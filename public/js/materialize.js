@@ -8301,3 +8301,7 @@ Picker.extend( 'pickadate', DatePicker )
 $(document).ready(function(){
       $('.parallax').parallax();
     });
+
+$(document).ready(function(){
+      $('.carousel').carousel();
+    });
