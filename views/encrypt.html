@@ -101,16 +101,16 @@
       <!-- <canvas id="black_box_canvas" width="500" height="200" display="none"></canvas> -->
     </div>
     </div>
-    <div class="center-btn">
-      <a class="waves-effect waves-green btn beige black-text" id="encrypt">Encrypt</a> 
-      <a class="waves-effect waves-red btn darkyellow black-text" id="show_code">Show Code</a>
+    <div class="center-btn" id="button-container">
+      <a class="waves-effect waves-green btn beige black-text tooltipped" id="encrypt" data-position="bottom" data-delay="50" data-tooltip="Encrypt the Plaintext!">Encrypt</a> 
+      <a class="waves-effect waves-red btn darkyellow black-text tooltipped" id="show_code" data-position="bottom" data-delay="50" data-tooltip="Show some real computer code that encrypts the plaintext">Show Code</a>
     </div>
 </div>
 
 
     <div class="row">
       <div class="col s2 pull-s2 flow-text">
-        <p class="flow-text">Plaintext:</p>
+        <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="This is the text we want to encrypt!">Plaintext:</p>
       </div>
       <div class="input-field col s2 pull-s3">             
         <input placeholder="Input the plaintext!" id="plaintext_value" type="text" class="validate">
@@ -124,7 +124,7 @@
       <br/>
       <br/>
       <div class="col s2 pull-s2 flow-text">
-        <p class="flow-text">Shift Value:</p>
+        <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="This is how much we want to shift by (negative means to the left, and positive means to the right!)">Shift Value:</p>
       </div>
       <div class="input-field col s2 pull-s2 flow-text">
         <canvas id="canvas" width="500" height="200"></canvas>
@@ -133,7 +133,7 @@
       </div>
 
       <div class="col s2 push-s2 flow-text">
-        <p class="flow-text">Ciphertext:</p>
+        <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="Our encoded text! This will appear once we encrypt the plaintext.">Ciphertext:</p>
       </div>
       <div class="input-field col s2 push-s1 flow-text">
         <input disabled placeholder="Output Ciphertext" id="output_text" type="text" class="validate">

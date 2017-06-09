@@ -167,6 +167,7 @@ function runEncryption(){
   // black_box_text.innerHTML = passed_text_value + shifting_value;
   // var canvas = document.getElementById("black_box_canvas");
   var parentNode = document.getElementById("black-box-parent");
+  var button_parent_node = document.getElementById('button-container');
   var canvas = document.createElement("canvas");
   canvas.width = 500;
   canvas.height = 200;
@@ -180,6 +181,7 @@ function runEncryption(){
     console.log(black_box_text.parentNode);
     parentNode.appendChild(canvas);
     black_box_text.parentNode.removeChild(black_box_text);
+    button_parent_node.removeChild(encrypt);
     // return;
     // black_box_text.style.display = 'none';
     if (canvas.getContext){
@@ -213,17 +215,18 @@ function runEncryption(){
           if (offset == 0){
             ctx.fillText(passed_text_value[i], 25 + i * 50, offsets[offset] + 30)            
           } else {
+            //Write a method for encryption
             ctx.fillText(String.fromCharCode(passed_text_value[i].charCodeAt(0) + shifting_value), 25 + i * 50, offsets[offset] + 30)
           }
 
           ctx.beginPath();
-          ctx.moveTo((i) * 50, offsets[offset] + 0);
-          ctx.lineTo((i) * 50, offsets[offset] + 50);
+          ctx.moveTo((i) * boxWidth, offsets[offset]);
+          ctx.lineTo((i) * boxWidth, offsets[offset] + boxHeight);
           ctx.stroke();
 
           ctx.beginPath();
-          ctx.moveTo((i + 1) * 50, offsets[offset] + 0);
-          ctx.lineTo((i + 1) * 50, offsets[offset] + 50);
+          ctx.moveTo((i + 1) * boxWidth, offsets[offset]);
+          ctx.lineTo((i + 1) * boxWidth, offsets[offset] + boxHeight);
           ctx.stroke();
         }
       }
