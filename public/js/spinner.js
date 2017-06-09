@@ -162,7 +162,7 @@ function runEncryption(){
   var passed_text_value = plaintext_value.value;
   // TODO rewrite below more cleanly
   var selected_value = (startIndex + 1) % numbers.length;
-  var shifting_value = numbers[selected_value].toString();
+  var shifting_value = numbers[selected_value];//.toString();
   //Get space locations
   // black_box_text.innerHTML = passed_text_value + shifting_value;
   // var canvas = document.getElementById("black_box_canvas");
@@ -202,7 +202,7 @@ function runEncryption(){
           console.log(colors)
           console.log(i)
           console.log(colors[i])
-          ctx.fillStyle = colors[i % colors.length];
+          ctx.fillStyle = "#FFFFFF";
 
           console.log(ctx.fillStyle)
           ctx.fillRect(i * boxWidth, offsets[offset], boxWidth, boxHeight);
@@ -210,7 +210,11 @@ function runEncryption(){
           ctx.font = "30px Arial";
           ctx.textAlign = "center";
           // TODO fix below value
-          ctx.fillText(passed_text_value[i], 25 + i * 50, offsets[offset] + 30)
+          if (offset == 0){
+            ctx.fillText(passed_text_value[i], 25 + i * 50, offsets[offset] + 30)            
+          } else {
+            ctx.fillText(String.fromCharCode(passed_text_value[i].charCodeAt(0) + shifting_value), 25 + i * 50, offsets[offset] + 30)
+          }
 
           ctx.beginPath();
           ctx.moveTo((i) * 50, offsets[offset] + 0);
