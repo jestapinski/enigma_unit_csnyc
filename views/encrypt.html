@@ -1,4 +1,5 @@
 <!doctype HTML>
+<link type="text/css" rel="stylesheet" href="css/styles/railscasts.css"  media="screen,projection"/>
 <link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>
 <style>
   body {
@@ -10,6 +11,8 @@
 ::-webkit-input-placeholder {
   color: #000000;
 }
+
+a { color: inherit; }
 
 #encrypt {
     position: relative;
@@ -103,10 +106,9 @@
     </div>
     <div class="center-btn" id="button-container">
       <a class="waves-effect waves-green btn beige black-text tooltipped" id="encrypt" data-position="bottom" data-delay="50" data-tooltip="Encrypt the Plaintext!">Encrypt</a> 
-      <a class="waves-effect waves-red btn darkyellow black-text tooltipped" id="show_code" data-position="bottom" data-delay="50" data-tooltip="Show some real computer code that encrypts the plaintext">Show Code</a>
+      <a class="waves-effect waves-red btn darkyellow black-text tooltipped" id="show_code" data-position="bottom" data-delay="50" data-tooltip="Show some real computer code that encrypts the plaintext" href="#modal1">Show Code</a>
     </div>
 </div>
-
 
     <div class="row">
       <div class="col s2 pull-s2 flow-text">
@@ -153,9 +155,59 @@
           Using a plaintext of: <strong>i have a dream</strong>, perform a Caesar Shift of <strong>right 3</strong> using the computational model (input the needed inputs on the left, and press "encrypt" to run the encryption and see the ciphertext as the output!)
         </p>
       </div>
+      <div class="col s2 push-s3">
+        <a href="/encrypt" class="waves-effect waves-green btn deepred white-text" id="refresh">Restart</a>
+      </div>
     </div>
 
+
+    <div id="modal1" class="modal">
+      <div class="modal-content">
+        <h4>Encryption Code</h4>
+        <p class="tooltipped" data-tooltip="Python is a computer programming language (like Java or C, which you may have heard of">Here is some Python computer code that performs the Caesar Shift given some plaintext and a shifting value:</p>
+        <pre><code>
+def caesar_shift(plaintext, shift_value=5):
+  ciphertext = ""
+  <a class="tooltipped" data-tooltip="Got it" onmouseover="$('#modalForLoop').modal('open')" id="for_loop_explanation">for eachletter in plaintext:</a> 
+
+    #if adding shift constant puts out of alphabet (> ord(z)) then sub ord(a)
+    encoded_letter = ord(c) + shift_value
+
+    #if our shift would go beyond the letter z then we wrap around to the start
+    if encoded_letter > ord('z'):
+      encoded_letter = ord('a') + (encoded_letter - ord('z')) - 1
+
+    #if our shift would go before the letter a then we wrap around to the end
+    if encoded_letter < ord('a'):
+      encoded_letter = ord('z') - (ord('a') - encoded_letter) + 1
+    
+    #put our new letter on the end of our ciphertext
+    ciphertext += (chr(encoded_letter))
+  return ciphertext
+        </code></pre>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close btn deepred">Close</a>
+      </div>
+    </div>
+
+    <div id="modalForLoop" class="modal bottom-sheet">
+    <div class="modal-content">
+      <h4>For Loops</h4>
+      <pre><code>
+for eachletter in plaintext:
+  #Do something
+</code></pre>
+      <p>A for loop instructs the computer to do something repeatedly. In this case, we are going to be performing the letter shifting operation for each letter in the plaintext.</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
+
     <script type="text/javascript" src="js/spinner.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="js/materialize.js"></script>
 	</body>

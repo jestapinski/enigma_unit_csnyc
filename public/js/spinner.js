@@ -159,6 +159,7 @@ function spinWheelDown(){
 }
 
 function runEncryption(){
+  remove_tooltip();
   var passed_text_value = plaintext_value.value;
   // TODO rewrite below more cleanly
   var selected_value = (startIndex + 1) % numbers.length;
