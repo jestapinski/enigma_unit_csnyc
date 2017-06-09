@@ -1,3 +1,5 @@
+var enableTooltips = true;
+
 var numbers = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
 var startIndex = 4
 var selectedIndex = 5
@@ -8,6 +10,7 @@ var show_code = document.getElementById('show_code');
 var encrypt = document.getElementById('encrypt');
 var plaintext_value = document.getElementById('plaintext_value');
 var black_box_text = document.getElementById('black_box_text');
+var output_text = document.getElementById('output_text');
 
 function drawWheel(){
   var canvas = document.getElementById("canvas");
@@ -231,7 +234,13 @@ function runEncryption(){
           ctx.stroke();
         }
       }
-    }    
+    }
+    var stringArray = passed_text_value.split("");
+    var mappedArray = stringArray.map(function(c){
+      return String.fromCharCode(c.charCodeAt(0) + shifting_value);
+    })
+    var newText = mappedArray.join("");
+    output_text.value = newText;    
   // }
 }
 

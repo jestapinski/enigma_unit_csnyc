@@ -1,79 +1,22 @@
+<!-- 
+Jordan Stapinski 
+Enigma Teaching Unit
+Encryption Page
+-->
+
 <!doctype HTML>
 <link type="text/css" rel="stylesheet" href="css/styles/railscasts.css"  media="screen,projection"/>
 <link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>
+<link type="text/css" rel="stylesheet" href="css/encrypt.css" media="screen,projection"/>
+
+<!-- Add background image -->
+
 <style>
-  body {
-    background-image: url("images/encrypt.png");
-    height: 100%;
-    background-size: cover;
-  }
-
-::-webkit-input-placeholder {
-  color: #000000;
+body {
+  background-image: url("images/encrypt.png");
+  height: 100%;
+  background-size: cover;
 }
-
-a { color: inherit; }
-
-#encrypt {
-    position: relative;
-    margin-top: -10%;
-}
-
-#show_code {
-  position: relative;
-  margin-top: -10%;
-}
-
-.plaintext_value {
-  margin-bottom: 50%;
-}
-
-.center-btn {
-  margin-bottom: 10%; 
-  text-align: center; 
-}
-
-
-.square-box{
-  float: left;
-  left: 45%;
-  border-radius: 20px;
-  position: relative;
-  width: 25%;
-  overflow: hidden;
-  background: #3F5666;
-}
-.square-box:before{
-    content: "";
-    display: block;
-    padding-top: 60%;
-}
-.square-content{
-    position:  absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    color: white;
-}
-.square-content div {
-   display: table;
-   width: 100%;
-   height: 100%;
-}
-.square-content span {
-    display: table-cell;
-    text-align: center;
-    vertical-align: middle;
-    color: white
-}
-
-.carousel-item { width:30px !important;}
-
-#scroller {
-  background-color: #FFFFFF;
-}
-
 </style>
 
 <html>
@@ -99,20 +42,23 @@ a { color: inherit; }
     <!-- Add some extra rows to separate title from fields -->
     <br/>
     <div class='square-box'>
-    <div class='square-content'><div><span id="black-box-parent">
-      <h4 id="black_box_text">Encryption Black Box</h4></span>
-      <!-- <canvas id="black_box_canvas" width="500" height="200" display="none"></canvas> -->
+      <div class='square-content'><div>
+        <span id="black-box-parent">
+          <h4 id="black_box_text">Encryption Black Box</h4>
+        </span></div>
+      </div>
+    <!-- Buttons within Black Box container -->
+      <div class="center-btn" id="button-container">
+        <a class="waves-effect waves-green btn beige black-text tooltipped" id="encrypt" data-tooltip="Encrypt the Plaintext!">Encrypt</a> 
+        <a class="waves-effect waves-red btn darkyellow black-text tooltipped" id="show_code" data-tooltip="Show some real computer code that encrypts the plaintext" href="#modal1">Show Code</a>
+      </div>
     </div>
-    </div>
-    <div class="center-btn" id="button-container">
-      <a class="waves-effect waves-green btn beige black-text tooltipped" id="encrypt" data-position="bottom" data-delay="50" data-tooltip="Encrypt the Plaintext!">Encrypt</a> 
-      <a class="waves-effect waves-red btn darkyellow black-text tooltipped" id="show_code" data-position="bottom" data-delay="50" data-tooltip="Show some real computer code that encrypts the plaintext" href="#modal1">Show Code</a>
-    </div>
-</div>
+
+    <!-- Plaintext inputs -->
 
     <div class="row">
       <div class="col s2 pull-s2 flow-text">
-        <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="This is the text we want to encrypt!">Plaintext:</p>
+        <p class="flow-text tooltipped" data-tooltip="This is the text we want to encrypt!">Plaintext:</p>
       </div>
       <div class="input-field col s2 pull-s3">             
         <input placeholder="Input the plaintext!" id="plaintext_value" type="text" class="validate">
@@ -125,23 +71,34 @@ a { color: inherit; }
       <br/>     
       <br/>
       <br/>
+
+      <!-- Shift Value inputs -->
+
       <div class="col s2 pull-s2 flow-text">
         <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="This is how much we want to shift by (negative means to the left, and positive means to the right!)">Shift Value:</p>
       </div>
+
+      <!-- Spinner -->
+
       <div class="input-field col s2 pull-s2 flow-text">
         <canvas id="canvas" width="500" height="200"></canvas>
-            <a class="waves-effect waves-green btn navy white-text" id="spinUp">Spin up</a>
-    <a class="waves-effect waves-green btn deepred white-text" id="spinDown">Spin down</a>
+        <a class="waves-effect waves-green btn navy white-text" id="spinUp">Spin up</a>
+        <a class="waves-effect waves-green btn deepred white-text" id="spinDown">Spin down</a>
       </div>
+
+      <!-- Output fields -->
 
       <div class="col s2 push-s2 flow-text">
         <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="Our encoded text! This will appear once we encrypt the plaintext.">Ciphertext:</p>
       </div>
+
       <div class="input-field col s2 push-s1 flow-text">
         <input disabled placeholder="Output Ciphertext" id="output_text" type="text" class="validate">
       </div>
+
     </div>
 
+    <!-- Instructions -->
 
     <div class="row">
       <div class="col s6 offset-s1">
@@ -160,18 +117,22 @@ a { color: inherit; }
       </div>
     </div>
 
+<!-- MODALS -->
 
     <div id="modal1" class="modal">
       <div class="modal-content">
         <h4>Encryption Code</h4>
         <p class="tooltipped" data-tooltip="Python is a computer programming language (like Java or C, which you may have heard of">Here is some Python computer code that performs the Caesar Shift given some plaintext and a shifting value:</p>
+
+        <!-- Python shift code -->
+
         <pre><code>
 def caesar_shift(plaintext, shift_value=5):
   ciphertext = ""
-  <a class="tooltipped" data-tooltip="Got it" onmouseover="$('#modalForLoop').modal('open')" id="for_loop_explanation">for eachletter in plaintext:</a> 
+  <a onmouseover="if(enableTooltips){$('#modalForLoop').modal('open')}">for eachletter in plaintext:</a> 
 
     #if adding shift constant puts out of alphabet (> ord(z)) then sub ord(a)
-    encoded_letter = ord(c) + shift_value
+    <a onmouseover="if(enableTooltips){$('#modalOrdChr').modal('open')}">encoded_letter = ord(c) + shift_value</a>
 
     #if our shift would go beyond the letter z then we wrap around to the start
     if encoded_letter > ord('z'):
@@ -182,30 +143,64 @@ def caesar_shift(plaintext, shift_value=5):
       encoded_letter = ord('z') - (ord('a') - encoded_letter) + 1
     
     #put our new letter on the end of our ciphertext
-    ciphertext += (chr(encoded_letter))
+    <a onmouseover="if(enableTooltips){$('#modalOrdChr').modal('open')}">ciphertext = ciphertext + (chr(encoded_letter))</a>
   return ciphertext
         </code></pre>
+
+      <!-- Toggle scrollover modals -->
+
+      <div class="switch">
+        Scrollover Hints: 
+        <label>
+          Off
+          <input type="checkbox" checked="On" onclick="enableTooltips = !enableTooltips" class="deepred">
+          <span class="lever"></span>
+          On
+        </label>
+      </div>
+
       </div>
       <div class="modal-footer">
         <a href="#!" class="modal-action modal-close btn deepred">Close</a>
       </div>
     </div>
 
-    <div id="modalForLoop" class="modal bottom-sheet">
-    <div class="modal-content">
-      <h4>For Loops</h4>
-      <pre><code>
-for eachletter in plaintext:
-  #Do something
-</code></pre>
-      <p>A for loop instructs the computer to do something repeatedly. In this case, we are going to be performing the letter shifting operation for each letter in the plaintext.</p>
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-    </div>
-  </div>
+<!-- Modal for explaining iteration -->
 
-    <script type="text/javascript" src="js/spinner.js"></script>
+    <div id="modalForLoop" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>For Loops</h4>
+        <pre><code>
+  for eachletter in plaintext:
+    #Do something
+        </code></pre>
+        <p>A for loop instructs the computer to do something repeatedly. In this case, we are going to be performing the letter shifting operation for each letter in the plaintext.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+<!-- Modal for explaining ASCII -->
+
+    <div id="modalOrdChr" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>Ord and Chr</h4>
+        <pre><code>
+encoded_letter = ord(c) + shift_value
+...
+ciphertext = ciphertext + (chr(encoded_letter))
+        </code></pre>
+        <p><code>ord</code> and <code>chr</code> are two special Python functions. In computers, letters are represented by numbers, ofthen referred to as their ASCII number. By converting a letter to its ASCII number, we can add the shift value to its ASCII number to get the number representing our ciphertext letter. <code>ord</code> converts a letter into its ASCII number and <code>chr</code> converts a ASCII number into a letter.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <!-- Importing Javascripts -->
+
+    <script type="text/javascript" src="js/encrypt.js"></script>
     <script src="js/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
