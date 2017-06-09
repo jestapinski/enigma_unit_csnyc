@@ -30,11 +30,6 @@
   text-align: center; 
 }
 
-#black_box_text{
-  margin: 0;
-  width: 80%;
-  height: 100%;
-}
 
 .square-box{
   float: left;
@@ -101,9 +96,13 @@
     <!-- Add some extra rows to separate title from fields -->
     <br/>
     <div class='square-box'>
-    <div class='square-content'><div><span><h4>Encryption Black Box</h4></span></div></div>
+    <div class='square-content'><div><span id="black-box-parent">
+      <h4 id="black_box_text">Encryption Black Box</h4></span>
+      <!-- <canvas id="black_box_canvas" width="500" height="200" display="none"></canvas> -->
+    </div>
+    </div>
     <div class="center-btn">
-      <a class="waves-effect waves-green btn beige black-text" id="encrypt" href="/encrypt">Encrypt</a> 
+      <a class="waves-effect waves-green btn beige black-text" id="encrypt">Encrypt</a> 
       <a class="waves-effect waves-red btn darkyellow black-text" id="show_code">Show Code</a>
     </div>
 </div>
