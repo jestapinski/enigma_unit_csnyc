@@ -108,7 +108,7 @@ body {
 
       <div class="row container">
           <p class="flow-text">
-            Using a plaintext of: <strong>i have a dream</strong>, perform a Caesar Shift of <strong>right 3</strong> using the computational model (input the needed inputs on the left, and press "encrypt" to run the encryption and see the ciphertext as the output!)
+            Using a plaintext of: <strong>i have a dream</strong>, perform a Caesar Shift of <strong>up 3</strong> using the computational model (input the needed inputs on the left, and press "encrypt" to run the encryption and see the ciphertext as the output!)
           </p>
       </div>
     </div>
@@ -125,10 +125,10 @@ body {
         <pre><code>
 def caesar_shift(plaintext, shift_value=5):
   ciphertext = ""
-  <a onmouseover="if(enableTooltips){$('#modalForLoop').modal('open')}">for eachletter in plaintext:</a> 
+  <a onmouseover="if(enable_tooltips){$('#modalForLoop').modal('open')}">for eachletter in plaintext:</a> 
 
     #if adding shift constant puts out of alphabet (> ord(z)) then sub ord(a)
-    <a onmouseover="if(enableTooltips){$('#modalOrdChr').modal('open')}">encoded_letter = ord(c) + shift_value</a>
+    <a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">encoded_letter = ord(c) + shift_value</a>
 
     #if our shift would go beyond the letter z then we wrap around to the start
     if encoded_letter > ord('z'):
@@ -139,7 +139,7 @@ def caesar_shift(plaintext, shift_value=5):
       encoded_letter = ord('z') - (ord('a') - encoded_letter) + 1
     
     #put our new letter on the end of our ciphertext
-    <a onmouseover="if(enableTooltips){$('#modalOrdChr').modal('open')}">ciphertext = ciphertext + (chr(encoded_letter))</a>
+    <a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">ciphertext = ciphertext + (chr(encoded_letter))</a>
   return ciphertext
         </code></pre>
 
@@ -149,7 +149,7 @@ def caesar_shift(plaintext, shift_value=5):
         Scrollover Hints: 
         <label>
           Off
-          <input type="checkbox" checked="On" onclick="enableTooltips = !enableTooltips" class="deepred">
+          <input type="checkbox" checked="On" onclick="enable_tooltips = !enable_tooltips" class="deepred">
           <span class="lever"></span>
           On
         </label>
