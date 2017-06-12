@@ -1,6 +1,6 @@
 var enableTooltips = true;
 
-var numbers = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
+var numbers = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]
 var startIndex = 4
 var selectedIndex = 5
 
@@ -11,6 +11,7 @@ var encrypt = document.getElementById('encrypt');
 var plaintext_value = document.getElementById('plaintext_value');
 var black_box_text = document.getElementById('black_box_text');
 var output_text = document.getElementById('output_text');
+var hidden_text = true;
 
 function drawWheel(){
   var canvas = document.getElementById("canvas");
@@ -171,6 +172,7 @@ function encryptionRedraw(i, passed_text_value, current_shift_value, shifting_va
       return;
     } 
     if (i == (passed_text_value.length - 1)){
+      $("#encrypt").removeClass('disabled');
       return;       
     } else {
       setTimeout(encryptionRedraw, 20, i + 1, passed_text_value, 0, shifting_value, 0, ctx);
@@ -235,6 +237,7 @@ function runEncryption(){
   if (black_box_text.parentNode){
     black_box_text.parentNode.removeChild(black_box_text);
   }
+  $("#encrypt").addClass('disabled');
     // button_parent_node.removeChild(encrypt);
 
   if (canvas.getContext){
@@ -283,20 +286,27 @@ function runEncryption(){
         ctx.stroke();
       }
     // }
-    offset = 1;
     setTimeout(encryptionRedraw, 20, 0, passed_text_value, 0, shifting_value, 0, ctx, shifting_value);
-    //For each letter in text
-      //draw letter
-      //draw next letter below
-      //Animate up
   }
   //Fix to place at end of animation
   var stringArray = passed_text_value.split("");
   var mappedArray = stringArray.map(function(c){
-    return String.fromCharCode(c.charCodeAt(0) + shifting_value);
+    return caesar_encrypt_one_letter(c, shifting_value);
   })
   var newText = mappedArray.join("");
   output_text.value = newText;    
+}
+
+function modify_instructions(){
+  if (hidden_text){
+    $('#instruction_set').show();
+    document.getElementById('instruction_button').text = 'Hide Instructions';
+    hidden_text = false;
+  } else {
+    $('#instruction_set').hide();
+    document.getElementById('instruction_button').text = 'Show Instructions';
+    hidden_text = true;
+  }
 }
 
 drawWheel()

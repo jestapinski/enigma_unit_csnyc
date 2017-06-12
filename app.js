@@ -20,7 +20,7 @@ MongoClient.connect('mongodb://localhost:27017/movie_information', function(err,
 		res.render('splash', {'unit_name': 'Enigma: An Introduction to Cryptography'});
 	});
 
-	app.get("/encrypt", function(req, res, next) {
+	app.get("/caesar-shift/encrypt", function(req, res, next) {
 		res.render('encrypt', {});
 	});
 
