@@ -222,6 +222,9 @@ function runEncryption(){
   // var canvas = document.getElementById("black_box_canvas");
   var parentNode = document.getElementById("black-box-parent");
   var button_parent_node = document.getElementById('button-container');
+  if (document.getElementById("black_box_canvas")){
+    document.getElementById("black_box_canvas").remove();
+  }
   var canvas = document.createElement("canvas");
   canvas.width = 500;
   canvas.height = 200;
@@ -229,8 +232,10 @@ function runEncryption(){
 
   console.log(black_box_text.parentNode);
   parentNode.appendChild(canvas);
-  black_box_text.parentNode.removeChild(black_box_text);
-  button_parent_node.removeChild(encrypt);
+  if (black_box_text.parentNode){
+    black_box_text.parentNode.removeChild(black_box_text);
+  }
+    // button_parent_node.removeChild(encrypt);
 
   if (canvas.getContext){
     var boxWidth = 50
