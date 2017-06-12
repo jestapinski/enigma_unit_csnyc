@@ -93,6 +93,27 @@ function redraw(step, direction){
       }
 }
 
+function caesar_encrypt_one_letter(initial_char, shift_value){
+  // var is_uppercase = 
+  var letter_ascii = initial_char.toLowerCase().charCodeAt(0);
+  if (!(initial_char.toLowerCase().match(/[a-z]/i))){return initial_char;}
+  var new_letter_ascii = letter_ascii + shift_value;
+  var z_value = 'z'.charCodeAt(0);
+  var a_value = 'a'.charCodeAt(0);
+  var letter_difference = 0;
+  console.log(z_value);
+  console.log(shift_value);
+  console.log(new_letter_ascii);
+  if (new_letter_ascii > z_value){
+    letter_difference = new_letter_ascii - z_value;
+    new_letter_ascii = a_value + letter_difference - 1;
+  } else if (new_letter_ascii < a_value){
+    letter_difference = a_value - new_letter_ascii;
+    new_letter_ascii = z_value - (letter_difference + 1);
+  }
+  return String.fromCharCode(new_letter_ascii);
+}
+
 function spinWheelUp(){
   var canvas = document.getElementById("canvas");
   if (canvas.getContext){
@@ -138,6 +159,54 @@ function plaintext_not_valid(text){
   return (text == "");
 }
 
+function encryptionRedraw(i, passed_text_value, current_shift_value, shifting_value, step, ctx){
+  ctx.clearRect(i * 50, 50, 500, 50);
+  var shift_offset = 1;
+  if (shifting_value < 0){
+    shift_offset = -1;
+  }
+  if (step === 50){
+    if (current_shift_value < shifting_value - 1){
+      setTimeout(encryptionRedraw, 20, i, passed_text_value, current_shift_value + shift_offset, shifting_value, 0, ctx);
+      return;
+    } 
+    if (i == (passed_text_value.length - 1)){
+      return;       
+    } else {
+      setTimeout(encryptionRedraw, 20, i + 1, passed_text_value, 0, shifting_value, 0, ctx);
+      return;      
+    }
+  }
+  var boxWidth = 50
+  var boxHeight = 50
+  var numSections = 4
+  // ctx = canvas.getContext("2d")
+  var offsets = [0, 100];
+  var offset = 1;
+  // console.log(i);
+  // for (var step = 0; step < boxHeight; step++){
+  ctx.clearRect(i * 50, 50, 500, 200);
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(i * boxWidth, offsets[offset], boxWidth, boxHeight);
+  ctx.fillStyle = "#000000";
+  ctx.font = "30px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(caesar_encrypt_one_letter(passed_text_value[i], current_shift_value), 25 + i * 50, offsets[offset] + 30 - step)
+  ctx.fillText(caesar_encrypt_one_letter(passed_text_value[i], current_shift_value + shift_offset), 25 + i * 50, offsets[offset] + 80 - step);        
+
+  ctx.beginPath();
+  ctx.moveTo((i) * boxWidth, offsets[offset]);
+  ctx.lineTo((i) * boxWidth, offsets[offset] + boxHeight);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo((i + 1) * boxWidth, offsets[offset]);
+  ctx.lineTo((i + 1) * boxWidth, offsets[offset] + boxHeight);
+  ctx.stroke();
+  setTimeout(encryptionRedraw, 20, i, passed_text_value, current_shift_value, shifting_value, step + 1, ctx);
+  // }
+}
+
 function runEncryption(){
   remove_tooltip();
   var passed_text_value = plaintext_value.value;
@@ -174,11 +243,11 @@ function runEncryption(){
 
     // ctx.strokeStyle = "black";
     // ctx.lineWidth = 2;
+    var offset = 0; //TODO REMOVE
 
     var colors = ["#F5E5C0", "#FFFFFF", "#F5E5C0", "#F5E5C0"]
-    for (var offset = 0; offset < offsets.length; offset++){
+    // for (var offset = 0; offset < offsets.length; offset++){
       for (var i = 0; i < passed_text_value.length; i++) {
-        // ctx.clearRect(0, i * 25, 25, 25)
         ctx = canvas.getContext("2d")
         console.log(colors)
         console.log(i)
@@ -208,8 +277,15 @@ function runEncryption(){
         ctx.lineTo((i + 1) * boxWidth, offsets[offset] + boxHeight);
         ctx.stroke();
       }
-    }
+    // }
+    offset = 1;
+    setTimeout(encryptionRedraw, 20, 0, passed_text_value, 0, shifting_value, 0, ctx, shifting_value);
+    //For each letter in text
+      //draw letter
+      //draw next letter below
+      //Animate up
   }
+  //Fix to place at end of animation
   var stringArray = passed_text_value.split("");
   var mappedArray = stringArray.map(function(c){
     return String.fromCharCode(c.charCodeAt(0) + shifting_value);
