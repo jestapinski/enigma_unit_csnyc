@@ -1,7 +1,10 @@
+// Jordan Stapinski
+// Enigma Unit Encryption Accompanying JS file
+
 var enableTooltips = true;
 
 var numbers = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]
-var startIndex = 4
+var startIndex = 3
 var selectedIndex = 5
 
 var spinUp = document.getElementById('spinUp');
@@ -11,19 +14,20 @@ var encrypt = document.getElementById('encrypt');
 var plaintext_value = document.getElementById('plaintext_value');
 var black_box_text = document.getElementById('black_box_text');
 var output_text = document.getElementById('output_text');
+var square_box = document.getElementById('square-box');
 var hidden_text = true;
+var numSections = 5;
 
 function drawWheel(){
   var canvas = document.getElementById("canvas");
   if (canvas.getContext){
-    var boxWidth = 50
-    var boxHeight = 50
-    var numSections = 4
-    ctx = canvas.getContext("2d")
+    var boxWidth = 50;
+    var boxHeight = 50;
+    ctx = canvas.getContext("2d");
 
-    ctx.clearRect(0, 0, 500, 200)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    var colors = ["#F5E5C0", "#FFFFFF", "#F5E5C0", "#F5E5C0"]
+    var colors = ["#F5E5C0", "#F5E5C0", "#FFFFFF", "#F5E5C0", "#F5E5C0"]
 
     for (var i = 0; i < numSections; i++) {
       ctx = canvas.getContext("2d")
@@ -53,12 +57,11 @@ function drawWheel(){
   }
 }
 
-function redraw(step, direction){
+function redraw(step, direction, ctx){
     var boxWidth = 50
     var boxHeight = 50
-    var numSections = 4
-    var colors = ["#F5E5C0", "#FFFFFF", "#F5E5C0", "#F5E5C0"]
-    ctx = canvas.getContext("2d")
+    var colors = ["#F5E5C0", "#F5E5C0", "#FFFFFF", "#F5E5C0", "#F5E5C0"]
+    // ctx = canvas.getContext("2d")
       for (var i = 0; i < numSections + 1; i++) {
         ctx = canvas.getContext("2d")
         if (i < colors.length){
@@ -75,10 +78,10 @@ function redraw(step, direction){
           if (numStart < 0){
             numStart += numbers.length
           }
-          console.log((startIndex + i - 1))
+          // console.log((startIndex + i - 1))
           ctx.fillText(numbers[numStart].toString(), 25, 30 + i * 50 - (step))
         } else {
-          console.log("step")
+          // console.log("step")
           ctx.fillText(numbers[(startIndex + i) % numbers.length].toString(), 25, -20 + i * 50 + step )
         }
 
@@ -120,12 +123,11 @@ function spinWheelUp(){
   if (canvas.getContext){
     var boxWidth = 50
     var boxHeight = 50
-    var numSections = 4
     ctx = canvas.getContext("2d")
 
-    var colors = ["#F5E5C0", "#FFFFFF", "#F5E5C0", "#F5E5C0"]
+    // var colors = ["#F5E5C0", "#FFFFFF", "#F5E5C0", "#F5E5C0"]
     for (var step = 0; step < boxHeight; step++){
-      setTimeout(redraw, 100, step, "up");
+      setTimeout(redraw, 100, step, "up", ctx);
       //setTimeout and pass step
     }
     startIndex++;
@@ -140,12 +142,10 @@ function spinWheelDown(){
   if (canvas.getContext){
     var boxWidth = 50
     var boxHeight = 50
-    var numSections = 4
     ctx = canvas.getContext("2d")
 
-    var colors = ["#F5E5C0", "#FFFFFF", "#F5E5C0", "#F5E5C0"]
     for (var step = 0; step < boxHeight; step++){
-      setTimeout(redraw, 100, step, "down");
+      setTimeout(redraw, 100, step, "down", ctx);
       //setTimeout and pass step
     }
     //Move for correctness
@@ -161,7 +161,13 @@ function plaintext_not_valid(text){
 }
 
 function encryptionRedraw(i, passed_text_value, current_shift_value, shifting_value, step, ctx){
-  ctx.clearRect(i * 50, 50, 500, 50);
+  var canvas_size = square_box.clientWidth;
+  var boxHeight = 50
+  var boxWidth = canvas_size / passed_text_value.length;
+  if (boxWidth > 50){
+    boxWidth = 50;
+  }
+  ctx.clearRect(i * boxWidth, boxHeight, canvas_size, boxHeight);
   var shift_offset = 1;
   if (shifting_value < 0){
     shift_offset = -1;
@@ -177,26 +183,26 @@ function encryptionRedraw(i, passed_text_value, current_shift_value, shifting_va
     } 
     if (i == (passed_text_value.length - 1)){
       $("#encrypt").removeClass('disabled');
+      ctx.clearRect(0, boxHeight, canvas_size, boxHeight);
       return;       
     } else {
       setTimeout(encryptionRedraw, 20, i + 1, passed_text_value, 0, shifting_value, 0, ctx);
       return;      
     }
   }
-  var boxWidth = 50
-  var boxHeight = 50
+
   var numSections = 4
   var offsets = [0, 100];
   var offset = 1;
 
-  ctx.clearRect(i * 50, 50, 500, 200);
+  ctx.clearRect(i * boxWidth, boxHeight, 500, 200);
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(i * boxWidth, offsets[offset], boxWidth, boxHeight);
   ctx.fillStyle = "#000000";
   ctx.font = "30px Arial";
   ctx.textAlign = "center";
-  ctx.fillText(caesar_encrypt_one_letter(passed_text_value[i], current_shift_value), 25 + i * 50, offsets[offset] + 30 - step)
-  ctx.fillText(caesar_encrypt_one_letter(passed_text_value[i], current_shift_value + shift_offset), 25 + i * 50, offsets[offset] + 80 - step);        
+  ctx.fillText(caesar_encrypt_one_letter(passed_text_value[i], current_shift_value), i * boxWidth + (boxWidth / 2), offsets[offset] + 30 - step)
+  ctx.fillText(caesar_encrypt_one_letter(passed_text_value[i], current_shift_value + shift_offset), i * boxWidth + (boxWidth / 2), offsets[offset] + 80 - step);        
 
   ctx.beginPath();
   ctx.moveTo((i) * boxWidth, offsets[offset]);
@@ -219,11 +225,10 @@ function runEncryption(){
     return;
   }
   // TODO rewrite below more cleanly
-  var selected_value = (startIndex + 1) % numbers.length;
+  var selected_value = (startIndex + 2) % numbers.length;
   var shifting_value = numbers[selected_value];//.toString();
   //Get space locations
-  // black_box_text.innerHTML = passed_text_value + shifting_value;
-  // var canvas = document.getElementById("black_box_canvas");
+
   var parentNode = document.getElementById("black-box-parent");
   var button_parent_node = document.getElementById('button-container');
   if (document.getElementById("black_box_canvas")){
@@ -242,22 +247,26 @@ function runEncryption(){
   $("#encrypt").addClass('disabled');
 
   if (canvas.getContext){
-    var boxWidth = 50
+    var canvas_size = square_box.clientWidth;
     var boxHeight = 50
+    var boxWidth = canvas_size / passed_text_value.length;
+    if (boxWidth > 50){
+      boxWidth = 50;
+    }
     var numSections = 4
     ctx = canvas.getContext("2d")
     var offsets = [0, 100];
 
-    ctx.clearRect(0, 0, 500, 200)
+    ctx.clearRect(0, 0, canvas_size, 200)
 
     var offset = 0; //TODO REMOVE
 
     var colors = ["#F5E5C0", "#FFFFFF", "#F5E5C0", "#F5E5C0"]
       for (var i = 0; i < passed_text_value.length; i++) {
         ctx = canvas.getContext("2d")
-        console.log(colors)
+        // console.log(colors)
         console.log(i)
-        console.log(colors[i])
+        // console.log(colors[i])
         ctx.fillStyle = "#FFFFFF";
 
         console.log(ctx.fillStyle)
@@ -267,10 +276,7 @@ function runEncryption(){
         ctx.textAlign = "center";
         // TODO fix below value
         if (offset == 0){
-          ctx.fillText(passed_text_value[i], 25 + i * 50, offsets[offset] + 30)            
-        } else {
-          //Write a method for encryption
-          ctx.fillText(String.fromCharCode(passed_text_value[i].charCodeAt(0) + shifting_value), 25 + i * 50, offsets[offset] + 30)
+          ctx.fillText(passed_text_value[i], i * boxWidth + (boxWidth / 2), offsets[offset] + 30)            
         }
 
         ctx.beginPath();
