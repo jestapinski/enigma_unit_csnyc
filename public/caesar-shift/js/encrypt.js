@@ -11,6 +11,7 @@ var black_box_text = document.getElementById('black_box_text');
 var output_text = document.getElementById('output_text');
 var square_box = document.getElementById('square-box');
 var canvas = document.getElementById("canvas");
+var encryption_code = document.getElementById('encryption_code');
 
 // Initializing Shift array constants
 var numbers = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];
@@ -160,6 +161,42 @@ function caesar_encrypt_one_letter(initial_char, shift_value){
   return String.fromCharCode(new_letter_ascii);
 }
 
+function overall_encryption(str, shift_value){
+  var final_string = [];
+  for (var i = 0; i < str.length; i++) {
+    final_string.push(caesar_encrypt_one_letter(str[i], shift_value));
+  }
+  return final_string.join("");
+}
+
+function assert(condition, message) {
+    if (!condition) {
+        throw message || "Assertion failed";
+    }
+}
+
+function test_encryption(){
+  jQuery.get('foo.txt', function(data) {
+    var myvar = data.split("\n");
+    for (var test_case_number = 0; test_case_number < myvar.length; test_case_number++){
+      var test_case = myvar[test_case_number].split(",");
+      var input_str = test_case[0];
+      var input_shift = parseInt(test_case[1]);
+      var output_str = test_case[2];
+      assert(overall_encryption(input_str, input_shift) === output_str);
+    }
+    encryption_code.value = data;
+    console.log(myvar);
+  });
+}
+test_encryption();
+
+jQuery.get('encrypt.py', function(data) {
+  encryption_code.innerHTML = data;
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
 /*
   spin_wheel_up
 

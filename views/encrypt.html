@@ -122,7 +122,7 @@ body {
 
         <!-- Python shift code -->
 
-        <pre><code>
+        <pre><code id="encryption_code">
 def caesar_shift(plaintext, shift_value=5):
   ciphertext = ""
   <a onmouseover="if(enable_tooltips){$('#modalForLoop').modal('open')}">for eachletter in plaintext:</a> 
@@ -196,12 +196,12 @@ ciphertext = ciphertext + (chr(encoded_letter))
 
     <!-- Importing Javascripts -->
 
-    <script type="text/javascript" src="js/encrypt.js"></script>
     <script src="js/highlight.pack.js"></script>
     <!-- Initialize code syntax highlighting -->
-    <script>hljs.initHighlightingOnLoad();</script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/encrypt.js"></script>
     <script type="text/javascript" src="js/materialize.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
     <script>
       $("#instruction_set").hide();  
     </script>
