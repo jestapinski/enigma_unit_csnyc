@@ -35,6 +35,7 @@ var box_height = 50;
 var box_center = box_width / 2;
 var text_height_offset = 30;
 var max_number_of_steps = 50;
+var canvas_margin = 10;
 
 /*
   draw_wheel
@@ -380,18 +381,20 @@ function not_enough_shifts_exhausted(shift_offset, current_shift_val, shifting_v
 */
 function encryption_redraw(i, passed_text_value, current_shift_value, 
                                                     shifting_value, step, ctx){
-  var canvas_width = square_box.clientWidth;
+  var canvas_width = square_box.clientWidth - 2 * canvas_margin;
   var canvas_height = 200;
   var box_width = canvas_width / passed_text_value.length;
-  var max_box_height = 50;
-  var heightOffset = 100;
+  var max_box_width = 50;
+  var height_offset = 100;
+  var line_draw_height = height_offset + max_box_width - 2;
   var shift_offset = 1;
   var next_letter, text_start, previous_letter, next_letter, text_letter;
+  var line_offset;
   var abs_shift = Math.abs(shifting_value);
   encryption_scrolling_speed = 100 / (passed_text_value.length * abs_shift);
   //So as to not be too slow
   encryption_scrolling_speed = Math.min(15, encryption_scrolling_speed);
-  box_width = Math.min(box_width, max_box_height);
+  box_width = Math.min(box_width, max_box_width);
   ctx.clearRect(0, box_height, canvas_width, box_height);
 
   // Negative shift for moving in the negative direction
@@ -420,9 +423,9 @@ function encryption_redraw(i, passed_text_value, current_shift_value,
   }
 
   //Fill in the rectangle for this letter
-  ctx.clearRect(i * box_width, box_height, canvas_width, canvas_height);
+  ctx.clearRect(canvas_margin + i * box_width, box_height, canvas_width, canvas_height);
   ctx.fillStyle = "#FFFFFF";
-  ctx.fillRect(i * box_width, heightOffset, box_width, box_height);
+  ctx.fillRect(canvas_margin + i * box_width, height_offset, box_width, box_height);
   establish_context_settings(ctx);
 
   //Draw text according to the current and next shift values
@@ -431,10 +434,39 @@ function encryption_redraw(i, passed_text_value, current_shift_value,
   text_letter = passed_text_value[i];
   previous_letter = caesar_encrypt_one_letter(text_letter, current_shift_value);
   next_letter = caesar_encrypt_one_letter(text_letter, next_shift_value);
-  ctx.fillText(previous_letter, text_start, heightOffset + 30 - step)
-  ctx.fillText(next_letter, text_start, heightOffset + 80 - step);        
+  if (shift_offset === -1){
+    ctx.fillText(previous_letter, canvas_margin + text_start, height_offset + 30 + step);
+  } else {
+    ctx.fillText(previous_letter, canvas_margin + text_start, height_offset + 30 - step);
+  }
+  //Clear above the letters
 
-  draw_vertical_box_lines(ctx, i, box_height, box_width, heightOffset);
+  if (shift_offset === -1){
+    ctx.fillText(next_letter, canvas_margin + text_start, height_offset - 20 + step); 
+    ctx.beginPath();
+    line_offset = height_offset + 2;
+    ctx.moveTo(canvas_margin + i * box_width, line_offset + step);
+    ctx.lineTo(canvas_margin + (i + 1) * box_width, line_offset + step);
+    ctx.stroke();   
+  } else {
+    ctx.fillText(next_letter, canvas_margin + text_start, height_offset + 80 - step);
+    ctx.beginPath();
+    line_offset = line_draw_height - step;
+    ctx.moveTo(canvas_margin + i * box_width, line_offset);
+    ctx.lineTo(canvas_margin + (i + 1) * box_width, line_offset);
+    ctx.stroke();
+  }
+
+  //Clear above the letters
+  ctx.fillStyle = "#3F5666";
+  ctx.fillRect(0, box_height, canvas_width + 2 * canvas_margin, box_height);
+
+  //Clear below the letters
+  ctx.fillStyle = "#3F5666";
+  ctx.fillRect(0, box_height + height_offset, canvas_width + 2 * canvas_margin, 
+                                                                    box_height);         
+
+  draw_vertical_box_lines(ctx, i, box_height, box_width, height_offset);
 
   setTimeout(encryption_redraw, encryption_scrolling_speed, i,passed_text_value, 
                             current_shift_value, shifting_value, step + 1, ctx);
@@ -484,7 +516,7 @@ function run_encryption(){
   $("#encrypt").addClass('disabled');
 
   if (canvas.getContext){
-    canvas_size = square_box.clientWidth;
+    canvas_size = square_box.clientWidth - 2 * canvas_margin;
     box_width = canvas_size / passed_text_value.length;
     box_width = Math.min(box_width, max_box_height);
     ctx = canvas.getContext("2d");
@@ -494,10 +526,10 @@ function run_encryption(){
     //Draw static top boxes
     for (i = 0; i < passed_text_value.length; i++) {
       ctx.fillStyle = "#FFFFFF";
-      ctx.fillRect(i * box_width, height_offset, box_width, box_height);
+      ctx.fillRect(canvas_margin + i * box_width, height_offset, box_width, box_height);
       establish_context_settings(ctx);
       this_letter = passed_text_value[i];
-      ctx.fillText(this_letter, box_width * (i + 1.0/2), text_height_offset);
+      ctx.fillText(this_letter, canvas_margin + box_width * (i + 1.0/2), text_height_offset);
 
       draw_vertical_box_lines(ctx, i, box_height, box_width, height_offset);
     }
@@ -528,13 +560,13 @@ function run_encryption(){
 function draw_vertical_box_lines(ctx, box_number, box_height, box_width, 
                                                                 height_offset){
   ctx.beginPath();
-  ctx.moveTo(box_number * box_width, height_offset);
-  ctx.lineTo(box_number * box_width, height_offset + box_height);
+  ctx.moveTo(canvas_margin + box_number * box_width, height_offset);
+  ctx.lineTo(canvas_margin + box_number * box_width, height_offset + box_height);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo((box_number + 1) * box_width, height_offset);
-  ctx.lineTo((box_number + 1) * box_width, height_offset + box_height);
+  ctx.moveTo(canvas_margin + (box_number + 1) * box_width, height_offset);
+  ctx.lineTo(canvas_margin + (box_number + 1) * box_width, height_offset + box_height);
   ctx.stroke();  
 }
 
