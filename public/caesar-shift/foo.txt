@@ -1,6 +1,0 @@
-a,1,b
-b,2,d
-ab,1,bc
-i have a dream,1,j ibwf b esfbn
-i came i saw i conquered,1,j dbnf j tbx j dporvfsfe
-///,10,///

@@ -176,7 +176,7 @@ function assert(condition, message) {
 }
 
 function test_encryption(){
-  jQuery.get('foo.txt', function(data) {
+  jQuery.get('encryption_tests.txt', function(data) {
     var myvar = data.split("\n");
     for (var test_case_number = 0; test_case_number < myvar.length; test_case_number++){
       var test_case = myvar[test_case_number].split(",");
@@ -186,13 +186,40 @@ function test_encryption(){
       assert(overall_encryption(input_str, input_shift) === output_str);
     }
     encryption_code.value = data;
-    console.log(myvar);
+    console.log("Javascript encryption passed");
   });
 }
 test_encryption();
 
+function convert_to_HTML(data){
+  var python_lines = data.split("\n");
+  var python_line;
+  var final_python_code = [];
+  var skip_flag = false;
+  // console.log(python_lines);
+  for (var i = 0; i < python_lines.length; i++){
+    if (skip_flag){
+      skip_flag = false;
+      continue;
+    }
+    python_line = python_lines[i];
+    if (python_line == "#END#"){
+      break;
+    }
+    if (python_line.trim().substring(0, 3) == "#<a"){
+      final_python_code.push(python_line.replace("#", ""));
+      skip_flag = true;
+    } else {
+      final_python_code.push(python_line);
+    }
+  }
+  // console.log(final_python_code);
+  return final_python_code.join("\n");
+}
+
 jQuery.get('encrypt.py', function(data) {
-  encryption_code.innerHTML = data;
+  var python_function = convert_to_HTML(data);
+  encryption_code.innerHTML = python_function;
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
