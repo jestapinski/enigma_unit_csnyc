@@ -19,7 +19,7 @@ var start_index = 3;
 var num_sections = 5;
 
 // Timer delay speed for the scroller and instructions
-var encryption_scrolling_speed = 15;
+var encryption_scrolling_speed = 5;
 var instruction_speed = 500;
 
 // Initializing UI customization options
@@ -286,6 +286,7 @@ function encryptionRedraw(i, passed_text_value, current_shift_value, shifting_va
   var heightOffset = 100;
   var shift_offset = 1;
   var next_letter, text_start;
+  encryption_scrolling_speed = 100 / (passed_text_value.length * Math.abs(shifting_value));
   boxWidth = Math.min(boxWidth, max_box_height);
   ctx.clearRect(0, boxHeight, canvas_width, boxHeight);
 

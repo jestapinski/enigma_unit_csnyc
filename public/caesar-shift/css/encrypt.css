@@ -5,7 +5,18 @@ For use with Enigma teaching model Encryption page
 */
 
 ::-webkit-input-placeholder {
-  color: #000000;
+  font-size: 20px;
+  color: #000000; 
+}
+
+input[type=text] {
+  font-size: 20px;
+  color: #000000; 
+}
+
+input[type=text][disabled] {
+  font-size: 20px;
+  color: #000000; 
 }
 
 a { color: inherit; }
