@@ -20,6 +20,7 @@ var num_sections = 5;
 
 // Timer delay speed for the scroller and instructions
 var encryption_scrolling_speed = 5;
+var wheel_scrolling_speed = 5;
 var instruction_speed = 500;
 
 // Initializing UI customization options
@@ -116,7 +117,7 @@ function redraw(step, direction, ctx){
     draw_horizontal_box_lines(ctx, i, box_height, box_width);
   }
   //Set a timeout to loop at a consistant time, essentially recursively
-  setTimeout(redraw, encryption_scrolling_speed, step + 1, direction, ctx);
+  setTimeout(redraw, wheel_scrolling_speed, step + 1, direction, ctx);
 }
 
 /*
@@ -508,6 +509,7 @@ function run_encryption(){
   canvas.id = "black_box_canvas";
 
   parent_node.appendChild(canvas);
+  black_box_text.remove();
   if (black_box_text.parent_node){
     black_box_text.parent_node.removeChild(black_box_text);
   }
