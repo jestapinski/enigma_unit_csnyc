@@ -381,7 +381,8 @@ function check_for_win(guess_string){
   console.log(guess_string);
   if (overall_encryption(plaintext_solution, shift_solution) === guess_string){
     console.log("Solved!");
-    $(location).attr('href', '/caesar-shift/decrypt');
+    $('#modalSuccess').modal('open');
+    // $(location).attr('href', '/caesar-shift/decrypt');
   } else {
     console.log("Not solved");
   }
@@ -656,3 +657,4 @@ spinUp.addEventListener("click", spin_wheel_up);
 spinDown.addEventListener("click", spin_wheel_down);
 encrypt.addEventListener("click", run_encryption);
 clipboard.addEventListener("click", copy_to_clipboard);
+

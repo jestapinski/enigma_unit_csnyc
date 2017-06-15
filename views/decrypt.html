@@ -29,7 +29,7 @@ body {
 
     <div class="row">
       <div class="col s3 offset-s1">
-        <a id="instruction_button" class="waves-effect waves-green btn navy" onclick="modify_instructions()">Show Instructions</a>
+        <a id="instruction_button" class="waves-effect waves-green btn navy" onclick="modify_instructions()">Hide Instructions</a>
       </div>
     </div>
 
@@ -43,8 +43,8 @@ body {
       </div>
     <!-- Buttons within Black Box container -->
       <div class="center-btn" id="button-container">
-        <a class="waves-effect waves-green btn beige black-text tooltipped" id="encrypt" data-tooltip="Encrypt the Plaintext!">Decrypt</a> 
-        <a class="waves-effect waves-red btn darkyellow black-text tooltipped" id="show_code" data-tooltip="Show some real computer code that encrypts the plaintext" href="#modal1">Show Code</a>
+        <a class="waves-effect waves-green btn beige black-text tooltipped" id="encrypt" data-tooltip="Try to decrypt the ciphertext!">Decrypt</a> 
+        <a class="waves-effect waves-red btn darkyellow black-text tooltipped" id="show_code" data-tooltip="Show some real computer code that decrypts the ciphertext" href="#modal1">Show Code</a>
       </div>
     </div>
 
@@ -52,8 +52,8 @@ body {
     <br/>
     <br/>
     <div class="row">
-      <div class="input-field col s3 pull-s2">             
-        <input disabled placeholder="qxhb mxofp" id="plaintext_value" value="qxhb mxofp" type="text" class="validate tooltipped" data-tooltip="This is the encrypted text we are looking to crack!">
+      <div class="input-field col s3 pull-s2 tooltipped" data-tooltip="This is the encrypted text we are looking to crack!">             
+        <input disabled placeholder="ryic nypgq" id="plaintext_value" value="ryic nypgq" type="text" class="validate">
         <label for="plaintext_value">Ciphertext</label>
       </div>
       <!-- TODO replace -->
@@ -88,7 +88,7 @@ body {
 
 
       <div class="input-field col s3 push-s1 flow-text tooltipped" data-tooltip="This is the ciphertext decrypted using the shift value provided">
-        <input disabled placeholder="ryic nypgq" value="ryic nypgq" id="output_text" type="text" class="tooltipped">
+        <input disabled placeholder="qxhb mxofp" value="qxhb mxofp" id="output_text" type="text" class="tooltipped">
         <label for="output_text">Plaintext</label>
         <a class="waves-effect waves-green btn beige black-text" id="clipboard">Copy to Clipboard</a>
       </div>
@@ -103,7 +103,7 @@ body {
 
       <div class="row container">
           <p class="flow-text">
-            We have a ciphertext of: <strong>vcmg rctku</strong>, but we do not know what shift values were used to encode this. Try different shift values to see if we can reverse the encryption to something legible!
+            We have a ciphertext of: <strong>ryic nypgq</strong>, but we do not know what shift values were used to encode this. Try different shift values to see if we can reverse the encryption to something legible!
           </p>
       </div>
     </div>
