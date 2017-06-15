@@ -25,7 +25,7 @@ var wheel_scrolling_speed = 5;
 var instruction_speed = 500;
 
 // Initializing UI customization options
-var hidden_text = true;
+var hidden_text = false;
 var enable_tooltips = true;
 
 // Wheel display colors
