@@ -24,6 +24,10 @@ MongoClient.connect('mongodb://localhost:27017/movie_information', function(err,
 		res.render('encrypt', {});
 	});
 
+	app.get("/caesar-shift/decrypt", function(req, res, next){
+		res.render('decrypt', {})
+	});
+
 	// Running the web server
 	var server = app.listen(3000, function() {
 	    var port = server.address().port;
