@@ -12,6 +12,7 @@ var output_text = document.getElementById('output_text');
 var square_box = document.getElementById('square-box');
 var canvas = document.getElementById("canvas");
 var encryption_code = document.getElementById('encryption_code');
+var clipboard = document.getElementById('clipboard');
 
 // Initializing Shift array constants
 var numbers = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];
@@ -592,6 +593,29 @@ function modify_instructions(){
   }
 }
 
+/*
+  copy_to_clipboard
+
+  No inputs
+  No return value
+
+  Copies the text in the ciphertext area to the clipboard
+*/
+function copy_to_clipboard(){
+  var copy_text_area, copied;
+  var toast_display_time = 4000
+  $('#output_text').removeAttr('disabled');
+  copy_text_area = document.querySelector('#output_text');
+  copy_text_area.select();
+  copied = document.execCommand('copy');
+  $('#output_text').attr('disabled', 'true');
+  if (copied){
+    Materialize.toast('Copied to Clipboard!', toast_display_time);    
+  } else {
+    Materialize.toast('Copy Failed, try manual copying', toast_display_time);
+  }
+}
+
 //Run the following when instantiating the web page
 test_encryption();
 draw_wheel()
@@ -605,6 +629,7 @@ jQuery.get('encrypt.py', function(data) {
 });
 
 //Bind buttons to events
-spinUp.addEventListener("click", spin_wheel_up)
-spinDown.addEventListener("click", spin_wheel_down)
-encrypt.addEventListener("click", run_encryption)
+spinUp.addEventListener("click", spin_wheel_up);
+spinDown.addEventListener("click", spin_wheel_down);
+encrypt.addEventListener("click", run_encryption);
+clipboard.addEventListener("click", copy_to_clipboard);
