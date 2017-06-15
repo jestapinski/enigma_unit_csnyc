@@ -9,17 +9,19 @@ For use with Enigma teaching model Encryption page
   color: #000000; 
 }
 
-input[type=text] {
-  font-size: 20px;
-  color: #000000; 
-}
-
 input[type=text][disabled] {
   font-size: 20px;
   color: #000000; 
 }
 
 a { color: inherit; }
+
+label {
+  color: #000000 !important;
+  font-size:1.68rem !important;
+  font-family:'Roboto' sans-serif; 
+  font-weight:300;
+}
 
 #encrypt {
     position: relative;
@@ -44,7 +46,7 @@ a { color: inherit; }
 
 .square-box{
   float: left;
-  left: 45%;
+  left: 40%;
   border-radius: 20px;
   position: relative;
   width: 25%;
