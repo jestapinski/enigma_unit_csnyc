@@ -206,7 +206,19 @@ ciphertext = ciphertext + (chr(encoded_letter))
         <p>Notice how the encryption code mechanism cycled through the alphabet at each letter the number of times as we indicated in our shift. Now we have some ciphertext to communicate our orders! Now let's try to decrypt some ciphertext using a similar mechanism.</p>
       </div>
       <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect waves-green">Continue</a>
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn navy">Continue</a>
+      </div>
+    </div>
+
+<!-- Modal for displaying positive feedback -->
+
+    <div id="modalRetry" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>Hmm, not quite</h4>
+        <p>It seems like something was encrypted, but not exactly the message and shift amount we were going for. Are you sure your plaintext value is <strong>move north</strong> and your encryption shift is <strong>up (positive) 3</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn deepred">Try Again</a>
       </div>
     </div>
 

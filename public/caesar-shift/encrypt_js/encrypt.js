@@ -382,9 +382,9 @@ function check_for_win(guess_string){
   if (overall_encryption(plaintext_solution, shift_solution) === guess_string){
     console.log("Solved!");
     $('#modalSuccess').modal('open');
-    // $(location).attr('href', '/caesar-shift/decrypt');
   } else {
     console.log("Not solved");
+    $('#modalRetry').modal('open');
   }
 }
 
