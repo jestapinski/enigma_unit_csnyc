@@ -158,9 +158,13 @@ function draw_horizontal_box_lines(ctx, box_number, box_height, box_width){
   Sets up values for the context to draw text, including font, color,
   and alignment
 */
-function establish_context_settings(ctx){
+function establish_context_settings(ctx, plaintext_length){
   ctx.fillStyle = "#000000";
-  ctx.font = "30px Arial";
+  if (plaintext_length > 20){
+    ctx.font = "24px Arial";
+  } else {
+    ctx.font = "30px Arial";    
+  }
   ctx.textAlign = "center";
 }
 
@@ -377,13 +381,9 @@ function not_enough_shifts_exhausted(shift_offset, current_shift_val, shifting_v
   or not the user has successfully encrypted the ciphertext. Provides feedback accordingly
 */
 function check_for_win(guess_string){
-  console.log(overall_encryption(plaintext_solution, shift_solution));
-  console.log(guess_string);
   if (overall_encryption(plaintext_solution, shift_solution) === guess_string){
-    console.log("Solved!");
     $('#modalSuccess').modal('open');
   } else {
-    console.log("Not solved");
     $('#modalRetry').modal('open');
   }
 }
@@ -452,7 +452,7 @@ function encryption_redraw(i, passed_text_value, current_shift_value,
   ctx.clearRect(canvas_margin + i * box_width, box_height, canvas_width, canvas_height);
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(canvas_margin + i * box_width, height_offset, box_width, box_height);
-  establish_context_settings(ctx);
+  establish_context_settings(ctx, passed_text_value.length);
 
   //Draw text according to the current and next shift values
   next_shift_value = current_shift_value + shift_offset;
@@ -522,6 +522,11 @@ function run_encryption(){
     return;
   }
 
+  if (passed_text_value.length > 30){
+    alert("This plaintext is too long!");
+    return;
+  }
+
   button_parent_node = document.getElementById('button-container');
   //Remove the encryption animation if it exists already
   if (document.getElementById("black_box_canvas")){
@@ -554,7 +559,7 @@ function run_encryption(){
     for (i = 0; i < passed_text_value.length; i++) {
       ctx.fillStyle = "#FFFFFF";
       ctx.fillRect(canvas_margin + i * box_width, height_offset, box_width, box_height);
-      establish_context_settings(ctx);
+      establish_context_settings(ctx, passed_text_value.length);
       this_letter = passed_text_value[i];
       ctx.fillText(this_letter, canvas_margin + box_width * (i + 1.0/2), text_height_offset);
 

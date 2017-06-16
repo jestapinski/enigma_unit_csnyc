@@ -8,6 +8,7 @@ Decryption Page
 <link type="text/css" rel="stylesheet" href="../css/railscasts.css"  media="screen,projection"/>
 <link type="text/css" rel="stylesheet" href="../css/materialize.css"  media="screen,projection"/>
 <link type="text/css" rel="stylesheet" href="decrypt_css/decrypt.css" media="screen,projection"/>
+<link rel="shortcut icon" href="../images/favicon.ico">
 <style>
 body {
   background-image: url("../images/decrypt.png");
@@ -186,6 +187,28 @@ ciphertext = ciphertext + (chr(encoded_letter))
       </div>
       <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <div id="modalSuccess" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>Correct!</h4>
+        <p>Notice how the encryption code mechanism cycled through the alphabet at each letter the number of times as we indicated in our shift. Now we have some ciphertext to communicate our orders! Now let's try to decrypt some ciphertext using a similar mechanism.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn navy">Continue</a>
+      </div>
+    </div>
+
+<!-- Modal for displaying positive feedback -->
+
+    <div id="modalRetry" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>Hmm, not quite</h4>
+        <p>We decrypted something, but this is illegible and not the intended message, keep trying!</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn deepred">Try Again</a>
       </div>
     </div>
 

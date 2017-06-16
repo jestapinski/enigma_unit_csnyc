@@ -39,6 +39,9 @@ var text_height_offset = 30;
 var max_number_of_steps = 50;
 var canvas_margin = 10;
 
+var plaintext_solution = "take paris";
+var shown_retry_msg = false;
+
 /*
   draw_wheel
 
@@ -156,9 +159,13 @@ function draw_horizontal_box_lines(ctx, box_number, box_height, box_width){
   Sets up values for the context to draw text, including font, color,
   and alignment
 */
-function establish_context_settings(ctx){
+function establish_context_settings(ctx, ciphertext_length){
   ctx.fillStyle = "#000000";
-  ctx.font = "30px Arial";
+  if (ciphertext_length > 20){
+    ctx.font = "24px Arial";
+  } else {
+    ctx.font = "30px Arial";    
+  }
   ctx.textAlign = "center";
 }
 
@@ -367,6 +374,28 @@ function not_enough_shifts_exhausted(shift_offset, current_shift_val, shifting_v
 }
 
 /*
+  check_for_win
+
+  possible_plaintext: The plaintext value decrypted by the decryption algorithm
+  No return value
+
+  Checks the plaintext value decrypted by the user against the expected solution.
+  If the plaintext value is correct, a success message is displayed redirecting
+  the user to the next exercise, otherwise a failure message is shown. The failure
+  message is shown exactly once.
+*/
+function check_for_win(possible_plaintext){
+  if (possible_plaintext === plaintext_solution){
+    $('#modalSuccess').modal('open');    
+  } else {
+    if (!shown_retry_msg){
+      $('#modalRetry').modal('open');
+      shown_retry_msg = true;      
+    }
+  }
+}
+
+/*
   encryption_redraw
 
   i: The index of the passed_text_value we are at
@@ -417,6 +446,7 @@ function encryption_redraw(i, passed_text_value, current_shift_value,
     if (i == (passed_text_value.length - 1)){
       $("#encrypt").removeClass('disabled');
       ctx.clearRect(0, box_height, canvas_width, box_height);
+      check_for_win(overall_encryption(passed_text_value, shifting_value));
       return;       
     } else {
       setTimeout(encryption_redraw, encryption_scrolling_speed, i + 1, 
@@ -429,7 +459,7 @@ function encryption_redraw(i, passed_text_value, current_shift_value,
   ctx.clearRect(canvas_margin + i * box_width, box_height, canvas_width, canvas_height);
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(canvas_margin + i * box_width, height_offset, box_width, box_height);
-  establish_context_settings(ctx);
+  establish_context_settings(ctx, passed_text_value.length);
 
   //Draw text according to the current and next shift values
   next_shift_value = current_shift_value + shift_offset;
@@ -531,7 +561,7 @@ function run_encryption(){
     for (i = 0; i < passed_text_value.length; i++) {
       ctx.fillStyle = "#FFFFFF";
       ctx.fillRect(canvas_margin + i * box_width, height_offset, box_width, box_height);
-      establish_context_settings(ctx);
+      establish_context_settings(ctx, passed_text_value.length);
       this_letter = passed_text_value[i];
       ctx.fillText(this_letter, canvas_margin + box_width * (i + 1.0/2), text_height_offset);
 
