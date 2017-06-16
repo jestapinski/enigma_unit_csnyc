@@ -255,19 +255,19 @@ function assert(condition) {
   or output strings. This format is used for the test data to cross-use with
   the equivalent Python function.
 */
-function test_encryption(){
+function test_decryption(){
   var tests, test_case_num, test_case, input_str, input_shift, output_str;
-  jQuery.get('encryption_tests.txt', function(data) {
+  jQuery.get('decryption-tests.txt', function(data) {
     tests = data.split("\n");
     for (test_case_num = 0; test_case_num < tests.length; test_case_num++){
       test_case = tests[test_case_num].split(",");
       input_str = test_case[0];
-      input_shift = parseInt(test_case[1]);
+      input_shift = -parseInt(test_case[1]);
       output_str = test_case[2];
       assert(overall_encryption(input_str, input_shift) === output_str);
     }
     decryption_code.value = data;
-    console.log("Javascript encryption passed");
+    console.log("Javascript decryption passed");
   });
 }
 
@@ -648,10 +648,10 @@ function copy_to_clipboard(){
 }
 
 //Run the following when instantiating the web page
-test_encryption();
+test_decryption();
 draw_wheel()
 //Convert the Python code to HTML and highlight
-jQuery.get('encrypt.py', function(data) {
+jQuery.get('decrypt.py', function(data) {
   var python_function = convert_to_HTML(data);
   decryption_code.innerHTML = python_function;
   $('pre code').each(function(i, block) {
