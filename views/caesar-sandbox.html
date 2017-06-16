@@ -1,30 +1,32 @@
 <!-- 
 Jordan Stapinski 
 Enigma Teaching Unit
-Decryption Page
+Sandbox Page
 -->
 
 <!doctype HTML>
 <link type="text/css" rel="stylesheet" href="../css/railscasts.css"  media="screen,projection"/>
 <link type="text/css" rel="stylesheet" href="../css/materialize.css"  media="screen,projection"/>
-<link type="text/css" rel="stylesheet" href="decrypt_css/decrypt.css" media="screen,projection"/>
+<link type="text/css" rel="stylesheet" href="encrypt_css/encrypt.css" media="screen,projection"/>
 <link rel="shortcut icon" href="../images/favicon.ico">
+<!-- Add background image -->
+
 <style>
 body {
-  background-image: url("../images/decrypt.png");
+  background-image: url("../images/encrypt.png");
   height: 100%;
   background-size: cover;
 }
 </style>
-<html>
-  <head>
-  	<title>Decryption Exercise</title>
-  </head>
-  <body>
 
+<html>
+	<head>
+		<title>Caesar Shift Sandbox</title>
+	</head>
+	<body>
     <div class="row">
       <div class="col s6 offset-s1">
-        <h1>Caesar Shift Decryption</h1>
+  		  <h1>Caesar Shift Sandbox</h1>
       </div>
     </div>
 
@@ -39,14 +41,14 @@ body {
     <div class='square-box' id='square-box'>
       <div class='square-content'><div>
         <span id="black-box-parent">
-          <h4 id="black_box_text">Decryption Mechanism</h4>
+          <h4 id="black_box_text">Caesar Shift Mechanism</h4>
         </span></div>
       </div>
     <!-- Buttons within Black Box container -->
       <div class="center-btn" id="button-container">
-        <a class="waves-effect waves-green btn beige black-text tooltipped" id="encrypt" data-tooltip="Try to decrypt the ciphertext!">Decrypt</a> 
-        <a class="waves-effect waves-red btn darkyellow black-text tooltipped" id="show_code" data-tooltip="Show some real computer code that decrypts the ciphertext" href="#modal1">Show Code</a>
-        <a class="waves-effect waves-red btn darkyellow black-text tooltipped" id="open_sandbox" data-tooltip="Explore using the Caesar Shift on words you choose!" href="/caesar-shift/sandbox" target="_blank">Play with Caesar Shift</a>
+        <a class="waves-effect waves-green btn beige black-text tooltipped" id="encrypt" data-tooltip="Encrypt the Plaintext!">Encrypt/Decrypt</a> 
+        <a class="waves-effect waves-red btn darkyellow black-text tooltipped" id="show_code" data-tooltip="Show some real computer code that encrypts the plaintext" href="#modal1">Show Code</a>
+        <a class="waves-effect waves-red btn deepred black-text tooltipped" id="open_sandbox" data-tooltip="Explore using the Caesar Shift on words you choose!" href="javascript:window.close();" target="_blank">Go Back to the Exercise</a>
       </div>
     </div>
 
@@ -54,9 +56,12 @@ body {
     <br/>
     <br/>
     <div class="row">
-      <div class="input-field col s3 pull-s2 tooltipped" data-tooltip="This is the encrypted text we are looking to crack!">             
-        <input disabled placeholder="ryic nypgq" id="plaintext_value" value="ryic nypgq" type="text" class="validate">
-        <label for="plaintext_value">Ciphertext</label>
+<!--       <div class="col s2 pull-s2 flow-text">
+        <p class="flow-text tooltipped" data-tooltip="This is the text we want to encrypt!">Plaintext:</p>
+      </div> -->
+      <div class="input-field col s3 pull-s2 tooltipped" data-tooltip="This is the text we want to shift through the Caesar Shift Mechanism">             
+        <input placeholder="I came, I saw, I conquered" value="I came, I saw, I conquered" id="plaintext_value" type="text" class="validate">
+        <label for="plaintext_value">Starting Text</label>
       </div>
       <!-- TODO replace -->
       <br />
@@ -70,7 +75,7 @@ body {
       <!-- Shift Value inputs -->
 
       <div class="col s1 pull-s2 flow-text">
-        <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="This is the shift value we think the encryptor used to create the ciphertext">Encryption Shift</p>
+        <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="This is how much we want to shift by (negative means to the left, and positive means to the right!)">Shift</p>
       </div>
 
       <!-- Spinner -->
@@ -88,10 +93,13 @@ body {
 
       <!-- Output fields -->
 
+<!--       <div class="col s2 push-s1 flow-text">
+        <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="Our encoded text! This will appear once we encrypt the plaintext.">Ciphertext:</p>
+      </div> -->
 
-      <div class="input-field col s3 push-s1 flow-text tooltipped" data-tooltip="This is the ciphertext decrypted using the shift value provided">
-        <input disabled placeholder="qxhb mxofp" value="qxhb mxofp" id="output_text" type="text" class="tooltipped">
-        <label for="output_text">Plaintext</label>
+      <div class="input-field col s3 push-s1 flow-text tooltipped" data-tooltip="This is the shifted starting text using the shift value passed">
+        <input disabled placeholder="J dbnf, J tbx, J dporvfsfe" value="J dbnf, J tbx, J dporvfsfe" id="output_text" type="text" class="tooltipped">
+        <label for="output_text">Final Text</label>
         <a class="waves-effect waves-green btn beige black-text" id="clipboard">Copy to Clipboard</a>
       </div>
 
@@ -105,7 +113,7 @@ body {
 
       <div class="row container">
           <p class="flow-text">
-            We have a ciphertext of: <strong>ryic nypgq</strong>, but we do not know what shift values were used to encode this. Try different shift values to see if we can reverse the encryption to something legible!
+            Play around! Try different values for the starting and ending text and run them through the Caesar Shift mechanism.
           </p>
       </div>
     </div>
@@ -191,33 +199,25 @@ ciphertext = ciphertext + (chr(encoded_letter))
       </div>
     </div>
 
-    <div id="modalSuccess" class="modal bottom-sheet">
+<!-- Modal for displaying sandbox intro -->
+
+    <div id="modal_sandbox" class="modal">
       <div class="modal-content">
-        <h4>Correct!</h4>
-        <p>Notice how the encryption code mechanism cycled through the alphabet at each letter the number of times as we indicated in our shift. Now we have some ciphertext to communicate our orders! Now let's try to decrypt some ciphertext using a similar mechanism.</p>
+        <h4>Caesar Shift Sandbox!</h4>
+        <p>Welcome to the Caesar Shift Sandbox! This page allows you to test out different starting text and shift values, and watch them run through the Caesar Shift algorithm! Just close this tab to return to your exercise.</p>
       </div>
       <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect waves-green btn navy">Continue</a>
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
       </div>
     </div>
 
-<!-- Modal for displaying positive feedback -->
-
-    <div id="modalRetry" class="modal bottom-sheet">
-      <div class="modal-content">
-        <h4>Hmm, not quite</h4>
-        <p>We decrypted something, but this is illegible and not the intended message, keep trying!</p>
-      </div>
-      <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect waves-green btn deepred">Try Again</a>
-      </div>
-    </div>
+    <!-- Importing Javascripts -->
 
     <script src="../js/highlight.pack.js"></script>
     <!-- Initialize code syntax highlighting -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="decrypt_js/decrypt.js"></script>
+    <script type="text/javascript" src="sandbox_js/sandbox.js"></script>
     <script type="text/javascript" src="../js/materialize.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-  </body>
+	</body>
 </html>

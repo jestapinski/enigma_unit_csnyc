@@ -28,6 +28,10 @@ MongoClient.connect('mongodb://localhost:27017/movie_information', function(err,
 		res.render('decrypt', {})
 	});
 
+	app.get("/caesar-shift/sandbox", function(req, res, next){
+		res.render('caesar-sandbox', {});
+	})
+
 	// Running the web server
 	var server = app.listen(3000, function() {
 	    var port = server.address().port;
