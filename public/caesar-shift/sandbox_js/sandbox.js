@@ -1,5 +1,5 @@
 // Jordan Stapinski
-// Enigma Unit Encryption Accompanying JS file
+// Enigma Unit Sandbox Accompanying JS file
 
 // Gathering document elements
 var spinUp = document.getElementById('spinUp');
@@ -11,7 +11,7 @@ var black_box_text = document.getElementById('black_box_text');
 var output_text = document.getElementById('output_text');
 var square_box = document.getElementById('square-box');
 var canvas = document.getElementById("canvas");
-var encryption_code = document.getElementById('encryption_code');
+var shift_code = document.getElementById('shift_code');
 var clipboard = document.getElementById('clipboard');
 var plaintext_solution = "move north";
 var shift_solution = 3;
@@ -264,7 +264,7 @@ function test_encryption(){
       output_str = test_case[2];
       assert(overall_encryption(input_str, input_shift) === output_str);
     }
-    encryption_code.value = data;
+    shift_code.value = data;
     console.log("Javascript encryption passed");
   });
 }
@@ -633,7 +633,7 @@ draw_wheel()
 //Convert the Python code to HTML and highlight
 jQuery.get('encrypt.py', function(data) {
   var python_function = convert_to_HTML(data);
-  encryption_code.innerHTML = python_function;
+  shift_code.innerHTML = python_function;
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });

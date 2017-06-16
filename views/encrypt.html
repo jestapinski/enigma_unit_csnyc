@@ -127,27 +127,9 @@ body {
         <h4>Encryption Code</h4>
         <p class="tooltipped" data-tooltip="Python is a computer programming language (like Java or C, which you may have heard of">Here is some Python computer code that performs the Caesar Shift given some plaintext and a shifting value:</p>
 
-        <!-- Python shift code -->
+        <!-- Python shift code (filled in automatically) -->
 
         <pre><code id="encryption_code">
-def caesar_shift(plaintext, shift_value=5):
-  ciphertext = ""
-  <a onmouseover="if(enable_tooltips){$('#modalForLoop').modal('open')}">for eachletter in plaintext:</a> 
-
-    #if adding shift constant puts out of alphabet (> ord(z)) then sub ord(a)
-    <a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">encoded_letter = ord(c) + shift_value</a>
-
-    #if our shift would go beyond the letter z then we wrap around to the start
-    if encoded_letter > ord('z'):
-      encoded_letter = ord('a') + (encoded_letter - ord('z')) - 1
-
-    #if our shift would go before the letter a then we wrap around to the end
-    if encoded_letter < ord('a'):
-      encoded_letter = ord('z') - (ord('a') - encoded_letter) + 1
-    
-    #put our new letter on the end of our ciphertext
-    <a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">ciphertext = ciphertext + (chr(encoded_letter))</a>
-  return ciphertext
         </code></pre>
 
       <!-- Toggle scrollover modals -->
@@ -222,6 +204,16 @@ ciphertext = ciphertext + (chr(encoded_letter))
       </div>
       <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn deepred">Try Again</a>
+      </div>
+    </div>
+
+    <div id="modal_encrypt" class="modal">
+      <div class="modal-content">
+        <h4>Caesar Shift Encryption</h4>
+        <p>One method of encrypting some text is through a <strong>Caesar Shift</strong>, in which we specify a number and direction which we move in the alphabet for each letter in our original text to get our encrypted text. Try the encryption example here, and feel free to click on the "Play with Caesar Shift" button to insert your own text and shift values to see the Caesar Shift in action!</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn navy">Go!</a>
       </div>
     </div>
 

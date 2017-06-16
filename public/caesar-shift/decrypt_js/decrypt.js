@@ -11,7 +11,7 @@ var black_box_text = document.getElementById('black_box_text');
 var output_text = document.getElementById('output_text');
 var square_box = document.getElementById('square-box');
 var canvas = document.getElementById("canvas");
-var encryption_code = document.getElementById('encryption_code');
+var decryption_code = document.getElementById('decryption_code');
 var clipboard = document.getElementById('clipboard');
 
 // Initializing Shift array constants
@@ -266,7 +266,7 @@ function test_encryption(){
       output_str = test_case[2];
       assert(overall_encryption(input_str, input_shift) === output_str);
     }
-    encryption_code.value = data;
+    decryption_code.value = data;
     console.log("Javascript encryption passed");
   });
 }
@@ -653,10 +653,11 @@ draw_wheel()
 //Convert the Python code to HTML and highlight
 jQuery.get('encrypt.py', function(data) {
   var python_function = convert_to_HTML(data);
-  encryption_code.innerHTML = python_function;
+  decryption_code.innerHTML = python_function;
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
+  $('#modal_decrypt').modal('open');
 });
 
 //Bind buttons to events

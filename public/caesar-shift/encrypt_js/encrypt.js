@@ -655,6 +655,7 @@ jQuery.get('encrypt.py', function(data) {
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
+  $('#modal_encrypt').modal('open');
 });
 
 //Bind buttons to events

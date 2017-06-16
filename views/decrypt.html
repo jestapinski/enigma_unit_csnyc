@@ -114,30 +114,11 @@ body {
 
     <div id="modal1" class="modal">
       <div class="modal-content">
-        <h4>Encryption Code</h4>
-        <p class="tooltipped" data-tooltip="Python is a computer programming language (like Java or C, which you may have heard of">Here is some Python computer code that performs the Caesar Shift given some plaintext and a shifting value:</p>
+        <h4>Decryption Code</h4>
+        <p class="tooltipped" data-tooltip="Python is a computer programming language (like Java or C, which you may have heard of">Here is some Python computer code that performs the Caesar Shift given some plaintext and a shifting value, note we can use the same code to encrypt and decrypt by inputting the shift_value in the opposite direction!:</p>
 
-        <!-- Python shift code -->
-
-        <pre><code id="encryption_code">
-def caesar_shift(plaintext, shift_value=5):
-  ciphertext = ""
-  <a onmouseover="if(enable_tooltips){$('#modalForLoop').modal('open')}">for eachletter in plaintext:</a> 
-
-    #if adding shift constant puts out of alphabet (> ord(z)) then sub ord(a)
-    <a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">encoded_letter = ord(c) + shift_value</a>
-
-    #if our shift would go beyond the letter z then we wrap around to the start
-    if encoded_letter > ord('z'):
-      encoded_letter = ord('a') + (encoded_letter - ord('z')) - 1
-
-    #if our shift would go before the letter a then we wrap around to the end
-    if encoded_letter < ord('a'):
-      encoded_letter = ord('z') - (ord('a') - encoded_letter) + 1
-    
-    #put our new letter on the end of our ciphertext
-    <a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">ciphertext = ciphertext + (chr(encoded_letter))</a>
-  return ciphertext
+        <!-- Python shift code (filled in automatically) -->
+        <pre><code id="decryption_code">
         </code></pre>
 
       <!-- Toggle scrollover modals -->
@@ -210,6 +191,16 @@ ciphertext = ciphertext + (chr(encoded_letter))
       </div>
       <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn deepred">Try Again</a>
+      </div>
+    </div>
+
+    <div id="modal_decrypt" class="modal">
+      <div class="modal-content">
+        <h4>Caesar Shift Decryption</h4>
+        <p>Now that we have seen how to encrypt some text using a Caesar Shift, we have a new task. We have intercepted some Ciphertext <strong>ryic nypgq</strong>. We know it was encrypted with a Caesar Shift, but we do not know what it means. Can you use different Encryption Shift possibilities to see if we can decode the message?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn navy">Go!</a>
       </div>
     </div>
 
