@@ -1,13 +1,13 @@
 import string
-def caesar_shift_decrypt(plaintext, shift_value=5):
+def caesar_shift_decrypt(ciphertext, shift_value=5):
   #we can flip the shift value we think the encryptor used to decrypt the message!
   shift_value = -shift_value
-  ciphertext = ""
+  plaintext = ""
   #<a onmouseover="if(enable_tooltips){$('#modalForLoop').modal('open')}">for eachletter in plaintext:</a> 
-  for eachletter in plaintext.lower():
+  for eachletter in ciphertext.lower():
     #if our letter is not a letter, keep it and move on!
     if eachletter not in string.ascii_letters:
-      ciphertext = ciphertext + eachletter
+      plaintext = plaintext + eachletter
       continue
 
     #if adding shift constant puts out of alphabet (> ord(z)) then sub ord(a)
@@ -24,8 +24,8 @@ def caesar_shift_decrypt(plaintext, shift_value=5):
     
     #put our new letter on the end of our ciphertext
     #<a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">ciphertext = ciphertext + (chr(encoded_letter))</a>
-    ciphertext = ciphertext + (chr(encoded_letter))
-  return ciphertext
+    plaintext = plaintext + (chr(encoded_letter))
+  return plaintext
 #END#
 
 def test_decryption():
