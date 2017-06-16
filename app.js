@@ -32,6 +32,10 @@ MongoClient.connect('mongodb://localhost:27017/movie_information', function(err,
 		res.render('caesar-sandbox', {});
 	})
 
+	app.get("/password/encrypt", function(req, res, next){
+		res.render('password-encrypt', {});
+	})
+
 	// Running the web server
 	var server = app.listen(3000, function() {
 	    var port = server.address().port;
