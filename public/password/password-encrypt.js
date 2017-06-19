@@ -10,6 +10,7 @@ var current_word_index = 0;
 var given_word = '';
 var box_height = 50;
 var text_height_offset = box_height * (3.0/5);
+var margin = 5;
 
 /*
   caesar_encrypt_one_letter
@@ -48,7 +49,24 @@ function caesar_encrypt_one_letter(initial_char, shift_value){
   return String.fromCharCode(new_letter_ascii);
 }
 
-function animate_ciphertext(ciphertext){
+function animate_ciphertext(plaintext, ciphertext, ctx){
+  var canvas = document.getElementById('black_box_canvas');
+  var box_width = (canvas.clientWidth - 2 * margin) / plaintext.length;
+  var box_height = 50;
+  // draw plaintext
+  // loop through ciphertext and draw
+  for (var i = 0; i < plaintext.length; i++){
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(margin + (i * box_width), 0, box_width, box_height);
+    ctx.fillStyle = "#000000";
+    ctx.textAlign = "center";
+    ctx.font = '20px Arial';
+    ctx.fillText(plaintext[i], margin + box_width * (i + (1.0 / 2)), text_height_offset);
+    ctx.beginPath();
+    ctx.moveTo(margin + (i * box_width), 0);
+    ctx.lineTo(margin + (i * box_width), box_height);
+    ctx.stroke();
+  }
 	return;
 }
 
@@ -129,13 +147,34 @@ function assert(condition) {
 */
 function run_encryption(){
 	var final_word, password, plaintext;
+  var parent_node = document.getElementById("black-box-parent");
+  var black_box_text = document.getElementById('black_box_text');
+  var ctx;
 	$('#word_shift_text').removeAttr('hidden');
 	password = password_value.value;
 	plaintext = plaintext_value.value;
 	final_word = password_encrypt(plaintext, password, current_word_index);
-	output_text.value = final_word;
-	animate_ciphertext(final_word);
-  draw_word_position();
+  if (document.getElementById("black_box_canvas")){
+    document.getElementById("black_box_canvas").remove();
+  }
+  //Create a new canvas and place it in the encryption box
+  canvas = document.createElement("canvas");
+  canvas.width = 300;
+  canvas.height = 200;
+  canvas.id = "black_box_canvas";
+
+  parent_node.appendChild(canvas);
+  ctx = canvas.getContext('2d');
+  black_box_text.remove();
+  if (black_box_text.parent_node){
+    black_box_text.parent_node.removeChild(black_box_text);
+  }
+
+  //Disable the ability to encrypt for now
+  $("#encrypt").addClass('disabled');
+  output_text.value = final_word;
+	animate_ciphertext(plaintext, final_word, ctx);
+  draw_word_position(0);
 }
 
 /*
@@ -204,21 +243,21 @@ function draw_word(ctx){
   var word = password_value.value;
   var canvas_width = word_shift_canvas.clientWidth;
   var box_width = canvas_width / (word.length);
-  //Draw white boxes
   for (var i = 0; i < word.length; i++){
+    //Background box
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(i * box_width, 0, box_width, box_height);
+    //Dividers
     ctx.fillStyle = "#000000";
     ctx.beginPath();
     ctx.moveTo(i * box_width, 0);
     ctx.lineTo(i * box_width, box_height);
     ctx.stroke();
+    //Letters
     ctx.font = "30px Arial";    
     ctx.textAlign = "center";
     ctx.fillText(word[i], box_width * (i + 1.0/2), text_height_offset);
   }
-  //Draw outlines
-  //Draw letters
   return;
 }
 
@@ -227,6 +266,16 @@ function highlight_word_position(ctx, word_index){
   var canvas_width = word_shift_canvas.clientWidth;
   var box_width = canvas_width / (word.length);
   // Draw yellow box the box_width and height as needed
+  ctx.fillStyle = "#F8CA4D";
+  ctx.fillRect(word_index * box_width, 0, box_width, box_height);
+  ctx.fillStyle = "#000000";
+  ctx.beginPath();
+  ctx.moveTo(word_index * box_width, 0);
+  ctx.lineTo(word_index * box_width, box_height);
+  ctx.stroke();
+  ctx.font = "30px Arial";    
+  ctx.textAlign = "center";
+  ctx.fillText(word[word_index], box_width * (word_index + 1.0/2), text_height_offset);
   return;
 }
 
@@ -284,6 +333,7 @@ function convert_to_HTML(data){
   return final_python_code.join("\n");
 }
 
+// Run the password encrypt algorithm unit tests
 jQuery.get('password-encrypt.py', function(data) {
   var python_function = convert_to_HTML(data);
   encryption_code.innerHTML = python_function;
