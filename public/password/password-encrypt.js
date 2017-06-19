@@ -46,24 +46,83 @@ function caesar_encrypt_one_letter(initial_char, shift_value){
   return String.fromCharCode(new_letter_ascii);
 }
 
+function animate_ciphertext(ciphertext){
+	return;
+}
 
+/*
+  password_encrypt
+
+  plaintext: The plaintext value we want to encrypt
+  password: The encryption password we will use to generate substitution shifts
+
+  returns the encrypted plaintext using the provided password and the current
+  word index.
+*/
+function password_encrypt(plaintext, password, word_index){
+	var final_word = '';
+  var a_value = 'a'.charCodeAt(0);
+  var shift_value, total_index, encryption_letter;
+	for (letter_index in plaintext){
+		total_index = word_index + parseInt(letter_index);
+		encryption_letter = password[total_index % password.length];
+		shift_value = encryption_letter.toLowerCase().charCodeAt(0) - a_value;
+		final_word += caesar_encrypt_one_letter(plaintext[letter_index], 
+													shift_value=shift_value);
+	}
+  return final_word;
+}
+
+function test_password_encrypt(){
+  var tests, test_case_num, test_case, input_str, input_shift, output_str;
+  jQuery.get('password-encrypt-tests.txt', function(data) {
+    tests = data.split("\n");
+    for (test_case_num = 0; test_case_num < tests.length; test_case_num++){
+      test_case = tests[test_case_num].split(",");
+      input_str = test_case[0];
+      password = test_case[1];
+      input_shift = parseInt(test_case[2]);
+      output_str = test_case[3];
+      assert(password_encrypt(input_str, password, input_shift) === output_str);
+    }
+    console.log("Javascript password encryption passed");
+  });
+}
+
+test_password_encrypt()
+
+/*
+  assert
+
+  condition: The condition we want to check true or false ASSUMES a boolean
+  No return value
+
+  assert simply continues if the passed condition is true, and throws an 
+  exception otherwise
+*/
+function assert(condition) {
+  if (!condition) {
+    throw "Encryption Test failed";
+  }
+}
+
+/*
+	run_encryption
+
+  No inputs
+  No return value
+
+  Runs the encryption process, including encrypting the current plaintext value,
+  showing the necessary animations, and updating UI elements.
+*/
 function run_encryption(){
-	var final_word, password, word_index, plaintext, encryption_letter;
-	var shift_value;
-	var a_value = 'a'.charCodeAt(0);
+	var final_word, password, plaintext;
 	$('#word_shift_text').removeAttr('hidden');
 	password = password_value.value;
-	word_index = current_word_index;
 	plaintext = plaintext_value.value;
-	final_word = '';
-	for (letter_index in plaintext){
-		encryption_letter = password[(current_word_index + letter_index) % password.length];
-		shift_value = encryption_letter.toLowerCase().charCodeAt(0) - a_value;
-		final_word += caesar_encrypt_one_letter(plaintext[letter_index], shift_value=shift_value);
-		console.log(final_word);
-	}
+	final_word = password_encrypt(plaintext, password, current_word_index);
 	output_text.value = final_word;
-
+	animate_ciphertext(final_word);
 }
 
 /*
