@@ -8,6 +8,8 @@ var plaintext_value = document.getElementById('plaintext_value');
 var output_text = document.getElementById('output_text');
 var current_word_index = 0;
 var given_word = '';
+var box_height = 50;
+var text_height_offset = box_height * (3.0/5);
 
 /*
   caesar_encrypt_one_letter
@@ -133,6 +135,7 @@ function run_encryption(){
 	final_word = password_encrypt(plaintext, password, current_word_index);
 	output_text.value = final_word;
 	animate_ciphertext(final_word);
+  draw_word_position();
 }
 
 /*
@@ -195,6 +198,52 @@ function draw_index_wheel(){
 		draw_inner_triangle(ctx);
 		draw_current_index_value(ctx);
 	}
+}
+
+function draw_word(ctx){
+  var word = password_value.value;
+  var canvas_width = word_shift_canvas.clientWidth;
+  var box_width = canvas_width / (word.length);
+  //Draw white boxes
+  for (var i = 0; i < word.length; i++){
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(i * box_width, 0, box_width, box_height);
+    ctx.fillStyle = "#000000";
+    ctx.beginPath();
+    ctx.moveTo(i * box_width, 0);
+    ctx.lineTo(i * box_width, box_height);
+    ctx.stroke();
+    ctx.font = "30px Arial";    
+    ctx.textAlign = "center";
+    ctx.fillText(word[i], box_width * (i + 1.0/2), text_height_offset);
+  }
+  //Draw outlines
+  //Draw letters
+  return;
+}
+
+function highlight_word_position(ctx, word_index){
+  var word = password_value.value;
+  var canvas_width = word_shift_canvas.clientWidth;
+  var box_width = canvas_width / (word.length);
+  // Draw yellow box the box_width and height as needed
+  return;
+}
+
+/*
+
+*/
+function draw_word_position(word_index){
+  var ctx;
+  if (word_shift_canvas.getContext){
+    ctx = word_shift_canvas.getContext('2d');
+    //Might want to clear canvas here
+    var canvas_width = word_shift_canvas.clientWidth;
+    var canvas_height = word_shift_canvas.clientHeight;
+    ctx.clearRect(0, 0, canvas_width, canvas_height);
+    draw_word(ctx);
+    highlight_word_position(ctx, word_index);
+  }
 }
 
 /*
