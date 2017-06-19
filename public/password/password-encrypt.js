@@ -55,6 +55,7 @@ function animate_ciphertext(ciphertext){
 
   plaintext: The plaintext value we want to encrypt
   password: The encryption password we will use to generate substitution shifts
+  word_index: The index of the password we want to start on
 
   returns the encrypted plaintext using the provided password and the current
   word index.
@@ -73,6 +74,17 @@ function password_encrypt(plaintext, password, word_index){
   return final_word;
 }
 
+
+/*
+  test_password_encrypt
+
+  No inputs
+  No return value
+
+  Tests the password_encrypt function using test inputs and expected outputs
+  found in password-encrypt-tests.txt, raising an assertion failure if a test
+  fails, or outputting a success message to the console otherwise.
+*/
 function test_password_encrypt(){
   var tests, test_case_num, test_case, input_str, input_shift, output_str;
   jQuery.get('password-encrypt-tests.txt', function(data) {
@@ -88,8 +100,6 @@ function test_password_encrypt(){
     console.log("Javascript password encryption passed");
   });
 }
-
-test_password_encrypt()
 
 /*
   assert
@@ -187,5 +197,52 @@ function draw_index_wheel(){
 	}
 }
 
+/*
+  convert_to_HTML
+
+  data: The raw test from the Python file we want to parse
+  returns an HTML-formatted piece of Python code
+
+  convert_to_HTML takes in raw python text which follows the following
+  conventions and converts it to formatted HTML:
+    - for each line that is formatted, a commented line should be above with
+      the exact HTML we wish to use in the application
+    - the formats begin with a <a tag directly after the comment (i.e. #<a)
+    - the code portion we wish to use ends with a #END# line
+    - see encrypt.py for an example
+*/
+function convert_to_HTML(data){
+  var python_lines = data.split("\n");
+  var python_line, i;
+  var final_python_code = [];
+  var skip_flag = false;
+  for (i = 0; i < python_lines.length; i++){
+    if (skip_flag){
+      skip_flag = false;
+      continue;
+    }
+    python_line = python_lines[i];
+    if (python_line == "#END#"){
+      break;
+    }
+    if (python_line.trim().substring(0, 3) == "#<a"){
+      final_python_code.push(python_line.replace("#", ""));
+      skip_flag = true;
+    } else {
+      final_python_code.push(python_line);
+    }
+  }
+  return final_python_code.join("\n");
+}
+
+jQuery.get('password-encrypt.py', function(data) {
+  var python_function = convert_to_HTML(data);
+  encryption_code.innerHTML = python_function;
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+
+test_password_encrypt()
 encrypt.addEventListener('click', run_encryption);
 setTimeout(run_start_modal, 600);
