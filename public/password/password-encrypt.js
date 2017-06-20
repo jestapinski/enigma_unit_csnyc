@@ -13,7 +13,7 @@ var box_height = 50;
 var box_height_offset = 100;
 var text_height_offset = box_height * (3.0/5);
 var margin = 5;
-var time_duration = 10;
+var time_duration = 7;
 
 /*
   caesar_encrypt_one_letter
@@ -52,29 +52,67 @@ function caesar_encrypt_one_letter(initial_char, shift_value){
   return String.fromCharCode(new_letter_ascii);
 }
 
-function animate_ciphertext(word_index, step, ciphertext, ctx, box_width){
+function animate_ciphertext(word_index, step, ciphertext, ctx, box_width, plaintext){
   var max_step = 50;
   var canvas_width = 500;
+  var text_start_x, text_height;
   //Move on to next letter
   if (step >= max_step){
     if (word_index === (ciphertext.length - 1)){
+      draw_plaintext(plaintext, ctx);
+      draw_word_position(-1);
+      $("#encrypt").removeClass('disabled');
       return;
     }
-    setTimeout(animate_ciphertext, time_duration, word_index + 1, 0, ciphertext, ctx, box_width);
+    setTimeout(animate_ciphertext, time_duration, word_index + 1, 0, ciphertext, ctx, box_width, plaintext);
     return;
   }
-  // Draw this one a touch higher
-  ctx.clearRect(margin + word_index * box_width, box_height + box_height_offset, box_width, box_height);
-  ctx.fillStyle = "#FFFFFF";
-  ctx.fillRect(margin + word_index * box_width, box_height + box_height_offset, box_width, box_height);
-  ctx.fillStyle = "#000000";
+  text_start_x = margin + word_index * box_width + box_width / 2;
+  draw_plaintext(plaintext, ctx);
+  draw_word_position(word_index);
+  ctx.fillStyle = "#F8CA4D";
   ctx.textAlign = "center";
   ctx.font = '20px Arial';
-  ctx.fillText(ciphertext[word_index], margin + word_index * box_width + box_width / 2, box_height + box_height_offset + text_height_offset + 50 - step);
-  ctx.fillText(ciphertext[word_index], margin + word_index * box_width + box_width / 2, box_height + box_height_offset + text_height_offset - step);
+  ctx.fillRect(margin + word_index * box_width, 0, box_width, box_height);
+  ctx.fillStyle = "#000000";
+  ctx.fillText(plaintext[word_index], text_start_x, text_height_offset);
+  ctx.fillStyle = "#FFFFFF";
+  // Draw this one a touch higher
+  ctx.clearRect(margin + word_index * box_width, box_height + box_height_offset, box_width, box_height);
+  ctx.fillRect(margin + word_index * box_width, box_height + box_height_offset, box_width, box_height);
+  ctx.fillStyle = "#000000";
+
+  text_height = box_height + box_height_offset + text_height_offset - step;
+  ctx.fillText(ciphertext[word_index], text_start_x, text_height + box_height);
+  ctx.fillText(plaintext[word_index], text_start_x, text_height);
+  ctx.beginPath();
+  ctx.moveTo(margin + (word_index * box_width), box_height + box_height_offset);
+  ctx.lineTo(margin + (word_index * box_width), box_height + box_height + box_height_offset);
+  ctx.stroke();
   ctx.fillStyle = "#3F5666";
   ctx.fillRect(0, box_height, canvas_width, box_height_offset);
-  setTimeout(animate_ciphertext, time_duration, word_index, step + 1, ciphertext, ctx, box_width);
+  ctx.fillRect(0, 2 * box_height + box_height_offset, canvas_width, box_height_offset);
+  setTimeout(animate_ciphertext, time_duration, word_index, step + 1, ciphertext, ctx, box_width, plaintext);
+}
+
+function draw_plaintext(plaintext, ctx){
+  var canvas = document.getElementById('black_box_canvas');
+  var box_width = (square_box.clientWidth - 2 * margin) / plaintext.length;
+  var box_height = 50;
+  // draw plaintext
+  ctx.clearRect(0, 0, canvas.clientWidth, box_height);
+  for (var i = 0; i < plaintext.length; i++){
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(margin + (i * box_width), 0, box_width, box_height);
+    ctx.fillStyle = "#000000";
+    ctx.textAlign = "center";
+    ctx.font = '20px Arial';
+    ctx.fillText(plaintext[i], margin + box_width * (i + (1.0 / 2)), text_height_offset);
+    ctx.beginPath();
+    ctx.moveTo(margin + (i * box_width), 0);
+    ctx.lineTo(margin + (i * box_width), box_height);
+    ctx.stroke();
+  }  
 }
 
 function draw_text_animations(plaintext, ciphertext, ctx){
@@ -94,20 +132,7 @@ function draw_text_animations(plaintext, ciphertext, ctx){
     ctx.lineTo(margin + (i * box_width), box_height);
     ctx.stroke();
   }
-  animate_ciphertext(0, 0, ciphertext, ctx, box_width);
-  // loop through ciphertext and draw
-  // for (i = 0; i < ciphertext.length; i++){
-  //   ctx.fillStyle = "#FFFFFF";
-  //   ctx.fillRect(margin + (i * box_width), box_height_offset, box_width, box_height);
-  //   ctx.fillStyle = "#000000";
-  //   ctx.textAlign = "center";
-  //   ctx.font = '20px Arial';
-  //   ctx.fillText(ciphertext[i], margin + box_width * (i + (1.0 / 2)), text_height_offset + box_height_offset);
-  //   ctx.beginPath();
-  //   ctx.moveTo(margin + (i * box_width), box_height_offset);
-  //   ctx.lineTo(margin + (i * box_width), box_height + box_height_offset);
-  //   ctx.stroke();    
-  // }
+  animate_ciphertext(0, 0, ciphertext, ctx, box_width, plaintext);
 	return;
 }
 
@@ -206,16 +231,17 @@ function run_encryption(){
 
   parent_node.appendChild(canvas);
   ctx = canvas.getContext('2d');
-  black_box_text.remove();
-  if (black_box_text.parent_node){
-    black_box_text.parent_node.removeChild(black_box_text);
+  if (black_box_text){
+    if (black_box_text.parent_node){
+      black_box_text.parent_node.removeChild(black_box_text);
+    }
+    black_box_text.remove();    
   }
 
   //Disable the ability to encrypt for now
   $("#encrypt").addClass('disabled');
   output_text.value = final_word;
 	draw_text_animations(plaintext, final_word, ctx);
-  draw_word_position(0);
 }
 
 /*
@@ -306,6 +332,7 @@ function highlight_word_position(ctx, word_index){
   var word = password_value.value;
   var canvas_width = word_shift_canvas.clientWidth;
   var box_width = canvas_width / (word.length);
+  word_index = word_index % word.length;
   // Draw yellow box the box_width and height as needed
   ctx.fillStyle = "#F8CA4D";
   ctx.fillRect(word_index * box_width, 0, box_width, box_height);
@@ -332,7 +359,9 @@ function draw_word_position(word_index){
     var canvas_height = word_shift_canvas.clientHeight;
     ctx.clearRect(0, 0, canvas_width, canvas_height);
     draw_word(ctx);
-    highlight_word_position(ctx, word_index);
+    if (word_index !== -1){
+      highlight_word_position(ctx, word_index);      
+    }
   }
 }
 
