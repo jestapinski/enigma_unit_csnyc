@@ -7,6 +7,8 @@ var password_value = document.getElementById('password_value');
 var plaintext_value = document.getElementById('plaintext_value');
 var output_text = document.getElementById('output_text');
 var square_box = document.getElementById('square-box');
+var encrypt = document.getElementById('encrypt');
+var instruction_text = document.getElementById('instructions_text');
 var current_word_index = 0;
 var given_word = '';
 var box_height = 50;
@@ -17,6 +19,11 @@ var time_duration = 7;
 var instruction_speed = 500;
 var a_value = 'a'.charCodeAt(0);
 var hidden_text = false;
+var instructions = "Write your own <strong>plaintext message of at least 5 \
+                  letters</strong> and <strong>password of at least 5 letters\
+                  </strong> such that the encrypted text is composed of all \
+                  <strong>unique letters</strong> (i.e. no letter is in the \
+                  encrypted text twice)!";
 
 /*
   caesar_encrypt_one_letter
@@ -604,6 +611,7 @@ function convert_to_HTML(data){
 jQuery.get('password-encrypt.py', function(data) {
   var python_function = convert_to_HTML(data);
   encryption_code.innerHTML = python_function;
+  instruction_text.innerHTML = instructions;
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
