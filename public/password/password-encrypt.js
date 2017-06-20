@@ -12,8 +12,9 @@ var given_word = '';
 var box_height = 50;
 var box_height_offset = 100;
 var text_height_offset = box_height * (3.0/5);
-var margin = 5;
+var margin = 10;
 var time_duration = 7;
+var a_value = 'a'.charCodeAt(0);
 
 /*
   caesar_encrypt_one_letter
@@ -52,9 +53,48 @@ function caesar_encrypt_one_letter(initial_char, shift_value){
   return String.fromCharCode(new_letter_ascii);
 }
 
-function animate_ciphertext(word_index, step, ciphertext, ctx, box_width, plaintext){
+function draw_highlighted_letter(ctx, word_index, plaintext, text_start_x, box_width){
+  ctx.fillStyle = "#F8CA4D";
+  ctx.textAlign = "center";
+  ctx.font = '20px Arial';
+  ctx.fillRect(margin + word_index * box_width, 0, box_width, box_height);
+  ctx.fillStyle = "#000000";
+  ctx.fillText(plaintext[word_index], text_start_x, text_height_offset);
+  ctx.fillStyle = "#FFFFFF";
+}
+
+function animate_text_draw_lines(ctx, ciphertext, plaintext, word_index, text_start_x, box_width, text_height){
+  ctx.fillText(ciphertext[word_index], text_start_x, text_height + box_height);
+  ctx.fillText(plaintext[word_index], text_start_x, text_height);
+  ctx.beginPath();
+  ctx.moveTo(margin + (word_index * box_width), box_height + box_height_offset);
+  ctx.lineTo(margin + (word_index * box_width), box_height + box_height + box_height_offset);
+  ctx.stroke();
+}
+
+function clear_text_overflow(ctx, canvas_width){
+  ctx.fillStyle = "#3F5666";
+  ctx.fillRect(0, box_height, canvas_width, box_height_offset);
+  ctx.fillRect(0, 2 * box_height + box_height_offset, canvas_width, box_height_offset);
+}
+
+function draw_process_text(ctx, plaintext, password_shift, word_index, ciphertext){
+  ctx.fillStyle = "#000000";
+  var shift_text = 'Shifting ';
+  ctx.textAlign = "left";
+  if (!(plaintext[word_index].toLowerCase().match(/[a-z]/i))){
+    shift_text = 'Not changing \''.concat(plaintext[word_index], '\' because it is not a letter');
+  } else {
+    shift_text = shift_text.concat(plaintext[word_index], ' by ', password_shift, ' to get ', ciphertext[word_index]);    
+  }
+  ctx.fillText(shift_text, margin, box_height_offset);
+}
+
+function animate_ciphertext(word_index, step, ciphertext, ctx, box_width, plaintext, password){
   var max_step = 50;
   var canvas_width = 500;
+  var password_index = word_index % password.length;
+  var password_shift = password[password_index].charCodeAt(0) - a_value;
   var text_start_x, text_height;
   //Move on to next letter
   if (step >= max_step){
@@ -64,35 +104,25 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width, plaint
       $("#encrypt").removeClass('disabled');
       return;
     }
-    setTimeout(animate_ciphertext, time_duration, word_index + 1, 0, ciphertext, ctx, box_width, plaintext);
+    setTimeout(animate_ciphertext, time_duration, word_index + 1, 0, ciphertext, ctx, box_width, plaintext, password);
     return;
   }
   text_start_x = margin + word_index * box_width + box_width / 2;
   draw_plaintext(plaintext, ctx);
   draw_word_position(word_index);
-  ctx.fillStyle = "#F8CA4D";
-  ctx.textAlign = "center";
-  ctx.font = '20px Arial';
-  ctx.fillRect(margin + word_index * box_width, 0, box_width, box_height);
-  ctx.fillStyle = "#000000";
-  ctx.fillText(plaintext[word_index], text_start_x, text_height_offset);
-  ctx.fillStyle = "#FFFFFF";
+  draw_highlighted_letter(ctx, word_index, plaintext, text_start_x, box_width);
   // Draw this one a touch higher
   ctx.clearRect(margin + word_index * box_width, box_height + box_height_offset, box_width, box_height);
   ctx.fillRect(margin + word_index * box_width, box_height + box_height_offset, box_width, box_height);
   ctx.fillStyle = "#000000";
 
   text_height = box_height + box_height_offset + text_height_offset - step;
-  ctx.fillText(ciphertext[word_index], text_start_x, text_height + box_height);
-  ctx.fillText(plaintext[word_index], text_start_x, text_height);
-  ctx.beginPath();
-  ctx.moveTo(margin + (word_index * box_width), box_height + box_height_offset);
-  ctx.lineTo(margin + (word_index * box_width), box_height + box_height + box_height_offset);
-  ctx.stroke();
-  ctx.fillStyle = "#3F5666";
-  ctx.fillRect(0, box_height, canvas_width, box_height_offset);
-  ctx.fillRect(0, 2 * box_height + box_height_offset, canvas_width, box_height_offset);
-  setTimeout(animate_ciphertext, time_duration, word_index, step + 1, ciphertext, ctx, box_width, plaintext);
+  animate_text_draw_lines(ctx, ciphertext, plaintext, word_index, text_start_x, box_width, text_height);
+  clear_text_overflow(ctx, canvas_width);
+
+  draw_process_text(ctx, plaintext, password_shift, word_index, ciphertext);
+
+  setTimeout(animate_ciphertext, time_duration, word_index, step + 1, ciphertext, ctx, box_width, plaintext, password);
 }
 
 function draw_plaintext(plaintext, ctx){
@@ -115,7 +145,7 @@ function draw_plaintext(plaintext, ctx){
   }  
 }
 
-function draw_text_animations(plaintext, ciphertext, ctx){
+function draw_text_animations(plaintext, ciphertext, ctx, password){
   var canvas = document.getElementById('black_box_canvas');
   var box_width = (square_box.clientWidth - 2 * margin) / plaintext.length;
   var box_height = 50;
@@ -132,7 +162,7 @@ function draw_text_animations(plaintext, ciphertext, ctx){
     ctx.lineTo(margin + (i * box_width), box_height);
     ctx.stroke();
   }
-  animate_ciphertext(0, 0, ciphertext, ctx, box_width, plaintext);
+  animate_ciphertext(0, 0, ciphertext, ctx, box_width, plaintext, password);
 	return;
 }
 
@@ -241,7 +271,7 @@ function run_encryption(){
   //Disable the ability to encrypt for now
   $("#encrypt").addClass('disabled');
   output_text.value = final_word;
-	draw_text_animations(plaintext, final_word, ctx);
+	draw_text_animations(plaintext, final_word, ctx, password);
 }
 
 /*
@@ -311,6 +341,7 @@ function draw_word(ctx){
   var canvas_width = word_shift_canvas.clientWidth;
   var box_width = canvas_width / (word.length);
   for (var i = 0; i < word.length; i++){
+    var alphabet_position = word[i].charCodeAt(0) - a_value;
     //Background box
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(i * box_width, 0, box_width, box_height);
@@ -324,6 +355,8 @@ function draw_word(ctx){
     ctx.font = "30px Arial";    
     ctx.textAlign = "center";
     ctx.fillText(word[i], box_width * (i + 1.0/2), text_height_offset);
+    ctx.font = "20px Arial";    
+    ctx.fillText(alphabet_position, box_width * (i + 1.0/2), text_height_offset + box_height);
   }
   return;
 }
