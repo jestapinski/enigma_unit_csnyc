@@ -6,11 +6,14 @@ var word_shift_canvas = document.getElementById('word_shift_canvas');
 var password_value = document.getElementById('password_value');
 var plaintext_value = document.getElementById('plaintext_value');
 var output_text = document.getElementById('output_text');
+var square_box = document.getElementById('square-box');
 var current_word_index = 0;
 var given_word = '';
 var box_height = 50;
+var box_height_offset = 100;
 var text_height_offset = box_height * (3.0/5);
 var margin = 5;
+var time_duration = 10;
 
 /*
   caesar_encrypt_one_letter
@@ -49,12 +52,36 @@ function caesar_encrypt_one_letter(initial_char, shift_value){
   return String.fromCharCode(new_letter_ascii);
 }
 
-function animate_ciphertext(plaintext, ciphertext, ctx){
+function animate_ciphertext(word_index, step, ciphertext, ctx, box_width){
+  var max_step = 50;
+  var canvas_width = 500;
+  //Move on to next letter
+  if (step >= max_step){
+    if (word_index === (ciphertext.length - 1)){
+      return;
+    }
+    setTimeout(animate_ciphertext, time_duration, word_index + 1, 0, ciphertext, ctx, box_width);
+    return;
+  }
+  // Draw this one a touch higher
+  ctx.clearRect(margin + word_index * box_width, box_height + box_height_offset, box_width, box_height);
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(margin + word_index * box_width, box_height + box_height_offset, box_width, box_height);
+  ctx.fillStyle = "#000000";
+  ctx.textAlign = "center";
+  ctx.font = '20px Arial';
+  ctx.fillText(ciphertext[word_index], margin + word_index * box_width + box_width / 2, box_height + box_height_offset + text_height_offset + 50 - step);
+  ctx.fillText(ciphertext[word_index], margin + word_index * box_width + box_width / 2, box_height + box_height_offset + text_height_offset - step);
+  ctx.fillStyle = "#3F5666";
+  ctx.fillRect(0, box_height, canvas_width, box_height_offset);
+  setTimeout(animate_ciphertext, time_duration, word_index, step + 1, ciphertext, ctx, box_width);
+}
+
+function draw_text_animations(plaintext, ciphertext, ctx){
   var canvas = document.getElementById('black_box_canvas');
-  var box_width = (canvas.clientWidth - 2 * margin) / plaintext.length;
+  var box_width = (square_box.clientWidth - 2 * margin) / plaintext.length;
   var box_height = 50;
   // draw plaintext
-  // loop through ciphertext and draw
   for (var i = 0; i < plaintext.length; i++){
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(margin + (i * box_width), 0, box_width, box_height);
@@ -67,6 +94,20 @@ function animate_ciphertext(plaintext, ciphertext, ctx){
     ctx.lineTo(margin + (i * box_width), box_height);
     ctx.stroke();
   }
+  animate_ciphertext(0, 0, ciphertext, ctx, box_width);
+  // loop through ciphertext and draw
+  // for (i = 0; i < ciphertext.length; i++){
+  //   ctx.fillStyle = "#FFFFFF";
+  //   ctx.fillRect(margin + (i * box_width), box_height_offset, box_width, box_height);
+  //   ctx.fillStyle = "#000000";
+  //   ctx.textAlign = "center";
+  //   ctx.font = '20px Arial';
+  //   ctx.fillText(ciphertext[i], margin + box_width * (i + (1.0 / 2)), text_height_offset + box_height_offset);
+  //   ctx.beginPath();
+  //   ctx.moveTo(margin + (i * box_width), box_height_offset);
+  //   ctx.lineTo(margin + (i * box_width), box_height + box_height_offset);
+  //   ctx.stroke();    
+  // }
 	return;
 }
 
@@ -159,8 +200,8 @@ function run_encryption(){
   }
   //Create a new canvas and place it in the encryption box
   canvas = document.createElement("canvas");
-  canvas.width = 300;
-  canvas.height = 200;
+  canvas.width = 500;
+  canvas.height = 300;
   canvas.id = "black_box_canvas";
 
   parent_node.appendChild(canvas);
@@ -173,7 +214,7 @@ function run_encryption(){
   //Disable the ability to encrypt for now
   $("#encrypt").addClass('disabled');
   output_text.value = final_word;
-	animate_ciphertext(plaintext, final_word, ctx);
+	draw_text_animations(plaintext, final_word, ctx);
   draw_word_position(0);
 }
 
