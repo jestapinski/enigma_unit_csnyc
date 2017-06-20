@@ -14,7 +14,9 @@ var box_height_offset = 100;
 var text_height_offset = box_height * (3.0/5);
 var margin = 10;
 var time_duration = 7;
+var instruction_speed = 500;
 var a_value = 'a'.charCodeAt(0);
+var hidden_text = false;
 
 /*
   caesar_encrypt_one_letter
@@ -53,7 +55,45 @@ function caesar_encrypt_one_letter(initial_char, shift_value){
   return String.fromCharCode(new_letter_ascii);
 }
 
-function draw_highlighted_letter(ctx, word_index, plaintext, text_start_x, box_width){
+/*
+  modify_instructions
+
+  No inputs
+  No return value
+
+  Flips the instructions text from hidden to shown, and vise versa
+*/
+function modify_instructions(){
+  if (hidden_text){
+    $('#instruction_set').show(instruction_speed);
+    document.getElementById('instruction_button').text = 'Hide Instructions';
+    hidden_text = false;
+  } else {
+    $('#instruction_set').hide(instruction_speed);
+    document.getElementById('instruction_button').text = 'Show Instructions';
+    hidden_text = true;
+  }
+}
+
+/*
+  draw_highlighted_letter
+
+  ctx: The 2d drawing context for the blue box canvas
+  word_index: The current index of the plaintext/ciphertext we are animating
+  plaintext: The original message we are encrypting
+  text_start_x: The horizontal point for our text
+  box_width: The width of the box for each letter of text
+
+  No return value
+
+  Draws a highlighted version of the specified plaintext letter in the blue box 
+  animation canvas. This allows for the user to clearly see the plaintext value
+  being modified. Draws a yellow-ish background with a black text value.
+
+  Helper function to animate_ciphertext
+*/
+function draw_highlighted_letter(ctx, word_index, plaintext, text_start_x,
+                                                                    box_width){
   ctx.fillStyle = "#F8CA4D";
   ctx.textAlign = "center";
   ctx.font = '20px Arial';
@@ -63,107 +103,189 @@ function draw_highlighted_letter(ctx, word_index, plaintext, text_start_x, box_w
   ctx.fillStyle = "#FFFFFF";
 }
 
-function animate_text_draw_lines(ctx, ciphertext, plaintext, word_index, text_start_x, box_width, text_height){
+/*
+  animate_text_draw_lines
+
+  ctx: The 2d drawing context for the blue box canvas
+  ciphertext: The encrypted plaintext
+  plaintext: The original message we are encrypting
+  word_index: The current index of the plaintext/ciphertext we are animating
+  text_start_x: The horizontal point for our text
+  box_width: The width of the box for each letter of text
+  text_height: The height of the text in the lower, animating, region of the box
+
+  No return value
+
+  Draws the 'scrolling' text by shifting y-coordinates according to the current
+  step in the animation (calculation figured out in animate_ciphertext). Also
+  draws the divider lines to separate letters in the animated text.
+
+  Helper function to animate_ciphertext
+*/
+function animate_text_draw_lines(ctx, ciphertext, plaintext, word_index, 
+                                        text_start_x, box_width, text_height){
+  var selected_box_width = word_index * box_width;
+  ctx.fillStyle = "#000000";
   ctx.fillText(ciphertext[word_index], text_start_x, text_height + box_height);
   ctx.fillText(plaintext[word_index], text_start_x, text_height);
   ctx.beginPath();
-  ctx.moveTo(margin + (word_index * box_width), box_height + box_height_offset);
-  ctx.lineTo(margin + (word_index * box_width), box_height + box_height + box_height_offset);
+  ctx.moveTo(margin + selected_box_width, box_height + box_height_offset);
+  ctx.lineTo(margin + selected_box_width, 2 * box_height + box_height_offset);
   ctx.stroke();
 }
 
+/*
+  clear_text_overflow
+
+  ctx: The 2d drawing context for the blue box canvas
+  canvas_width: The width of the blue box canvas
+
+  No return value
+
+  Clears the areas above and below the lower, animating section in the blue
+  box canvas to hide text re-drawing effects.
+
+  Helper function to animate_ciphertext
+*/
 function clear_text_overflow(ctx, canvas_width){
   ctx.fillStyle = "#3F5666";
   ctx.fillRect(0, box_height, canvas_width, box_height_offset);
-  ctx.fillRect(0, 2 * box_height + box_height_offset, canvas_width, box_height_offset);
+  ctx.fillRect(0, 2 * box_height + box_height_offset, canvas_width, 
+                                                            box_height_offset);
 }
 
-function draw_process_text(ctx, plaintext, password_shift, word_index, ciphertext){
-  ctx.fillStyle = "#000000";
+/*
+  draw_process_text
+
+  ctx: The 2d drawing context for the blue box canvas
+  plaintext: The original message we are encrypting
+  password_shift: The value we are shifting the word_index place in the 
+    plaintext by to encrypt it
+  word_index: The current index of the plaintext/ciphertext we are animating
+  ciphertext: The encrypted plaintext
+
+  No return value
+
+  Draws process text showing the user, clearly, our plaintext letter, our
+  ciphertext letter, and the shift we are using to go from plaintext to
+  ciphertext. If the given point in the plaintext is not a letter, then we
+  report that this is not a letter and it is not shifted.
+
+  Helper function to animate_ciphertext
+*/
+function draw_process_text(ctx, plaintext, password_shift, word_index, 
+                                                                  ciphertext){
   var shift_text = 'Shifting ';
+  ctx.font = "20px Arial";
+  ctx.fillStyle = "#FFFFFF";
   ctx.textAlign = "left";
   if (!(plaintext[word_index].toLowerCase().match(/[a-z]/i))){
-    shift_text = 'Not changing \''.concat(plaintext[word_index], '\' because it is not a letter');
+    shift_text = 'Not changing \''.concat(plaintext[word_index], 
+                                              '\' because it is not a letter');
   } else {
-    shift_text = shift_text.concat(plaintext[word_index], ' by ', password_shift, ' to get ', ciphertext[word_index]);    
+    shift_text = shift_text.concat(plaintext[word_index], ' by ', 
+                           password_shift, ' to get ', ciphertext[word_index]);    
   }
   ctx.fillText(shift_text, margin, box_height_offset);
 }
 
-function animate_ciphertext(word_index, step, ciphertext, ctx, box_width, plaintext, password){
+/*
+  draw_plaintext
+
+  plaintext: The original message we are encrypting
+  ctx: The 2d drawing context for the blue box canvas
+
+  No return value
+
+  Draws the upper 'static' plaintext section within the blue box, containing
+  text and dividing lines between text boxes.
+
+  Helper function for animate_ciphertext
+*/
+function draw_plaintext(plaintext, ctx){
+  var canvas = document.getElementById('black_box_canvas');
+  var box_width = (square_box.clientWidth - 2 * margin) / plaintext.length;
+  var box_height = 50;
+  var box_horizontal;
+  // draw plaintext
+  ctx.clearRect(0, 0, canvas.clientWidth, box_height);
+  for (var i = 0; i < plaintext.length; i++){
+    box_horizontal = margin + (i * box_width)
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(box_horizontal, 0, box_width, box_height);
+    ctx.fillStyle = "#000000";
+    ctx.textAlign = "center";
+    ctx.font = '20px Arial';
+    ctx.fillText(plaintext[i], box_horizontal + (box_width/2), 
+                                                            text_height_offset);
+    ctx.beginPath();
+    ctx.moveTo(box_horizontal, 0);
+    ctx.lineTo(box_horizontal, box_height);
+    ctx.stroke();
+  }  
+}
+
+/*
+  animate_ciphertext
+
+  word_index: The current index of the plaintext/ciphertext we are animating
+  step: The point in the animation we are at (0 <= step <= 50) 
+  ciphertext: The encrypted plaintext
+  ctx: The 2d drawing context for the blue box canvas
+  box_width: The width of the box for each letter of text
+  plaintext: The original message we are encrypting
+  password: The password we are using to encrypt the plaintext
+
+  No return value
+
+  Runs the animations for the password encryption process, including:
+    - Animating the plaintext --> ciphertext process in the blue box
+    - Showing moving through the password with values in the word shift canvas
+    - Highlighting the current point of the plaintext and password in the 
+      algorithm
+
+  Continuously sets timers for continued calls and a smooth animation
+*/
+function animate_ciphertext(word_index, step, ciphertext, ctx, box_width, 
+                                                        plaintext, password){
   var max_step = 50;
   var canvas_width = 500;
   var password_index = word_index % password.length;
   var password_shift = password[password_index].charCodeAt(0) - a_value;
   var text_start_x, text_height;
-  //Move on to next letter
   if (step >= max_step){
+    //Move on to next letter
     if (word_index === (ciphertext.length - 1)){
+      //End of the word, stop here
       draw_plaintext(plaintext, ctx);
       draw_word_position(-1);
       $("#encrypt").removeClass('disabled');
       return;
     }
-    setTimeout(animate_ciphertext, time_duration, word_index + 1, 0, ciphertext, ctx, box_width, plaintext, password);
+    setTimeout(animate_ciphertext, time_duration, word_index + 1, 0, ciphertext,
+                                           ctx, box_width, plaintext, password);
     return;
   }
   text_start_x = margin + word_index * box_width + box_width / 2;
   draw_plaintext(plaintext, ctx);
   draw_word_position(word_index);
   draw_highlighted_letter(ctx, word_index, plaintext, text_start_x, box_width);
-  // Draw this one a touch higher
-  ctx.clearRect(margin + word_index * box_width, box_height + box_height_offset, box_width, box_height);
-  ctx.fillRect(margin + word_index * box_width, box_height + box_height_offset, box_width, box_height);
-  ctx.fillStyle = "#000000";
+
+  //Draw the rectangle backing the letter here
+  ctx.clearRect(margin + word_index * box_width, box_height + box_height_offset,
+                                                         box_width, box_height);
+  ctx.fillRect(margin + word_index * box_width, box_height + box_height_offset,
+                                                         box_width, box_height);
 
   text_height = box_height + box_height_offset + text_height_offset - step;
-  animate_text_draw_lines(ctx, ciphertext, plaintext, word_index, text_start_x, box_width, text_height);
+  animate_text_draw_lines(ctx, ciphertext, plaintext, word_index, text_start_x,
+                                                        box_width, text_height);
   clear_text_overflow(ctx, canvas_width);
-
   draw_process_text(ctx, plaintext, password_shift, word_index, ciphertext);
 
-  setTimeout(animate_ciphertext, time_duration, word_index, step + 1, ciphertext, ctx, box_width, plaintext, password);
-}
-
-function draw_plaintext(plaintext, ctx){
-  var canvas = document.getElementById('black_box_canvas');
-  var box_width = (square_box.clientWidth - 2 * margin) / plaintext.length;
-  var box_height = 50;
-  // draw plaintext
-  ctx.clearRect(0, 0, canvas.clientWidth, box_height);
-  for (var i = 0; i < plaintext.length; i++){
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(margin + (i * box_width), 0, box_width, box_height);
-    ctx.fillStyle = "#000000";
-    ctx.textAlign = "center";
-    ctx.font = '20px Arial';
-    ctx.fillText(plaintext[i], margin + box_width * (i + (1.0 / 2)), text_height_offset);
-    ctx.beginPath();
-    ctx.moveTo(margin + (i * box_width), 0);
-    ctx.lineTo(margin + (i * box_width), box_height);
-    ctx.stroke();
-  }  
-}
-
-function draw_text_animations(plaintext, ciphertext, ctx, password){
-  var canvas = document.getElementById('black_box_canvas');
-  var box_width = (square_box.clientWidth - 2 * margin) / plaintext.length;
-  var box_height = 50;
-  // draw plaintext
-  for (var i = 0; i < plaintext.length; i++){
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(margin + (i * box_width), 0, box_width, box_height);
-    ctx.fillStyle = "#000000";
-    ctx.textAlign = "center";
-    ctx.font = '20px Arial';
-    ctx.fillText(plaintext[i], margin + box_width * (i + (1.0 / 2)), text_height_offset);
-    ctx.beginPath();
-    ctx.moveTo(margin + (i * box_width), 0);
-    ctx.lineTo(margin + (i * box_width), box_height);
-    ctx.stroke();
-  }
-  animate_ciphertext(0, 0, ciphertext, ctx, box_width, plaintext, password);
-	return;
+  //Set the timeout to continue the animation
+  setTimeout(animate_ciphertext, time_duration, word_index, step + 1, 
+                               ciphertext, ctx, box_width, plaintext, password);
 }
 
 /*
@@ -245,7 +367,7 @@ function run_encryption(){
 	var final_word, password, plaintext;
   var parent_node = document.getElementById("black-box-parent");
   var black_box_text = document.getElementById('black_box_text');
-  var ctx;
+  var box_width, ctx;
 	$('#word_shift_text').removeAttr('hidden');
 	password = password_value.value;
 	plaintext = plaintext_value.value;
@@ -271,7 +393,8 @@ function run_encryption(){
   //Disable the ability to encrypt for now
   $("#encrypt").addClass('disabled');
   output_text.value = final_word;
-	draw_text_animations(plaintext, final_word, ctx, password);
+  box_width = (square_box.clientWidth - 2 * margin) / plaintext.length;
+  animate_ciphertext(0, 0, final_word, ctx, box_width, plaintext, password);
 }
 
 /*
@@ -314,7 +437,7 @@ function draw_inner_triangle(ctx){
 	draw_current_index_value
 
 	ctx: The drawing context for the word_index_wheel_canvas
-	angle: The angle at which we want to draw the value (spinning around the wheel)
+	angle: The angle at which we want to draw (spinning around the wheel)
 	No return value
 
 	Draws the current word index value, along with its letter, on the wheel
@@ -326,6 +449,15 @@ function draw_current_index_value(ctx, angle){
 	return;
 }
 
+/*
+  draw_index_wheel
+
+  No inputs
+  No return value
+
+  Draws the word index selection wheel on the word index selection canvas which
+  is used to select the starting index in the password
+*/
 function draw_index_wheel(){
 	var ctx;
 	if (word_index_wheel_canvas.getContext){
@@ -336,7 +468,16 @@ function draw_index_wheel(){
 	}
 }
 
-function draw_word(ctx){
+/*
+  draw_password
+
+  ctx: The 2d drawing context for the word shift canvas
+
+  No return value
+
+  Draws the password text within the word shift canvas
+*/
+function draw_password(ctx){
   var word = password_value.value;
   var canvas_width = word_shift_canvas.clientWidth;
   var box_width = canvas_width / (word.length);
@@ -356,32 +497,55 @@ function draw_word(ctx){
     ctx.textAlign = "center";
     ctx.fillText(word[i], box_width * (i + 1.0/2), text_height_offset);
     ctx.font = "20px Arial";    
-    ctx.fillText(alphabet_position, box_width * (i + 1.0/2), text_height_offset + box_height);
+    ctx.fillText(alphabet_position, box_width * (i + 1/2), 
+                                              text_height_offset + box_height);
   }
   return;
 }
 
-function highlight_word_position(ctx, word_index){
+/*
+  highlight_password_position
+
+  ctx: The 2d drawing context for the word shift canvas
+  word_index: The point in the plaintext/ciphertext we are animating in
+
+  No return value
+
+  Draws a highlight over the current password position the animation is in
+
+  Helper function for draw_word_position
+*/
+function highlight_password_position(ctx, word_index){
   var word = password_value.value;
   var canvas_width = word_shift_canvas.clientWidth;
   var box_width = canvas_width / (word.length);
+  var box_horizontal;
   word_index = word_index % word.length;
+  box_horizontal = word_index * box_width;
   // Draw yellow box the box_width and height as needed
   ctx.fillStyle = "#F8CA4D";
-  ctx.fillRect(word_index * box_width, 0, box_width, box_height);
+  ctx.fillRect(box_horizontal, 0, box_width, box_height);
   ctx.fillStyle = "#000000";
   ctx.beginPath();
-  ctx.moveTo(word_index * box_width, 0);
-  ctx.lineTo(word_index * box_width, box_height);
+  ctx.moveTo(box_horizontal, 0);
+  ctx.lineTo(box_horizontal, box_height);
   ctx.stroke();
   ctx.font = "30px Arial";    
   ctx.textAlign = "center";
-  ctx.fillText(word[word_index], box_width * (word_index + 1.0/2), text_height_offset);
+  ctx.fillText(word[word_index], box_horizontal + (box_width/2), 
+                                                            text_height_offset);
   return;
 }
 
 /*
+  draw_word_position
 
+  word_index: The point in the plaintext/ciphertext we are animating in
+
+  No return value
+
+  Draws the password and a highlighting effect at the word index (unless the 
+  given word index is -1) on the word shift canvas 
 */
 function draw_word_position(word_index){
   var ctx;
@@ -391,9 +555,9 @@ function draw_word_position(word_index){
     var canvas_width = word_shift_canvas.clientWidth;
     var canvas_height = word_shift_canvas.clientHeight;
     ctx.clearRect(0, 0, canvas_width, canvas_height);
-    draw_word(ctx);
+    draw_password(ctx);
     if (word_index !== -1){
-      highlight_word_position(ctx, word_index);      
+      highlight_password_position(ctx, word_index);      
     }
   }
 }
