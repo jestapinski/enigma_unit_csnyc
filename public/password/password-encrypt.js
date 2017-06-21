@@ -38,6 +38,9 @@ function to_radians (angle) {
 var theta_right = to_radians(-60);
 var theta_left = to_radians(-120);
 var given_password = password_value.value;
+var rotation_angle = 0;
+var angle_offset = 20;
+var max_step = 50;
 
 /*
   caesar_encrypt_one_letter
@@ -269,7 +272,6 @@ function draw_plaintext(plaintext, ctx){
 */
 function animate_ciphertext(word_index, step, ciphertext, ctx, box_width, 
                                                         plaintext, password){
-  var max_step = 50;
   var canvas_width = 500;
   var password_index = (word_index + current_word_index) % password.length;
   var password_shift = password[password_index].charCodeAt(0) - a_value;
@@ -419,13 +421,26 @@ function run_encryption(){
 }
 
 function increase_index(){
+  // rotation_angle++;
+  // draw_index_wheel(to_radians(rotation_angle));
+  index_wheel_timer(0);
   current_word_index++;
-  draw_index_wheel();
 }
 
 function decrease_index(){
   current_word_index--;
-  draw_index_wheel();
+  rotation_angle--;
+  draw_index_wheel(to_radians(rotation_angle));
+}
+
+function index_wheel_timer(step){
+  console.log(step);
+  if (step == max_step){
+    return;
+  } else {
+    draw_index_wheel(to_radians(step));
+    setTimeout(index_wheel_timer, time_duration, step + 1);
+  }
 }
 
 /*
@@ -511,20 +526,30 @@ function draw_inner_triangle(ctx){
 
 	Draws the current word index value, along with its letter, on the wheel
 */
-function draw_current_index_value(ctx, angle){
+function draw_current_index_value(ctx, angle, draw_other){
 	if (!angle){
 		angle = 0;
 	}
+  if (!draw_other){
+    draw_other = 0;
+  }
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
   var x, y;
   var text_height = 60;
   // x = cx;
-  y = cy - text_height;
+  y = - text_height + 10;
   ctx.fillStyle = "#000000";
   ctx.textAlign = "center";
   ctx.font = '30px Arial';
-  ctx.fillText(current_word_index.toString(), cx, y);
+  ctx.fillText(current_word_index.toString(), 0, y);
   ctx.font = '20px Arial';
-  ctx.fillText(given_password[current_word_index % given_password.length], cx, y + 30);
+  ctx.fillText(given_password[current_word_index % given_password.length], 0, -30);
+  ctx.rotate(to_radians(-50 + angle));
+  ctx.font = '30px Arial';
+  ctx.fillText((current_word_index - 1).toString(), 0, y);
+  ctx.font = '20px Arial';
+  ctx.fillText(given_password[(current_word_index - 1) % given_password.length], 0, -30);
 	return;
 }
 
@@ -542,13 +567,14 @@ function input_change(){
   Draws the word index selection wheel on the word index selection canvas which
   is used to select the starting index in the password
 */
-function draw_index_wheel(){
+function draw_index_wheel(angle){
 	var ctx;
+  console.log("drawing");
 	if (word_index_wheel_canvas.getContext){
 		ctx = word_index_wheel_canvas.getContext('2d');
 		draw_outer_wheel(ctx);
 		draw_inner_triangle(ctx);
-		draw_current_index_value(ctx);
+		draw_current_index_value(ctx, angle);
 	}
 }
 
