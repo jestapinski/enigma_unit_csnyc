@@ -38,6 +38,9 @@ function to_radians (angle) {
 var theta_right = to_radians(-60);
 var theta_left = to_radians(-120);
 var given_password = password_value.value;
+var rotation_angle = 0;
+var angle_offset = 20;
+var max_step = 50;
 
 /*
   caesar_encrypt_one_letter
@@ -269,7 +272,6 @@ function draw_plaintext(plaintext, ctx){
 */
 function animate_ciphertext(word_index, step, ciphertext, ctx, box_width, 
                                                         plaintext, password){
-  var max_step = 50;
   var canvas_width = 500;
   var password_index = (word_index + current_word_index) % password.length;
   var password_shift = password[password_index].charCodeAt(0) - a_value;
@@ -281,6 +283,10 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
       draw_plaintext(plaintext, ctx);
       draw_word_position(-1);
       $("#encrypt").removeClass('disabled');
+      $("#spinUp").removeClass('disabled');
+      if (current_word_index != 0){
+        $("#spinDown").removeClass('disabled');
+      }
       return;
     }
     setTimeout(animate_ciphertext, time_duration, word_index + 1, 0, ciphertext,
@@ -390,6 +396,8 @@ function run_encryption(){
   var black_box_text = document.getElementById('black_box_text');
   var box_width, ctx;
 	$('#word_shift_text').removeAttr('hidden');
+  $("#spinUp").addClass('disabled');
+  $("#spinDown").addClass('disabled');
 	password = password_value.value;
 	plaintext = plaintext_value.value;
 	final_word = password_encrypt(plaintext, password, current_word_index);
@@ -419,13 +427,33 @@ function run_encryption(){
 }
 
 function increase_index(){
-  current_word_index++;
-  draw_index_wheel();
+  $("#spinUp").addClass('disabled');
+  $("#spinDown").addClass('disabled');
+  index_wheel_timer(0, -1);
 }
 
 function decrease_index(){
-  current_word_index--;
-  draw_index_wheel();
+  if (current_word_index == 0){
+    return;
+  }
+  $("#spinUp").addClass('disabled');
+  $("#spinDown").addClass('disabled');
+  index_wheel_timer(0, 1);
+}
+
+function index_wheel_timer(step, pass){
+  console.log(step);
+  if (step == max_step){
+    current_word_index += -pass;
+    $("#spinUp").removeClass('disabled');
+    if (current_word_index != 0){
+      $("#spinDown").removeClass('disabled');
+    }
+    return;
+  } else {
+    draw_index_wheel(step, pass);
+    setTimeout(index_wheel_timer, time_duration, step + 1, pass);
+  }
 }
 
 /*
@@ -511,20 +539,31 @@ function draw_inner_triangle(ctx){
 
 	Draws the current word index value, along with its letter, on the wheel
 */
-function draw_current_index_value(ctx, angle){
+function draw_current_index_value(ctx, angle, pass){
+  console.log(angle);
 	if (!angle){
 		angle = 0;
 	}
+  if (!pass){
+    pass = 0;
+  }
+  ctx.translate(cx, cy);
+  ctx.rotate(to_radians(pass * angle));
   var x, y;
   var text_height = 60;
   // x = cx;
-  y = cy - text_height;
+  y = - text_height + 10;
   ctx.fillStyle = "#000000";
   ctx.textAlign = "center";
   ctx.font = '30px Arial';
-  ctx.fillText(current_word_index.toString(), cx, y);
+  ctx.fillText(current_word_index.toString(), 0, y);
   ctx.font = '20px Arial';
-  ctx.fillText(given_password[current_word_index % given_password.length], cx, y + 30);
+  ctx.fillText(given_password[current_word_index % given_password.length], 0, -30);
+  ctx.rotate(to_radians(pass * -50));
+  ctx.font = '30px Arial';
+  ctx.fillText((current_word_index - pass).toString(), 0, y);
+  ctx.font = '20px Arial';
+  ctx.fillText(given_password[(current_word_index - pass) % given_password.length], 0, -30);
 	return;
 }
 
@@ -542,13 +581,15 @@ function input_change(){
   Draws the word index selection wheel on the word index selection canvas which
   is used to select the starting index in the password
 */
-function draw_index_wheel(){
+function draw_index_wheel(angle, pass){
 	var ctx;
+  console.log("drawing");
 	if (word_index_wheel_canvas.getContext){
 		ctx = word_index_wheel_canvas.getContext('2d');
 		draw_outer_wheel(ctx);
 		draw_inner_triangle(ctx);
-		draw_current_index_value(ctx);
+    console.log(pass);
+		draw_current_index_value(ctx, angle, pass);
 	}
 }
 
@@ -692,6 +733,7 @@ jQuery.get('password-encrypt.py', function(data) {
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
+  $("#spinDown").addClass('disabled');
 });
 
 test_password_encrypt()
