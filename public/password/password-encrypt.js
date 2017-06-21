@@ -9,6 +9,8 @@ var output_text = document.getElementById('output_text');
 var square_box = document.getElementById('square-box');
 var encrypt = document.getElementById('encrypt');
 var instruction_text = document.getElementById('instructions_text');
+var spin_up = document.getElementById('spinUp');
+var spin_down = document.getElementById('spinDown');
 var current_word_index = 0;
 var given_word = '';
 var box_height = 50;
@@ -27,7 +29,7 @@ var instructions = "Write your own <strong>plaintext message of at least 5 \
 var pi = Math.PI;
 var cx = 100;
 var cy = 100;
-var radius = 100;
+var radius = 95;
 var cos = Math.cos;
 var sin = Math.sin;
 function to_radians (angle) {
@@ -35,6 +37,7 @@ function to_radians (angle) {
 }
 var theta_right = to_radians(-60);
 var theta_left = to_radians(-120);
+var given_password = password_value.value;
 
 /*
   caesar_encrypt_one_letter
@@ -268,7 +271,7 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
                                                         plaintext, password){
   var max_step = 50;
   var canvas_width = 500;
-  var password_index = word_index % password.length;
+  var password_index = (word_index + current_word_index) % password.length;
   var password_shift = password[password_index].charCodeAt(0) - a_value;
   var text_start_x, text_height;
   if (step >= max_step){
@@ -415,6 +418,16 @@ function run_encryption(){
   animate_ciphertext(0, 0, final_word, ctx, box_width, plaintext, password);
 }
 
+function increase_index(){
+  current_word_index++;
+  draw_index_wheel();
+}
+
+function decrease_index(){
+  current_word_index--;
+  draw_index_wheel();
+}
+
 /*
 	run_start_modal
 
@@ -436,8 +449,17 @@ function run_start_modal(){
 	Draws the outer, dark wheel for the word index wheel
 */
 function draw_outer_wheel(ctx){
+  ctx.restore();
+  ctx.save();
+  ctx.clearRect(0, 0, 200, 250);
+  ctx.fillStyle = "#000000";
   ctx.beginPath();
   ctx.arc(cx, cy, radius, 0, 2 * pi);
+  ctx.lineWidth = 0;
+  ctx.strokeStyle = '';
+  console.log(cx);
+  console.log(cy);
+  console.log(radius);
   ctx.fillStyle = "#000000";
   ctx.fill();
   ctx.stroke();
@@ -493,7 +515,22 @@ function draw_current_index_value(ctx, angle){
 	if (!angle){
 		angle = 0;
 	}
+  var x, y;
+  var text_height = 60;
+  // x = cx;
+  y = cy - text_height;
+  ctx.fillStyle = "#000000";
+  ctx.textAlign = "center";
+  ctx.font = '30px Arial';
+  ctx.fillText(current_word_index.toString(), cx, y);
+  ctx.font = '20px Arial';
+  ctx.fillText(given_password[current_word_index % given_password.length], cx, y + 30);
 	return;
+}
+
+function input_change(){
+  given_password = password_value.value;
+  draw_index_wheel();
 }
 
 /*
@@ -604,7 +641,7 @@ function draw_word_position(word_index){
     ctx.clearRect(0, 0, canvas_width, canvas_height);
     draw_password(ctx);
     if (word_index !== -1){
-      highlight_password_position(ctx, word_index);      
+      highlight_password_position(ctx, word_index + current_word_index);      
     }
   }
 }
@@ -660,4 +697,6 @@ jQuery.get('password-encrypt.py', function(data) {
 test_password_encrypt()
 draw_index_wheel();
 encrypt.addEventListener('click', run_encryption);
+spin_up.addEventListener('click', increase_index);
+spin_down.addEventListener('click', decrease_index);
 setTimeout(run_start_modal, 600);
