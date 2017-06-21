@@ -24,6 +24,17 @@ var instructions = "Write your own <strong>plaintext message of at least 5 \
                   </strong> such that the encrypted text is composed of all \
                   <strong>unique letters</strong> (i.e. no letter is in the \
                   encrypted text twice)!";
+var pi = Math.PI;
+var cx = 100;
+var cy = 100;
+var radius = 100;
+var cos = Math.cos;
+var sin = Math.sin;
+function to_radians (angle) {
+  return angle * (pi / 180);
+}
+var theta_right = to_radians(-60);
+var theta_left = to_radians(-120);
 
 /*
   caesar_encrypt_one_letter
@@ -425,6 +436,11 @@ function run_start_modal(){
 	Draws the outer, dark wheel for the word index wheel
 */
 function draw_outer_wheel(ctx){
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, 2 * pi);
+  ctx.fillStyle = "#000000";
+  ctx.fill();
+  ctx.stroke();
 	return;
 }
 
@@ -437,6 +453,30 @@ function draw_outer_wheel(ctx){
 	Draws the inner, light section for the selected word index	
 */
 function draw_inner_triangle(ctx){
+  var x, y, x1, y1;
+  x = cx + radius * cos(theta_right);
+  y = cy + radius * sin(theta_right) + 2;
+  console.log(x);
+  console.log(y);
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(x, y);
+  x1 = cx + radius * cos(theta_left);
+  y1 = cy + radius * sin(theta_left) + 2;
+  ctx.lineTo(x1, y1);
+  ctx.closePath();
+  ctx.fillStyle = "#FFFFFF";
+  ctx.lineWidth = 5;
+  ctx.fill();
+  ctx.strokeStyle = 'white';
+  ctx.stroke();
+  console.log((y + y1) / 2);
+
+  ctx.beginPath();
+  //TODO fix
+  ctx.ellipse((x + x1) / 2, (y + y1) / 2, (x - x1) / 2, 13.5, 0, -pi, 0);
+  ctx.fill();
+  ctx.stroke();
 	return;
 }
 
@@ -618,5 +658,6 @@ jQuery.get('password-encrypt.py', function(data) {
 });
 
 test_password_encrypt()
+draw_index_wheel();
 encrypt.addEventListener('click', run_encryption);
 setTimeout(run_start_modal, 600);
