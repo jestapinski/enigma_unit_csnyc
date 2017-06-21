@@ -33,7 +33,17 @@ MongoClient.connect('mongodb://localhost:27017/movie_information', function(err,
 	})
 
 	app.get("/password/encrypt", function(req, res, next){
-		res.render('password-encrypt', {});
+		res.render('base_password_exercise', {'title': 'Password Shift Encryption',
+					'image_path': '../images/password_encrypt.png',
+					'exercise_type': 'Encrypt',
+					'input_label': 'Plaintext',
+					'output_label': 'Ciphertext',
+					'js_source': true,
+					'instructions': "Write your own <strong>plaintext message of at least 5 \
+									letters</strong> and <strong>password of at least 5 letters\
+									</strong> such that the encrypted text is composed of all \
+									<strong>unique letters</strong> (i.e. no letter is in the \
+									encrypted text twice)!"});
 	})
 
 	// Running the web server
