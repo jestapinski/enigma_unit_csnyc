@@ -1,6 +1,7 @@
 var express = require('express'),
     app = express(),
     engines = require('consolidate'),
+    nunjucks = require('nunjucks'),
     MongoClient = require('mongodb').MongoClient,
     bodyParser = require('body-parser'),
     assert = require('assert');
@@ -10,6 +11,11 @@ app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+// var env = nunjucks.configure('views', {
+//     autoescape: true,
+//     express: app
+// });
 
 MongoClient.connect('mongodb://localhost:27017/movie_information', function(err, db) {
 
@@ -38,7 +44,7 @@ MongoClient.connect('mongodb://localhost:27017/movie_information', function(err,
 					'exercise_type': 'Encrypt',
 					'input_label': 'Plaintext',
 					'output_label': 'Ciphertext',
-					'js_source': true,
+					js_source: true,
 					'instructions': "Write your own <strong>plaintext message of at least 5 \
 									letters</strong> and <strong>password of at least 5 letters\
 									</strong> such that the encrypted text is composed of all \

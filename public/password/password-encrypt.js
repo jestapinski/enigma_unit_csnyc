@@ -11,6 +11,7 @@ var encrypt = document.getElementById('encrypt');
 var instruction_text = document.getElementById('instructions_text');
 var spin_up = document.getElementById('spinUp');
 var spin_down = document.getElementById('spinDown');
+var clipboard = document.getElementById('clipboard');
 var current_word_index = 0;
 var given_word = '';
 var box_height = 50;
@@ -688,6 +689,29 @@ function draw_word_position(word_index){
 }
 
 /*
+  copy_to_clipboard
+
+  No inputs
+  No return value
+
+  Copies the text in the ciphertext area to the clipboard
+*/
+function copy_to_clipboard(){
+  var copy_text_area, copied;
+  var toast_display_time = 4000
+  $('#output_text').removeAttr('disabled');
+  copy_text_area = document.querySelector('#output_text');
+  copy_text_area.select();
+  copied = document.execCommand('copy');
+  $('#output_text').attr('disabled', 'true');
+  if (copied){
+    Materialize.toast('Copied to Clipboard!', toast_display_time);    
+  } else {
+    Materialize.toast('Copy Failed, try manual copying', toast_display_time);
+  }
+}
+
+/*
   convert_to_HTML
 
   data: The raw test from the Python file we want to parse
@@ -741,4 +765,5 @@ draw_index_wheel();
 encrypt.addEventListener('click', run_encryption);
 spin_up.addEventListener('click', increase_index);
 spin_down.addEventListener('click', decrease_index);
+clipboard.addEventListener('click', copy_to_clipboard);
 setTimeout(run_start_modal, 600);
