@@ -250,6 +250,13 @@ function draw_plaintext(plaintext, ctx){
   }  
 }
 
+function check_is_win(plaintext, password, ciphertext){
+  return ((Set(ciphertext).size == ciphertext.length)
+          && (plaintext.size >= 5)
+          && (password.size >= 5)
+    );
+}
+
 /*
   animate_ciphertext
 
@@ -287,6 +294,9 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
       $("#spinUp").removeClass('disabled');
       if (current_word_index != 0){
         $("#spinDown").removeClass('disabled');
+      }
+      if (check_is_win){
+        console.log("win!");
       }
       return;
     }
