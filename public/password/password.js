@@ -715,6 +715,13 @@ if (document.title.includes('Sandbox')){
   });    
 }
 
+if (document.title.includes('Decryption')){
+  $.getScript('password-decrypt.js', function(){
+    console.log('Loaded Decryption');
+    test_password_encrypt()
+  });  
+}
+
 draw_index_wheel();
 encrypt.addEventListener('click', run_encryption);
 spin_up.addEventListener('click', increase_index);
