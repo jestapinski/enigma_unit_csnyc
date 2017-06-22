@@ -9,27 +9,24 @@ var output_text = document.getElementById('output_text');
 var square_box = document.getElementById('square-box');
 var encrypt = document.getElementById('encrypt');
 var instruction_text = document.getElementById('instructions_text');
+var opening_modal_text = document.getElementById('opening_modal_text');
 var spin_up = document.getElementById('spinUp');
 var spin_down = document.getElementById('spinDown');
 var clipboard = document.getElementById('clipboard');
 var current_word_index = 0;
 var given_word = '';
-var box_height = 50;
-var box_height_offset = 100;
-var text_height_offset = box_height * (3.0/5);
-var margin = 10;
-var time_duration = 7;
-var instruction_speed = 500;
-var a_value = 'a'.charCodeAt(0);
+var validate = true;
+const box_height = 50;
+const box_height_offset = 100;
+const text_height_offset = box_height * (3.0/5);
+const margin = 10;
+const time_duration = 7;
+const instruction_speed = 500;
+const a_value = 'a'.charCodeAt(0);
 var hidden_text = false;
-var instructions = "Write your own <strong>plaintext message of at least 5 \
-                  letters</strong> and <strong>password of at least 5 letters\
-                  </strong> such that the encrypted text is composed of all \
-                  <strong>unique letters</strong> (i.e. no letter is in the \
-                  encrypted text twice)!";
-var pi = Math.PI;
-var cx = 100;
-var cy = 100;
+const pi = Math.PI;
+const cx = 100;
+const cy = 100;
 var radius = 95;
 var cos = Math.cos;
 var sin = Math.sin;
@@ -288,8 +285,10 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
       if (current_word_index != 0){
         $("#spinDown").removeClass('disabled');
       }
-      if (check_is_win){
-        console.log("win!");
+      if (validate){
+        if (check_is_win(plaintext, password, ciphertext)){
+          console.log("win!");
+        }
       }
       return;
     }
@@ -706,6 +705,14 @@ if (document.title.includes('Encryption')){
     console.log('Loaded Encrypt');
     test_password_encrypt()
   });  
+}
+
+if (document.title.includes('Sandbox')){
+  validate = false;
+  $.getScript('password-sandbox.js', function(){
+    console.log('Loaded Sandbox');
+    test_password_encrypt()
+  });    
 }
 
 draw_index_wheel();

@@ -36,7 +36,7 @@ MongoClient.connect('mongodb://localhost:27017/movie_information', function(err,
 
 	app.get("/caesar-shift/sandbox", function(req, res, next){
 		res.render('caesar-sandbox', {});
-	})
+	});
 
 	app.get("/password/encrypt", function(req, res, next){
 		res.render('base_password_exercise', {'title': 'Password Shift Encryption',
@@ -50,7 +50,17 @@ MongoClient.connect('mongodb://localhost:27017/movie_information', function(err,
 									</strong> such that the encrypted text is composed of all \
 									<strong>unique letters</strong> (i.e. no letter is in the \
 									encrypted text twice)!"});
-	})
+	});
+
+	app.get("/password/sandbox", function(req, res, next){
+		res.render('base_password_exercise', {'title': 'Password Shift Sandbox',
+					'image_path': '../images/password_encrypt.png',
+					'exercise_type': 'Sandbox',
+					'input_label': 'Starting Text',
+					'output_label': 'Ending Text',
+					js_source: true,
+					'instructions': 'pass'});
+	});
 
 	// Running the web server
 	var server = app.listen(3000, function() {

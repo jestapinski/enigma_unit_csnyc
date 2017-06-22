@@ -1,18 +1,13 @@
-var instructions = "Write your own <strong>plaintext message of at least 5 \
-                  letters</strong> and <strong>password of at least 5 letters\
-                  </strong> such that the encrypted text is composed of all \
-                  <strong>unique letters</strong> (i.e. no letter is in the \
-                  encrypted text twice)!";
+var instructions = "Play around with shifting some text based on a password!\
+                    When you are done, feel free to exit this tab, or click\
+                    the 'Back to Exercise' button to shift back to the\
+                    password shift exercise";
 
-var opening_text = "We have been playing with encryption and decryption of text\
-                     with a fixed shifting value for each letter. What if we\
-                    made the encryption technique more complicated?\
-                     Consider using a word to define our shift values. We can\
-                      think of each letter as having a number according to its\
-                       position in the alphabet (a is 1, b is 2, and so on).";
+var opening_text = instructions;
 
 function check_is_win(plaintext, password, ciphertext){
-  return ((Set(ciphertext).size === ciphertext.length)
+  var cipherset = new Set(ciphertext);
+  return ((cipherset.size === ciphertext.length)
           && (plaintext.size >= 5)
           && (password.size >= 5)
     );
