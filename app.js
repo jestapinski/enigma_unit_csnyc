@@ -54,7 +54,7 @@ MongoClient.connect('mongodb://localhost:27017/movie_information', function(err,
 
 	app.get("/password/sandbox", function(req, res, next){
 		res.render('base_password_exercise', {'title': 'Password Shift Sandbox',
-					'image_path': '../images/password_encrypt.png',
+					'image_path': '../images/password-sandbox.png',
 					'exercise_type': 'Sandbox',
 					'input_label': 'Starting Text',
 					'output_label': 'Ending Text',
