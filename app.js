@@ -1,6 +1,7 @@
 var express = require('express'),
     app = express(),
     engines = require('consolidate'),
+    nunjucks = require('nunjucks'),
     MongoClient = require('mongodb').MongoClient,
     bodyParser = require('body-parser'),
     assert = require('assert');
@@ -10,6 +11,11 @@ app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+// var env = nunjucks.configure('views', {
+//     autoescape: true,
+//     express: app
+// });
 
 MongoClient.connect('mongodb://localhost:27017/movie_information', function(err, db) {
 
@@ -30,7 +36,7 @@ MongoClient.connect('mongodb://localhost:27017/movie_information', function(err,
 
 	app.get("/caesar-shift/sandbox", function(req, res, next){
 		res.render('caesar-sandbox', {});
-	})
+	});
 
 	app.get("/password/encrypt", function(req, res, next){
 		res.render('base_password_exercise', {'title': 'Password Shift Encryption',
@@ -38,12 +44,25 @@ MongoClient.connect('mongodb://localhost:27017/movie_information', function(err,
 					'exercise_type': 'Encrypt',
 					'input_label': 'Plaintext',
 					'output_label': 'Ciphertext',
-					'js_source': true,
-					'instructions': "Write your own <strong>plaintext message of at least 5 \
-									letters</strong> and <strong>password of at least 5 letters\
-									</strong> such that the encrypted text is composed of all \
-									<strong>unique letters</strong> (i.e. no letter is in the \
-									encrypted text twice)!"});
+					js_source: true});
+	});
+
+	app.get("/password/sandbox", function(req, res, next){
+		res.render('base_password_exercise', {'title': 'Password Shift Sandbox',
+					'image_path': '../images/password-sandbox.png',
+					'exercise_type': 'Sandbox',
+					'input_label': 'Starting Text',
+					'output_label': 'Ending Text',
+					js_source: true});
+	});
+
+	app.get("/password/decrypt", function(req, res, next){
+		res.render('base_password_exercise', {'title': 'Password Shift Decryption',
+					'image_path': '../images/password-sandbox.png',
+					'exercise_type': 'Decryption',
+					'input_label': 'Ciphertext',
+					'output_label': 'Plaintext',
+					js_source: true});
 	})
 
 	// Running the web server
