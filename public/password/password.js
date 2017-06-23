@@ -411,6 +411,7 @@ function index_wheel_timer(step, pass){
       $("#spinDown").removeClass('disabled');
     }
     index_input.value = current_word_index;
+    draw_word_position(0);
     return;
   } else {
     draw_index_wheel(step, pass);
@@ -741,6 +742,7 @@ if (document.title.includes('Decryption')){
 }
 
 draw_index_wheel();
+draw_word_position(0);
 encrypt.addEventListener('click', run_encryption);
 spin_up.addEventListener('click', increase_index);
 spin_down.addEventListener('click', decrease_index);
