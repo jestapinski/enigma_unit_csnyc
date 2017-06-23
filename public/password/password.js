@@ -13,6 +13,7 @@ var opening_modal_text = document.getElementById('opening_modal_text');
 var spin_up = document.getElementById('spinUp');
 var spin_down = document.getElementById('spinDown');
 var clipboard = document.getElementById('clipboard');
+var index_input = document.getElementById('index_input');
 var current_word_index = 0;
 var given_word = '';
 var validate = true;
@@ -20,9 +21,10 @@ const box_height = 50;
 const box_height_offset = 100;
 const text_height_offset = box_height * (3.0/5);
 const margin = 10;
-const time_duration = 7;
+const time_duration = 5;
 const instruction_speed = 500;
 const a_value = 'a'.charCodeAt(0);
+const wheel_rotation_offset = -50;
 var hidden_text = false;
 const pi = Math.PI;
 const cx = 100;
@@ -401,6 +403,7 @@ function index_wheel_timer(step, pass){
     if (current_word_index != 0){
       $("#spinDown").removeClass('disabled');
     }
+    index_input.value = current_word_index;
     return;
   } else {
     draw_index_wheel(step, pass);
@@ -487,40 +490,44 @@ function draw_inner_triangle(ctx){
 
 	ctx: The drawing context for the word_index_wheel_canvas
 	angle: The angle at which we want to draw (spinning around the wheel)
+  direction
 	No return value
 
 	Draws the current word index value, along with its letter, on the wheel
 */
-function draw_current_index_value(ctx, angle, pass){
-  console.log(angle);
+function draw_current_index_value(ctx, angle, direction){
+  var next_letter;
+  const text_height = 60;
+  const y = - text_height + 10;
 	if (!angle){
 		angle = 0;
 	}
-  if (!pass){
-    pass = 0;
+  if (!direction){
+    direction = 0;
   }
   ctx.translate(cx, cy);
-  ctx.rotate(to_radians(pass * angle));
-  var x, y;
-  var text_height = 60;
-  // x = cx;
-  y = - text_height + 10;
+  ctx.rotate(to_radians(direction * angle));
+
   ctx.fillStyle = "#000000";
   ctx.textAlign = "center";
   ctx.font = '30px Arial';
   ctx.fillText(current_word_index.toString(), 0, y);
   ctx.font = '20px Arial';
-  ctx.fillText(given_password[current_word_index % given_password.length], 0, -30);
-  ctx.rotate(to_radians(pass * -50));
+  ctx.fillText(given_password[current_word_index % given_password.length], 0, 
+                                                          -text_height_offset);
+  ctx.rotate(to_radians(direction * wheel_rotation_offset));
   ctx.font = '30px Arial';
-  ctx.fillText((current_word_index - pass).toString(), 0, y);
+  ctx.fillText((current_word_index - direction).toString(), 0, y);
   ctx.font = '20px Arial';
-  ctx.fillText(given_password[(current_word_index - pass) % given_password.length], 0, -30);
+  next_letter = current_word_index - direction;
+  ctx.fillText(given_password[(next_letter) % given_password.length], 0, 
+                                                          -text_height_offset);
 	return;
 }
 
 function input_change(){
   given_password = password_value.value;
+  current_word_index = parseInt(index_input.value);
   draw_index_wheel();
 }
 
@@ -700,6 +707,8 @@ function convert_to_HTML(data){
   return final_python_code.join("\n");
 }
 
+// Allowing for modularity in different versions of the password exercise
+
 if (document.title.includes('Encryption')){
   $.getScript('password-encrypt.js', function(){
     console.log('Loaded Encrypt');
@@ -708,6 +717,7 @@ if (document.title.includes('Encryption')){
 }
 
 if (document.title.includes('Sandbox')){
+  //Turn off validations while in the Sandbox
   validate = false;
   $.getScript('password-sandbox.js', function(){
     console.log('Loaded Sandbox');
@@ -718,7 +728,7 @@ if (document.title.includes('Sandbox')){
 if (document.title.includes('Decryption')){
   $.getScript('password-decrypt.js', function(){
     console.log('Loaded Decryption');
-    test_password_encrypt()
+    test_password_decrypt()
   });  
 }
 

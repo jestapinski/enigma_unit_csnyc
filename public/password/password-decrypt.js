@@ -49,7 +49,7 @@ function password_encrypt(plaintext, password, word_index){
   found in password-encrypt-tests.txt, raising an assertion failure if a test
   fails, or outputting a success message to the console otherwise.
 */
-function test_password_encrypt(){
+function test_password_decrypt(){
   var tests, test_case_num, test_case, input_str, input_shift, output_str;
   jQuery.get('password-decrypt-tests.txt', function(data) {
     tests = data.split("\n");
@@ -61,7 +61,7 @@ function test_password_encrypt(){
       output_str = test_case[3];
       assert(password_encrypt(input_str, password, input_shift) === output_str);
     }
-    console.log("Javascript password encryption passed");
+    console.log("Javascript password decryption passed");
   });
 }
 
