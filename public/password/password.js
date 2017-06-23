@@ -41,6 +41,7 @@ var given_password = password_value.value;
 var rotation_angle = 0;
 var angle_offset = 20;
 var max_step = 50;
+var shift_switch;
 
 /*
   caesar_encrypt_one_letter
@@ -287,6 +288,9 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
       if (current_word_index != 0){
         $("#spinDown").removeClass('disabled');
       }
+      if (shift_switch){
+        $('#shift_switch').removeAttr('disabled');
+      }
       if (validate){
         if (check_is_win(plaintext, password, ciphertext)){
           console.log("win!");
@@ -352,6 +356,9 @@ function run_encryption(){
 	$('#word_shift_text').removeAttr('hidden');
   $("#spinUp").addClass('disabled');
   $("#spinDown").addClass('disabled');
+  if (shift_switch){
+    $('#shift_switch').attr('disabled', 'true');
+  }
 	password = password_value.value;
 	plaintext = plaintext_value.value;
 	final_word = password_encrypt(plaintext, password, current_word_index);
@@ -712,7 +719,7 @@ function convert_to_HTML(data){
 if (document.title.includes('Encryption')){
   $.getScript('password-encrypt.js', function(){
     console.log('Loaded Encrypt');
-    test_password_encrypt()
+    test_password_encrypt();
   });  
 }
 
@@ -721,14 +728,15 @@ if (document.title.includes('Sandbox')){
   validate = false;
   $.getScript('password-sandbox.js', function(){
     console.log('Loaded Sandbox');
-    test_password_encrypt()
+    test_password_encrypt();
+    test_password_decrypt();
   });    
 }
 
 if (document.title.includes('Decryption')){
   $.getScript('password-decrypt.js', function(){
     console.log('Loaded Decryption');
-    test_password_decrypt()
+    test_password_decrypt();
   });  
 }
 
