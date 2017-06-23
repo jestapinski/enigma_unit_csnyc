@@ -51,7 +51,7 @@ function password_encrypt(plaintext, password, word_index){
 */
 function test_password_encrypt(){
   var tests, test_case_num, test_case, input_str, input_shift, output_str;
-  jQuery.get('password-encrypt-tests.txt', function(data) {
+  jQuery.get('password-decrypt-tests.txt', function(data) {
     tests = data.split("\n");
     for (test_case_num = 0; test_case_num < tests.length; test_case_num++){
       test_case = tests[test_case_num].split(",");
@@ -70,7 +70,7 @@ function shift_letter(password, password_index, a_value){
 }
 
 // Run the password encrypt algorithm unit tests
-jQuery.get('password-encrypt.py', function(data) {
+jQuery.get('password-decrypt.py', function(data) {
   var python_function = convert_to_HTML(data);
   encryption_code.innerHTML = python_function;
   instruction_text.innerHTML = instructions;

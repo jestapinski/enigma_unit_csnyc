@@ -317,6 +317,7 @@ function convert_to_HTML(data){
   by 1, overflowing if needed.
 */
 function spin_wheel_up(){
+  var ctx;
   if (canvas.getContext){
     ctx = canvas.getContext("2d");
     setTimeout(redraw, encryption_scrolling_speed, 0, "up", ctx);
@@ -335,6 +336,7 @@ function spin_wheel_up(){
   by 1, overflowing if needed.
 */
 function spin_wheel_down(){
+  var ctx;
   if (canvas.getContext){
     ctx = canvas.getContext("2d");
     setTimeout(redraw, encryption_scrolling_speed, 0, "down", ctx);
