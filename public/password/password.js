@@ -14,6 +14,8 @@ var spin_up = document.getElementById('spinUp');
 var spin_down = document.getElementById('spinDown');
 var clipboard = document.getElementById('clipboard');
 var index_input = document.getElementById('index_input');
+var success_modal_text = document.getElementById('success_modal_text');
+var retry_modal_text = document.getElementById('retry_modal_text');
 var current_word_index = 0;
 var given_word = '';
 var validate = true;
@@ -41,6 +43,7 @@ var given_password = password_value.value;
 var rotation_angle = 0;
 var angle_offset = 20;
 var max_step = 50;
+var shift_switch;
 
 /*
   caesar_encrypt_one_letter
@@ -281,15 +284,21 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
     if (word_index === (ciphertext.length - 1)){
       //End of the word, stop here
       draw_plaintext(plaintext, ctx);
-      draw_word_position(-1);
+      draw_word_position(0);
       $("#encrypt").removeClass('disabled');
       $("#spinUp").removeClass('disabled');
       if (current_word_index != 0){
         $("#spinDown").removeClass('disabled');
       }
+      if (shift_switch){
+        $('#shift_switch').removeAttr('disabled');
+      }
       if (validate){
         if (check_is_win(plaintext, password, ciphertext)){
+          $('#modalSuccess').modal('open');
           console.log("win!");
+        } else {
+          $('#modalRetry').modal('open');
         }
       }
       return;
@@ -352,6 +361,9 @@ function run_encryption(){
 	$('#word_shift_text').removeAttr('hidden');
   $("#spinUp").addClass('disabled');
   $("#spinDown").addClass('disabled');
+  if (shift_switch){
+    $('#shift_switch').attr('disabled', 'true');
+  }
 	password = password_value.value;
 	plaintext = plaintext_value.value;
 	final_word = password_encrypt(plaintext, password, current_word_index);
@@ -404,6 +416,7 @@ function index_wheel_timer(step, pass){
       $("#spinDown").removeClass('disabled');
     }
     index_input.value = current_word_index;
+    draw_word_position(0);
     return;
   } else {
     draw_index_wheel(step, pass);
@@ -528,6 +541,7 @@ function draw_current_index_value(ctx, angle, direction){
 function input_change(){
   given_password = password_value.value;
   current_word_index = parseInt(index_input.value);
+  draw_word_position(0);
   draw_index_wheel();
 }
 
@@ -712,7 +726,7 @@ function convert_to_HTML(data){
 if (document.title.includes('Encryption')){
   $.getScript('password-encrypt.js', function(){
     console.log('Loaded Encrypt');
-    test_password_encrypt()
+    test_password_encrypt();
   });  
 }
 
@@ -721,18 +735,20 @@ if (document.title.includes('Sandbox')){
   validate = false;
   $.getScript('password-sandbox.js', function(){
     console.log('Loaded Sandbox');
-    test_password_encrypt()
+    test_password_encrypt();
+    test_password_decrypt();
   });    
 }
 
 if (document.title.includes('Decryption')){
   $.getScript('password-decrypt.js', function(){
     console.log('Loaded Decryption');
-    test_password_decrypt()
+    test_password_decrypt();
   });  
 }
 
 draw_index_wheel();
+draw_word_position(0);
 encrypt.addEventListener('click', run_encryption);
 spin_up.addEventListener('click', increase_index);
 spin_down.addEventListener('click', decrease_index);

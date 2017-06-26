@@ -1,14 +1,17 @@
-var instructions = "Instructions TBD";
+const instructions = "We have a ciphertext of <strong>ulsu hzekvto</strong> that\
+                    we need to crack. We have a clue that <strong>the password is\
+                    the country which hosts the city of Paris</strong> and the\
+                    <strong>index input is the day of the month the Allies invaded\
+                    Normandy Beach</strong>. Hint: <u><a href='https://en.wikipedia.org/wiki/Normandy_landings' style='color:blue' target=_blank>The Battle of Normandy</a></u>";
 
-var opening_text = instructions;
+const opening_text = instructions;
+const success_text = "Great work, moving on";
+const failure_text = "Not quite, make sure you are following the instructions";
 const alphabet_size = 26;
+const answer = 'push dunkirk'
 
 function check_is_win(plaintext, password, ciphertext){
-  var cipherset = new Set(ciphertext);
-  return ((cipherset.size === ciphertext.length)
-          && (plaintext.size >= 5)
-          && (password.size >= 5)
-    );
+  return ciphertext === answer;
 }
 
 /*
@@ -75,6 +78,8 @@ jQuery.get('password-decrypt.py', function(data) {
   encryption_code.innerHTML = python_function;
   instruction_text.innerHTML = instructions;
   opening_modal_text.innerHTML = opening_text;
+  success_modal_text.innerHTML = success_text;
+  retry_modal_text.innerHTML = failure_text;
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });

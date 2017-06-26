@@ -1,15 +1,19 @@
-var instructions = "Write your own <strong>plaintext message of at least 5 \
+const instructions = "Write your own <strong>plaintext message of at least 5 \
                   letters</strong> and <strong>password of at least 5 letters\
                   </strong> such that the encrypted text is composed of all \
                   <strong>unique letters</strong> (i.e. no letter is in the \
                   encrypted text twice)!";
 
-var opening_text = "We have been playing with encryption and decryption of text\
+const opening_text = "We have been playing with encryption and decryption of text\
                      with a fixed shifting value for each letter. What if we\
                     made the encryption technique more complicated?\
                      Consider using a word to define our shift values. We can\
                       think of each letter as having a number according to its\
                        position in the alphabet (a is 1, b is 2, and so on).";
+
+const success_text = "Great work, moving on";
+
+const failure_text = "Not quite, make sure you are following the instructions";
 
 /*
   check_is_win
@@ -23,9 +27,10 @@ var opening_text = "We have been playing with encryption and decryption of text\
   Validates the user's inputs versus the provided rule condition
 */
 function check_is_win(plaintext, password, ciphertext){
-  return ((Set(ciphertext).size === ciphertext.length)
-          && (plaintext.size >= 5)
-          && (password.size >= 5)
+  var cipherset = new Set(ciphertext);
+  return ((cipherset.size === ciphertext.length)
+          && (plaintext.length >= 5)
+          && (password.length >= 5)
     );
 }
 
@@ -90,6 +95,8 @@ jQuery.get('password-encrypt.py', function(data) {
   encryption_code.innerHTML = python_function;
   instruction_text.innerHTML = instructions;
   opening_modal_text.innerHTML = opening_text;
+  success_modal_text.innerHTML = success_text;
+  retry_modal_text.innerHTML = failure_text;
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });

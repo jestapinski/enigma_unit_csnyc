@@ -33,6 +33,7 @@ app.get("/password/encrypt", function(req, res, next){
 				'exercise_type': 'Encrypt',
 				'input_label': 'Plaintext',
 				'output_label': 'Ciphertext',
+				'next_route': '/password/decrypt',
 				js_source: true});
 });
 
@@ -42,6 +43,7 @@ app.get("/password/decrypt", function(req, res, next){
 				'exercise_type': 'Decrypt',
 				'input_label': 'Ciphertext',
 				'output_label': 'Plaintext',
+				'next_route': '/enigma/encrypt', //To be changed
 				js_source: true});
 });
 
