@@ -1,14 +1,15 @@
-var instructions = "Instructions TBD";
+var instructions = "We have a ciphertext of <strong>ulsu hzekvto</strong> that\
+                    we need to crack. We have a clue that <strong>the password is\
+                    the country which hosts the city of Paris</strong> and the\
+                    <strong>index input is the day of the month the Allies invaded\
+                    Normandy Beach</strong>. Hint: <u><a href='https://en.wikipedia.org/wiki/Normandy_landings' style='color:blue' target=_blank>The Battle of Normandy</a></u>";
 
 var opening_text = instructions;
 const alphabet_size = 26;
+const answer = 'push dunkirk'
 
 function check_is_win(plaintext, password, ciphertext){
-  var cipherset = new Set(ciphertext);
-  return ((cipherset.size === ciphertext.length)
-          && (plaintext.size >= 5)
-          && (password.size >= 5)
-    );
+  return ciphertext === answer;
 }
 
 /*
