@@ -282,7 +282,7 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
     if (word_index === (ciphertext.length - 1)){
       //End of the word, stop here
       draw_plaintext(plaintext, ctx);
-      draw_word_position(-1);
+      draw_word_position(0);
       $("#encrypt").removeClass('disabled');
       $("#spinUp").removeClass('disabled');
       if (current_word_index != 0){
@@ -293,7 +293,10 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
       }
       if (validate){
         if (check_is_win(plaintext, password, ciphertext)){
+          $('#modalSuccess').modal('open');
           console.log("win!");
+        } else {
+          $('#modalRetry').modal('open');
         }
       }
       return;
@@ -536,6 +539,7 @@ function draw_current_index_value(ctx, angle, direction){
 function input_change(){
   given_password = password_value.value;
   current_word_index = parseInt(index_input.value);
+  draw_word_position(0);
   draw_index_wheel();
 }
 

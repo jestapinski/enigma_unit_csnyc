@@ -10,11 +10,7 @@ var encryption_function, decryption_function;
 shift_switch = document.getElementById('shift_switch');
 
 function check_is_win(plaintext, password, ciphertext){
-  var cipherset = new Set(ciphertext);
-  return ((cipherset.size === ciphertext.length)
-          && (plaintext.size >= 5)
-          && (password.size >= 5)
-    );
+  return false;
 }
 
 /*

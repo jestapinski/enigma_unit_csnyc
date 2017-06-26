@@ -23,9 +23,10 @@ var opening_text = "We have been playing with encryption and decryption of text\
   Validates the user's inputs versus the provided rule condition
 */
 function check_is_win(plaintext, password, ciphertext){
-  return ((Set(ciphertext).size === ciphertext.length)
-          && (plaintext.size >= 5)
-          && (password.size >= 5)
+  var cipherset = new Set(ciphertext);
+  return ((cipherset.size === ciphertext.length)
+          && (plaintext.length >= 5)
+          && (password.length >= 5)
     );
 }
 
