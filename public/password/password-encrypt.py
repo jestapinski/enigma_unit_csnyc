@@ -1,32 +1,19 @@
-import string
+from encrypt import *
+
 #START#
-def caesar_shift_one_letter(letter, shift_value):
-  if letter not in string.ascii_letters:
-    return letter
-
-  #if adding shift constant puts out of alphabet (> ord(z)) then sub ord(a)
-  #<a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">encoded_letter = ord(eachletter) + shift_value</a>
-  encoded_letter = ord(letter) + shift_value
-
-  #if our shift would go beyond the letter z then we wrap around to the start
-  if encoded_letter > ord('z'):
-    encoded_letter = ord('a') + (encoded_letter - ord('z')) - 1
-
-  #if our shift would go before the letter a then we wrap around to the end
-  if encoded_letter < ord('a'):
-    encoded_letter = ord('z') - (ord('a') - encoded_letter) + 1
-
-  return chr(encoded_letter)
-
 def password_shift_encryption(plaintext, password, password_starting_index):
   final_word = ''
+  #<a href="#" class="clickable" onclick="$('#modalOrd').modal('open')">alphabet_offset = ord('a')</a>
   alphabet_offset = ord('a')
+  #<a href="#" class="clickable" onclick="$('#modalForLoop').modal('open')">for letter_index in range(len(plaintext)):</a>
   for letter_index in range(len(plaintext)):
     password_current_index = password_starting_index + letter_index
     encryption_letter = password[password_current_index % len(password)]
+    #<a href="#" class="clickable" onclick="$('#modalOffset').modal('open')">shift_value = ord(encryption_letter.lower()) - alphabet_offset</a>
     shift_value = ord(encryption_letter.lower()) - alphabet_offset
     plaintext_letter = plaintext[letter_index].lower()
-    final_word = final_word + caesar_shift_one_letter(plaintext_letter, shift_value)
+    #<a href="#" class="clickable" onclick="$('#modalStrConcat').modal('open')">final_word = final_word + caesar_shift(plaintext_letter, shift_value)</a>
+    final_word = final_word + caesar_shift(plaintext_letter, shift_value)
   return final_word
 #END#
 def make_tests():
