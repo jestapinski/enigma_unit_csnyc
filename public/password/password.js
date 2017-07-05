@@ -123,7 +123,7 @@ function draw_highlighted_letter(ctx, word_index, plaintext, text_start_x,
                                                                     box_width){
   ctx.fillStyle = "#F8CA4D";
   ctx.textAlign = "center";
-  ctx.font = '20px Arial';
+  ctx.font = '20px PT Mono';
   ctx.fillRect(margin + word_index * box_width, 0, box_width, box_height);
   ctx.fillStyle = "#000000";
   ctx.fillText(plaintext[word_index], text_start_x, text_height_offset);
@@ -203,7 +203,7 @@ function clear_text_overflow(ctx, canvas_width){
 function draw_process_text(ctx, plaintext, password_shift, word_index, 
                                                                   ciphertext){
   var shift_text = 'Shifting ';
-  ctx.font = "20px Arial";
+  ctx.font = "20px PT Mono";
   ctx.fillStyle = "#FFFFFF";
   ctx.textAlign = "left";
   if (!(plaintext[word_index].toLowerCase().match(/[a-z]/i))){
@@ -242,7 +242,7 @@ function draw_plaintext(plaintext, ctx){
     ctx.fillRect(box_horizontal, 0, box_width, box_height);
     ctx.fillStyle = "#000000";
     ctx.textAlign = "center";
-    ctx.font = '20px Arial';
+    ctx.font = '20px PT Mono';
     ctx.fillText(plaintext[i], box_horizontal + (box_width/2), 
                                                             text_height_offset);
     ctx.beginPath();
@@ -523,15 +523,15 @@ function draw_current_index_value(ctx, angle, direction){
 
   ctx.fillStyle = "#000000";
   ctx.textAlign = "center";
-  ctx.font = '30px Arial';
+  ctx.font = '30px PT Mono';
   ctx.fillText(current_word_index.toString(), 0, y);
-  ctx.font = '20px Arial';
+  ctx.font = '20px PT Mono';
   ctx.fillText(given_password[current_word_index % given_password.length], 0, 
                                                           -text_height_offset);
   ctx.rotate(to_radians(direction * wheel_rotation_offset));
-  ctx.font = '30px Arial';
+  ctx.font = '30px PT Mono';
   ctx.fillText((current_word_index - direction).toString(), 0, y);
-  ctx.font = '20px Arial';
+  ctx.font = '20px PT Mono';
   next_letter = current_word_index - direction;
   ctx.fillText(given_password[(next_letter) % given_password.length], 0, 
                                                           -text_height_offset);
@@ -591,10 +591,10 @@ function draw_password(ctx){
     ctx.lineTo(i * box_width, box_height);
     ctx.stroke();
     //Letters
-    ctx.font = "30px Arial";    
+    ctx.font = "30px PT Mono";    
     ctx.textAlign = "center";
     ctx.fillText(word[i], box_width * (i + 1.0/2), text_height_offset);
-    ctx.font = "20px Arial";    
+    ctx.font = "20px PT Mono";    
     ctx.fillText(alphabet_position, box_width * (i + 1/2), 
                                               text_height_offset + box_height);
   }
@@ -628,7 +628,7 @@ function highlight_password_position(ctx, word_index){
   ctx.moveTo(box_horizontal, 0);
   ctx.lineTo(box_horizontal, box_height);
   ctx.stroke();
-  ctx.font = "30px Arial";    
+  ctx.font = "30px PT Mono";    
   ctx.textAlign = "center";
   ctx.fillText(word[word_index], box_horizontal + (box_width/2), 
                                                             text_height_offset);
