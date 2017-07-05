@@ -163,7 +163,7 @@ function establish_context_settings(ctx, plaintext_length){
   if (plaintext_length > 20){
     ctx.font = "1.20rem PT Mono";
   } else {
-    ctx.font = "1.20rem PT Mono";    
+    ctx.font = "1.30rem PT Mono";    
   }
   ctx.textAlign = "center";
 }
@@ -288,12 +288,22 @@ function convert_to_HTML(data){
   var python_line, i;
   var final_python_code = [];
   var skip_flag = false;
+  var start_flag = false;
   for (i = 0; i < python_lines.length; i++){
+    python_line = python_lines[i];
+    console.log(python_line);
+    if (python_line == "#START#"){
+      start_flag = true;
+      continue;
+    }
+    if (!start_flag){
+      continue;
+    }
     if (skip_flag){
       skip_flag = false;
       continue;
     }
-    python_line = python_lines[i];
+    console.log(python_line);
     if (python_line == "#END#"){
       break;
     }
