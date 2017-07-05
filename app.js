@@ -28,7 +28,7 @@ app.get("/caesar-shift/sandbox", function(req, res, next){
 });
 
 app.get("/password/encrypt", function(req, res, next){
-	res.render('base_password_exercise', {'title': 'Password Shift Encryption',
+	res.render('base_password_exercise', {'title': 'Vigenere Cipher Encryption',
 				'image_path': '../images/password_encrypt.png',
 				'exercise_type': 'Encrypt',
 				'input_label': 'Plaintext',
@@ -38,7 +38,7 @@ app.get("/password/encrypt", function(req, res, next){
 });
 
 app.get("/password/decrypt", function(req, res, next){
-	res.render('base_password_exercise', {'title': 'Password Shift Decryption',
+	res.render('base_password_exercise', {'title': 'Vigenere Cipher Decryption',
 				'image_path': '../images/password-sandbox.png',
 				'exercise_type': 'Decrypt',
 				'input_label': 'Ciphertext',
@@ -48,7 +48,7 @@ app.get("/password/decrypt", function(req, res, next){
 });
 
 app.get("/password/sandbox", function(req, res, next){
-	res.render('base_password_exercise', {'title': 'Password Shift Sandbox',
+	res.render('base_password_exercise', {'title': 'Vigenere Cipher Sandbox',
 				'image_path': '../images/password-sandbox.png',
 				'exercise_type': 'Sandbox',
 				'input_label': 'Starting Text',
