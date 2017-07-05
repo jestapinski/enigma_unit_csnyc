@@ -1,8 +1,9 @@
 import string
+from encrypt_library import *
 #START#
 def caesar_shift(plaintext, shift_value=5):
   ciphertext = ""
-  #<a onmouseover="if(enable_tooltips){$('#modalForLoop').modal('open')}">for eachletter in plaintext:</a> 
+  #<a href="#" class="clickable" class="clickable" onclick="if(enable_tooltips){$('#modalForLoop').modal('open')}">for eachletter in plaintext:</a> 
   for eachletter in plaintext.lower():
     #if our letter is not a letter, keep it and move on!
     if eachletter not in string.ascii_letters:
@@ -10,20 +11,22 @@ def caesar_shift(plaintext, shift_value=5):
       continue
 
     #if adding shift constant puts out of alphabet (> ord(z)) then sub ord(a)
-    #<a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">encoded_letter = ord(eachletter) + shift_value</a>
-    encoded_letter = ord(eachletter) + shift_value
+    #<a href="#" class="clickable" onclick="if(enable_tooltips){$('#modalShiftVal').modal('open')}">encoded_letter = shift_by_value_in_alphabet(eachletter, shift_value)</a>
+    encoded_letter = shift_by_value_in_alphabet(eachletter, shift_value)
 
     #if our shift would go beyond the letter z then we wrap around to the start
-    if encoded_letter > ord('z'):
-      encoded_letter = ord('a') + (encoded_letter - ord('z')) - 1
+    if is_above_z(encoded_letter):
+      #<a href="#" class="clickable" onclick="if(enable_tooltips){$('#modalWrapA').modal('open')}">encoded_letter = wrap_around_a(encoded_letter)</a>
+      encoded_letter = wrap_around_a(encoded_letter)
 
     #if our shift would go before the letter a then we wrap around to the end
-    if encoded_letter < ord('a'):
-      encoded_letter = ord('z') - (ord('a') - encoded_letter) + 1
+    if is_below_a(encoded_letter):
+      #<a href="#" class="clickable" onclick="if(enable_tooltips){$('#modalWrapZ').modal('open')}">encoded_letter = wrap_around_z(encoded_letter)</a>
+      encoded_letter = wrap_around_z(encoded_letter)
     
     #put our new letter on the end of our ciphertext
-    #<a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">ciphertext = ciphertext + (chr(encoded_letter))</a>
-    ciphertext = ciphertext + (chr(encoded_letter))
+    #<a href="#" class="clickable" onclick="if(enable_tooltips){$('#modalStrConcat').modal('open')}">ciphertext = ciphertext + encoded_letter</a>
+    ciphertext = ciphertext + encoded_letter
   return ciphertext
 #END#
 

@@ -1,32 +1,12 @@
 import string
+from encrypt_library import *
+from encrypt import caesar_shift
 #START#
 def caesar_shift_decrypt(ciphertext, shift_value=5):
   #we can flip the shift value we think the encryptor used to decrypt the message!
   shift_value = -shift_value
-  plaintext = ""
-  #<a onmouseover="if(enable_tooltips){$('#modalForLoop').modal('open')}">for eachletter in plaintext:</a> 
-  for eachletter in ciphertext.lower():
-    #if our letter is not a letter, keep it and move on!
-    if eachletter not in string.ascii_letters:
-      plaintext = plaintext + eachletter
-      continue
-
-    #if adding shift constant puts out of alphabet (> ord(z)) then sub ord(a)
-    #<a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">encoded_letter = ord(eachletter) + shift_value</a>
-    encoded_letter = ord(eachletter) + shift_value
-
-    #if our shift would go beyond the letter z then we wrap around to the start
-    if encoded_letter > ord('z'):
-      encoded_letter = ord('a') + (encoded_letter - ord('z')) - 1
-
-    #if our shift would go before the letter a then we wrap around to the end
-    if encoded_letter < ord('a'):
-      encoded_letter = ord('z') - (ord('a') - encoded_letter) + 1
-    
-    #put our new letter on the end of our ciphertext
-    #<a onmouseover="if(enable_tooltips){$('#modalOrdChr').modal('open')}">ciphertext = ciphertext + (chr(encoded_letter))</a>
-    plaintext = plaintext + (chr(encoded_letter))
-  return plaintext
+    #<a href="#" class="clickable" onclick="if(enable_tooltips){$('#modalOrdChr').modal('open')}">return caesar_shift(ciphertext, shift_value)</a>
+  return caesar_shift(ciphertext, shift_value)
 #END#
 
 def test_decryption():

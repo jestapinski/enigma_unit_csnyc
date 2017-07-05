@@ -171,18 +171,6 @@ h6, label {
         <pre><code id="encryption_code">
         </code></pre>
 
-      <!-- Toggle scrollover modals -->
-
-      <div class="switch">
-        Scrollover Hints: 
-        <label>
-          Off
-          <input type="checkbox" checked="On" onclick="enable_tooltips = !enable_tooltips" class="deepred">
-          <span class="lever"></span>
-          On
-        </label>
-      </div>
-
       </div>
       <div class="modal-footer">
         <a href="#!" class="modal-action modal-close btn deepred">Close</a>
@@ -198,7 +186,7 @@ h6, label {
   for eachletter in plaintext:
     #Do something
         </code></pre>
-        <p>A for loop instructs the computer to do something repeatedly. In this case, we are going to be performing the letter shifting operation for each letter in the plaintext.</p>
+        <p>A for loop instructs the computer to do something repeatedly. In this case, we are going to be performing the letter shifting operation for each letter in the plaintext. In this example, we are encrypting the text one letter at a time by using the for loop statement, looping through each letter in the starting message.</p>
       </div>
       <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
@@ -221,6 +209,62 @@ ciphertext = ciphertext + (chr(encoded_letter))
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
       </div>
     </div>
+
+    <div id="modalShiftVal" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>shift_by_value_in_alphabet</h4>
+        <pre><code>
+def shift_by_value_in_alphabet(starting_letter, shift_value):
+  return chr(ord(starting_letter) + shift_value)
+        </code></pre>
+        <p>This function takes in a letter and an amount to shift by, and returns the letter computed by shifting the starting letter by the <code>shift_value</code> in the alphabet</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <div id="modalWrapA" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>wrap_around_a</h4>
+        <pre><code>
+def wrap_around_a(letter):
+  return chr(ord('a') + (ord(letter) - ord('z')) - 1)
+        </code></pre>
+        <p>This function takes in a letter past z computed by the caesar shift and computes the necessary wraparound it needs to go back around a to perform the shift</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <div id="modalWrapZ" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>wrap_around_z</h4>
+        <pre><code>
+def wrap_around_z(letter):
+  return chr(ord('z') - (ord('a') - ord(letter)) + 1)
+        </code></pre>
+        <p>This function takes in a letter before a computed by the caesar shift and computes the necessary wraparound it needs to go back around a to perform the shift</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <div id="modalStrConcat" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>String Concatenation</h4>
+        <pre><code>
+ciphertext = ciphertext + encoded_letter
+        </code></pre>
+        <p>In computers, words (like your plaintext or ciphertext message) are referred to as strings. This is just some vocabulary about how computers work with literal words. In the Python programming language, when we want to combine two words (perhaps we want to combine "Alan" and "Turing" to get "AlanTuring"), <strong>we represent this as "adding" the two strings</strong>, seen here! This line of code combines the ciphertext we already created with the new letter we just encrypted.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
 
 <!-- Modal for displaying positive feedback -->
 

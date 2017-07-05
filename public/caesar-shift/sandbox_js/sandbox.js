@@ -288,12 +288,20 @@ function convert_to_HTML(data){
   var python_line, i;
   var final_python_code = [];
   var skip_flag = false;
+  var start_flag = false;
   for (i = 0; i < python_lines.length; i++){
+    python_line = python_lines[i];
+    if (python_line == "#START#"){
+      start_flag = true;
+      continue;
+    }
+    if (!start_flag){
+      continue;
+    }
     if (skip_flag){
       skip_flag = false;
       continue;
     }
-    python_line = python_lines[i];
     if (python_line == "#END#"){
       break;
     }

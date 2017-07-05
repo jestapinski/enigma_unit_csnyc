@@ -13,6 +13,7 @@ var square_box = document.getElementById('square-box');
 var canvas = document.getElementById("canvas");
 var decryption_code = document.getElementById('decryption_code');
 var clipboard = document.getElementById('clipboard');
+var encrypt_code = document.getElementById('encrypt_code');
 
 // Initializing Shift array constants
 var numbers = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];
@@ -667,6 +668,14 @@ jQuery.get('decrypt.py', function(data) {
   });
   $('#modal_decrypt').modal('open');
 });
+
+jQuery.get('encrypt.py', function(data){
+  var python_function = convert_to_HTML(data);
+  encrypt_code.innerHTML = python_function;
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  }); 
+})
 
 //Bind buttons to events
 spinUp.addEventListener("click", spin_wheel_up);
