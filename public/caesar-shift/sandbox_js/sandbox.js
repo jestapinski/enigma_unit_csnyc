@@ -161,9 +161,9 @@ function draw_horizontal_box_lines(ctx, box_number, box_height, box_width){
 function establish_context_settings(ctx, plaintext_length){
   ctx.fillStyle = "#000000";
   if (plaintext_length > 20){
-    ctx.font = "24px Arial";
+    ctx.font = "1.20rem PT Mono";
   } else {
-    ctx.font = "30px Arial";    
+    ctx.font = "1.30rem PT Mono";    
   }
   ctx.textAlign = "center";
 }

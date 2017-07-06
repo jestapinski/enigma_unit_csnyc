@@ -7,7 +7,9 @@ def password_shift_encryption(plaintext, password, password_starting_index):
   alphabet_offset = ord('a')
   #<a href="#" class="clickable" onclick="$('#modalForLoop1').modal('open')">for letter_index in range(len(plaintext)):</a>
   for letter_index in range(len(plaintext)):
+    # Find where in the password we are to encrypt off of
     password_current_index = password_starting_index + letter_index
+    # Find the letter in the password we wish to use for our encryption
     encryption_letter = password[password_current_index % len(password)].lower()
     #<a href="#" class="clickable" onclick="$('#modalOffset').modal('open')">shift_value = ord(encryption_letter) - alphabet_offset</a>
     shift_value = ord(encryption_letter) - alphabet_offset
