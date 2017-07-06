@@ -13,6 +13,7 @@ def password_shift_encryption(plaintext, password, password_starting_index):
     encryption_letter = password[password_current_index % len(password)].lower()
     #<a href="#" class="clickable" onclick="$('#modalOffset').modal('open')">shift_value = ord(encryption_letter) - alphabet_offset</a>
     shift_value = ord(encryption_letter) - alphabet_offset
+    # Find the letter of the plaintext we are encrypting
     plaintext_letter = plaintext[letter_index].lower()
     #<a href="#" class="clickable" onclick="$('#modalStrConcat1').modal('open')">final_word = final_word + caesar_shift(plaintext_letter, shift_value)</a>
     final_word = final_word + caesar_shift(plaintext_letter, shift_value)

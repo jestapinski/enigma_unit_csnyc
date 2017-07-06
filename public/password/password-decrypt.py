@@ -19,6 +19,7 @@ def caesar_shift_one_letter(letter, shift_value):
   return chr(encoded_letter)
 
 #START#
+# Still in progress! Modals to be added
 def password_shift_decryption(plaintext, password, password_starting_index):
   final_word = ''
   alphabet_offset = ord('a')

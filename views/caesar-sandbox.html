@@ -8,6 +8,8 @@ Sandbox Page
 <link type="text/css" rel="stylesheet" href="../css/railscasts.css"  media="screen,projection"/>
 <link type="text/css" rel="stylesheet" href="../css/materialize.css"  media="screen,projection"/>
 <link type="text/css" rel="stylesheet" href="encrypt_css/encrypt.css" media="screen,projection"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 <link rel="shortcut icon" href="../images/favicon.ico">
 <!-- Add background image -->
 
@@ -135,7 +137,7 @@ h6, label {
       <!-- Shift Value inputs -->
 
       <div class="col s1 pull-s2 flow-text">
-        <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="This is how much we want to shift by (negative means to the left, and positive means to the right!)">Shift</p>
+        <label class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="This is how much we want to shift by (negative means to the left, and positive means to the right!)">Shift <i class="tiny material-icons">info_outline</i></label>
       </div>
 
       <!-- Spinner -->
@@ -156,7 +158,7 @@ h6, label {
 
       <div class="input-field col s3 push-s1 flow-text tooltipped" data-tooltip="This is the shifted starting text using the shift value passed">
         <input disabled placeholder="J dbnf, J tbx, J dporvfsfe" value="J dbnf, J tbx, J dporvfsfe" id="output_text" type="text" class="tooltipped">
-        <label for="output_text">Final Text</label>
+        <label for="output_text">Final Text <i class="tiny material-icons">info_outline</i></label>
         <a class="waves-effect waves-green btn beige black-text" id="clipboard">Copy to Clipboard</a>
       </div>
 
