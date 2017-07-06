@@ -3,6 +3,14 @@ Jordan Stapinski
 Decryption page CSS
 For use with Enigma teaching model Encryption page
 */
+.clickable {
+  border: 2px solid #777;
+}
+
+.clickable:hover
+{
+  border: 2px solid #F8CA4D;
+}
 
 ::-webkit-input-placeholder {
   font-size: 20px;

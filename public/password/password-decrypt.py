@@ -1,4 +1,5 @@
-import string
+from encrypt import *
+
 def caesar_shift_one_letter(letter, shift_value):
   if letter not in string.ascii_letters:
     return letter
@@ -17,6 +18,7 @@ def caesar_shift_one_letter(letter, shift_value):
 
   return chr(encoded_letter)
 
+#START#
 def password_shift_decryption(plaintext, password, password_starting_index):
   final_word = ''
   alphabet_offset = ord('a')

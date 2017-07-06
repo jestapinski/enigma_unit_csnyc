@@ -4,6 +4,15 @@ Encryption page CSS
 For use with Enigma teaching model Encryption page
 */
 
+.clickable {
+  border: 2px solid #777;
+}
+
+.clickable:hover
+{
+  border: 2px solid #F8CA4D;
+}
+
 ::-webkit-input-placeholder {
   font-size: 20px;
   color: #000000; 
@@ -96,3 +105,5 @@ label {
 .switch label input[type=checkbox]:checked+.lever:after {
   background-color: #F8CA4D;
 }
+
+.modal { width: 85% ; max-height: 85% !important ; }  /* increase the height and width as you desire */

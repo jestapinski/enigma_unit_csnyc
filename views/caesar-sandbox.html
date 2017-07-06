@@ -21,6 +21,43 @@ body {
 .nav-wrapper {
   background-color: #3F5666 !important;
 }
+
+input[type=text] {
+  font-size: 16px;
+  color: #000000;
+  background-color: #FFFFFF;
+  border: 2px solid #777;
+  padding-left: 4px; 
+}
+
+input[type=text][disabled] {
+  font-size: 16px;
+  color: #444444;
+  border: 2px solid #777;
+}
+
+.input-field input[type=text]:enabled{
+ border-bottom: 1px solid #777;
+ box-shadow: 0 1px 0 0 #777;
+}
+
+.input-field input[type=text]:focus {
+ border-bottom: 1px solid #F8CA4D;
+ box-shadow: 0 1px 0 0 #F8CA4D;
+}
+
+a { color: inherit; }
+
+p {
+  font-size: 1.25rem !important;
+}
+
+h6, label {
+  color: #000000 !important;
+  font-size:1.38rem !important;
+  font-family:'Roboto' sans-serif; 
+  font-weight:300;
+}
 </style>
 
 <html>
@@ -38,9 +75,20 @@ body {
 	<body>
     <div class="row">
       <div class="col s6 offset-s1">
-  		  <h1>Caesar Shift Sandbox</h1>
+  		  <h3>Caesar Shift Sandbox</h3>
       </div>
     </div>
+
+        <!-- Instructions -->
+    <div id="instruction_set">
+      <div class="row">
+          <h4 class = "col offset-s1">Instructions:</h4>        
+          <p class="flow-text col s11 offset-s1">
+            Play around! Try different values for the starting and ending text and run them through the Caesar Shift mechanism.
+          </p>
+      </div>
+    </div>
+
 
     <div class="row">
       <div class="col s3 offset-s1">
@@ -105,9 +153,6 @@ body {
 
       <!-- Output fields -->
 
-<!--       <div class="col s2 push-s1 flow-text">
-        <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="Our encoded text! This will appear once we encrypt the plaintext.">Ciphertext:</p>
-      </div> -->
 
       <div class="input-field col s3 push-s1 flow-text tooltipped" data-tooltip="This is the shifted starting text using the shift value passed">
         <input disabled placeholder="J dbnf, J tbx, J dporvfsfe" value="J dbnf, J tbx, J dporvfsfe" id="output_text" type="text" class="tooltipped">
@@ -117,18 +162,6 @@ body {
 
     </div>
 
-    <!-- Instructions -->
-    <div id="instruction_set">
-      <div class="row container">
-          <h3>Instructions:</h3>        
-      </div>
-
-      <div class="row container">
-          <p class="flow-text">
-            Play around! Try different values for the starting and ending text and run them through the Caesar Shift mechanism.
-          </p>
-      </div>
-    </div>
 
 <!-- MODALS -->
 
@@ -142,17 +175,6 @@ body {
         <pre><code id="shift_code">
         </code></pre>
 
-      <!-- Toggle scrollover modals -->
-
-      <div class="switch">
-        Scrollover Hints: 
-        <label>
-          Off
-          <input type="checkbox" checked="On" onclick="enable_tooltips = !enable_tooltips" class="deepred">
-          <span class="lever"></span>
-          On
-        </label>
-      </div>
 
       </div>
       <div class="modal-footer">
@@ -169,7 +191,7 @@ body {
   for eachletter in plaintext:
     #Do something
         </code></pre>
-        <p>A for loop instructs the computer to do something repeatedly. In this case, we are going to be performing the letter shifting operation for each letter in the plaintext.</p>
+        <p>A for loop instructs the computer to do something repeatedly. In this case, we are going to be performing the letter shifting operation for each letter in the plaintext. In this example, we are encrypting the text one letter at a time by using the for loop statement, looping through each letter in the starting message.</p>
       </div>
       <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
@@ -187,6 +209,61 @@ encoded_letter = ord(c) + shift_value
 ciphertext = ciphertext + (chr(encoded_letter))
         </code></pre>
         <p><code>ord</code> and <code>chr</code> are two special Python functions. In computers, letters are represented by numbers, ofthen referred to as their ASCII number. By converting a letter to its ASCII number, we can add the shift value to its ASCII number to get the number representing our ciphertext letter. <code>ord</code> converts a letter into its ASCII number and <code>chr</code> converts a ASCII number into a letter.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <div id="modalShiftVal" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>shift_by_value_in_alphabet</h4>
+        <pre><code>
+def shift_by_value_in_alphabet(starting_letter, shift_value):
+  return chr(ord(starting_letter) + shift_value)
+        </code></pre>
+        <p>This function takes in a letter and an amount to shift by, and returns the letter computed by shifting the starting letter by the <code>shift_value</code> in the alphabet</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <div id="modalWrapA" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>wrap_around_a</h4>
+        <pre><code>
+def wrap_around_a(letter):
+  return chr(ord('a') + (ord(letter) - ord('z')) - 1)
+        </code></pre>
+        <p>This function takes in a letter past z computed by the caesar shift and computes the necessary wraparound it needs to go back around a to perform the shift</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <div id="modalWrapZ" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>wrap_around_z</h4>
+        <pre><code>
+def wrap_around_z(letter):
+  return chr(ord('z') - (ord('a') - ord(letter)) + 1)
+        </code></pre>
+        <p>This function takes in a letter before a computed by the caesar shift and computes the necessary wraparound it needs to go back around a to perform the shift</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <div id="modalStrConcat" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>String Concatenation</h4>
+        <pre><code>
+ciphertext = ciphertext + encoded_letter
+        </code></pre>
+        <p>In computers, words (like your plaintext or ciphertext message) are referred to as strings. This is just some vocabulary about how computers work with literal words. In the Python programming language, when we want to combine two words (perhaps we want to combine "Alan" and "Turing" to get "AlanTuring"), <strong>we represent this as "adding" the two strings</strong>, seen here! This line of code combines the ciphertext we already created with the new letter we just encrypted.</p>
       </div>
       <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>

@@ -8,6 +8,8 @@ Encryption Page
 <link type="text/css" rel="stylesheet" href="../css/railscasts.css"  media="screen,projection"/>
 <link type="text/css" rel="stylesheet" href="../css/materialize.css"  media="screen,projection"/>
 <link type="text/css" rel="stylesheet" href="encrypt_css/encrypt.css" media="screen,projection"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 <link rel="shortcut icon" href="../images/favicon.ico">
 <!-- Add background image -->
 
@@ -20,6 +22,43 @@ body {
 
 .nav-wrapper {
   background-color: #3F5666 !important;
+}
+
+input[type=text] {
+  font-size: 16px;
+  color: #000000;
+  background-color: #FFFFFF;
+  border: 2px solid #777;
+  padding-left: 4px; 
+}
+
+input[type=text][disabled] {
+  font-size: 16px;
+  color: #444444;
+  border: 2px solid #777;
+}
+
+.input-field input[type=text]:enabled{
+ border-bottom: 1px solid #777;
+ box-shadow: 0 1px 0 0 #777;
+}
+
+.input-field input[type=text]:focus {
+ border-bottom: 1px solid #F8CA4D;
+ box-shadow: 0 1px 0 0 #F8CA4D;
+}
+
+a { color: inherit; }
+
+p {
+  font-size: 1.25rem !important;
+}
+
+h6, label {
+  color: #000000 !important;
+  font-size:1.38rem !important;
+  font-family:'Roboto' sans-serif; 
+  font-weight:300;
 }
 </style>
 
@@ -38,7 +77,17 @@ body {
 	<body>
     <div class="row">
       <div class="col s6 offset-s1">
-  		  <h1>Caesar Shift Encryption</h1>
+  		  <h3>Caesar Shift Encryption</h3>
+      </div>
+    </div>
+
+        <!-- Instructions -->
+    <div id="instruction_set">
+      <div class="row">
+          <h4 class="col offset-s1">Instructions:</h4>        
+          <p class="flow-text col s11 offset-s1">
+            Using a plaintext of: <strong>move north</strong>, perform a Caesar Shift of <strong>up 3</strong> using the computational model (input the needed inputs on the left, and press "encrypt" to run the encryption and see the ciphertext as the output!)
+          </p>
       </div>
     </div>
 
@@ -84,7 +133,7 @@ body {
       <!-- Shift Value inputs -->
 
       <div class="col s1 pull-s2 flow-text">
-        <p class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="This is how much we want to shift by (negative means to the left, and positive means to the right!)">Shift</p>
+        <label class="flow-text tooltipped" data-position="bottom" data-delay="50" data-tooltip="This is how much we want to shift by (negative means to the left, and positive means to the right!)">Shift <i class="tiny material-icons">info_outline</i></label>
       </div>
 
       <!-- Spinner -->
@@ -96,7 +145,7 @@ body {
       <div class="col s1 pull-s3">
         <a class="waves-effect waves-green btn" style="visibility:hidden">Up</a>
         <a class="waves-effect waves-green btn" style="visibility:hidden">Up</a>
-        <a class="waves-effect waves-green btn navy white-text" id="spinUp">Up</a>
+        <a class="waves-effect waves-green btn navy white-text" id="spinUp">Up&nbsp;&nbsp;</a>
         <a class="waves-effect waves-green btn deepred white-text" id="spinDown">Down</a>
       </div>
 
@@ -110,19 +159,6 @@ body {
 
     </div>
 
-    <!-- Instructions -->
-    <div id="instruction_set">
-      <div class="row container">
-          <h3>Instructions:</h3>        
-      </div>
-
-      <div class="row container">
-          <p class="flow-text">
-            Using a plaintext of: <strong>move north</strong>, perform a Caesar Shift of <strong>up 3</strong> using the computational model (input the needed inputs on the left, and press "encrypt" to run the encryption and see the ciphertext as the output!)
-          </p>
-      </div>
-    </div>
-
 <!-- MODALS -->
 
     <div id="modal1" class="modal">
@@ -134,18 +170,6 @@ body {
 
         <pre><code id="encryption_code">
         </code></pre>
-
-      <!-- Toggle scrollover modals -->
-
-      <div class="switch">
-        Scrollover Hints: 
-        <label>
-          Off
-          <input type="checkbox" checked="On" onclick="enable_tooltips = !enable_tooltips" class="deepred">
-          <span class="lever"></span>
-          On
-        </label>
-      </div>
 
       </div>
       <div class="modal-footer">
@@ -162,7 +186,7 @@ body {
   for eachletter in plaintext:
     #Do something
         </code></pre>
-        <p>A for loop instructs the computer to do something repeatedly. In this case, we are going to be performing the letter shifting operation for each letter in the plaintext.</p>
+        <p>A for loop instructs the computer to do something repeatedly. In this case, we are going to be performing the letter shifting operation for each letter in the plaintext. In this example, we are encrypting the text one letter at a time by using the for loop statement, looping through each letter in the starting message.</p>
       </div>
       <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
@@ -185,6 +209,62 @@ ciphertext = ciphertext + (chr(encoded_letter))
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
       </div>
     </div>
+
+    <div id="modalShiftVal" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>shift_by_value_in_alphabet</h4>
+        <pre><code>
+def shift_by_value_in_alphabet(starting_letter, shift_value):
+  return chr(ord(starting_letter) + shift_value)
+        </code></pre>
+        <p>This function takes in a letter and an amount to shift by, and returns the letter computed by shifting the starting letter by the <code>shift_value</code> in the alphabet</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <div id="modalWrapA" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>wrap_around_a</h4>
+        <pre><code>
+def wrap_around_a(letter):
+  return chr(ord('a') + (ord(letter) - ord('z')) - 1)
+        </code></pre>
+        <p>This function takes in a letter past z computed by the caesar shift and computes the necessary wraparound it needs to go back around a to perform the shift</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <div id="modalWrapZ" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>wrap_around_z</h4>
+        <pre><code>
+def wrap_around_z(letter):
+  return chr(ord('z') - (ord('a') - ord(letter)) + 1)
+        </code></pre>
+        <p>This function takes in a letter before a computed by the caesar shift and computes the necessary wraparound it needs to go back around a to perform the shift</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
+    <div id="modalStrConcat" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>String Concatenation</h4>
+        <pre><code>
+ciphertext = ciphertext + encoded_letter
+        </code></pre>
+        <p>In computers, words (like your plaintext or ciphertext message) are referred to as strings. This is just some vocabulary about how computers work with literal words. In the Python programming language, when we want to combine two words (perhaps we want to combine "Alan" and "Turing" to get "AlanTuring"), <strong>we represent this as "adding" the two strings</strong>, seen here! This line of code combines the ciphertext we already created with the new letter we just encrypted.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+
 
 <!-- Modal for displaying positive feedback -->
 

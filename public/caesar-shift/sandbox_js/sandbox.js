@@ -161,9 +161,9 @@ function draw_horizontal_box_lines(ctx, box_number, box_height, box_width){
 function establish_context_settings(ctx, plaintext_length){
   ctx.fillStyle = "#000000";
   if (plaintext_length > 20){
-    ctx.font = "24px Arial";
+    ctx.font = "1.20rem PT Mono";
   } else {
-    ctx.font = "30px Arial";    
+    ctx.font = "1.30rem PT Mono";    
   }
   ctx.textAlign = "center";
 }
@@ -288,12 +288,20 @@ function convert_to_HTML(data){
   var python_line, i;
   var final_python_code = [];
   var skip_flag = false;
+  var start_flag = false;
   for (i = 0; i < python_lines.length; i++){
+    python_line = python_lines[i];
+    if (python_line == "#START#"){
+      start_flag = true;
+      continue;
+    }
+    if (!start_flag){
+      continue;
+    }
     if (skip_flag){
       skip_flag = false;
       continue;
     }
-    python_line = python_lines[i];
     if (python_line == "#END#"){
       break;
     }

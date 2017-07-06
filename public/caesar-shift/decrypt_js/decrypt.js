@@ -13,6 +13,7 @@ var square_box = document.getElementById('square-box');
 var canvas = document.getElementById("canvas");
 var decryption_code = document.getElementById('decryption_code');
 var clipboard = document.getElementById('clipboard');
+var encrypt_code = document.getElementById('encrypt_code');
 
 // Initializing Shift array constants
 var numbers = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];
@@ -159,12 +160,12 @@ function draw_horizontal_box_lines(ctx, box_number, box_height, box_width){
   Sets up values for the context to draw text, including font, color,
   and alignment
 */
-function establish_context_settings(ctx, ciphertext_length){
+function establish_context_settings(ctx, plaintext_length){
   ctx.fillStyle = "#000000";
-  if (ciphertext_length > 20){
-    ctx.font = "24px Arial";
+  if (plaintext_length > 20){
+    ctx.font = "1.20rem PT Mono";
   } else {
-    ctx.font = "30px Arial";    
+    ctx.font = "1.30rem PT Mono";    
   }
   ctx.textAlign = "center";
 }
@@ -290,12 +291,20 @@ function convert_to_HTML(data){
   var python_line, i;
   var final_python_code = [];
   var skip_flag = false;
+  var start_flag = false;
   for (i = 0; i < python_lines.length; i++){
+    python_line = python_lines[i];
+    if (python_line == "#START#"){
+      start_flag = true;
+      continue;
+    }
+    if (!start_flag){
+      continue;
+    }
     if (skip_flag){
       skip_flag = false;
       continue;
     }
-    python_line = python_lines[i];
     if (python_line == "#END#"){
       break;
     }
@@ -659,6 +668,14 @@ jQuery.get('decrypt.py', function(data) {
   });
   $('#modal_decrypt').modal('open');
 });
+
+jQuery.get('encrypt.py', function(data){
+  var python_function = convert_to_HTML(data);
+  encrypt_code.innerHTML = python_function;
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  }); 
+})
 
 //Bind buttons to events
 spinUp.addEventListener("click", spin_wheel_up);

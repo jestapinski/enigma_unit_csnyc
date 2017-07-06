@@ -16,9 +16,11 @@ var clipboard = document.getElementById('clipboard');
 var index_input = document.getElementById('index_input');
 var success_modal_text = document.getElementById('success_modal_text');
 var retry_modal_text = document.getElementById('retry_modal_text');
+var encrypt_code = document.getElementById('encrypt_code');
 var current_word_index = 0;
 var given_word = '';
 var validate = true;
+const enable_tooltips = true;
 const box_height = 50;
 const box_height_offset = 100;
 const text_height_offset = box_height * (3.0/5);
@@ -123,7 +125,7 @@ function draw_highlighted_letter(ctx, word_index, plaintext, text_start_x,
                                                                     box_width){
   ctx.fillStyle = "#F8CA4D";
   ctx.textAlign = "center";
-  ctx.font = '20px Arial';
+  ctx.font = '1.30rem PT Mono';
   ctx.fillRect(margin + word_index * box_width, 0, box_width, box_height);
   ctx.fillStyle = "#000000";
   ctx.fillText(plaintext[word_index], text_start_x, text_height_offset);
@@ -178,7 +180,7 @@ function clear_text_overflow(ctx, canvas_width){
   ctx.fillStyle = "#3F5666";
   ctx.fillRect(0, box_height, canvas_width, box_height_offset);
   ctx.fillRect(0, 2 * box_height + box_height_offset, canvas_width, 
-                                                            box_height_offset);
+                                                            box_height_offset / 2);
 }
 
 /*
@@ -203,12 +205,11 @@ function clear_text_overflow(ctx, canvas_width){
 function draw_process_text(ctx, plaintext, password_shift, word_index, 
                                                                   ciphertext){
   var shift_text = 'Shifting ';
-  ctx.font = "20px Arial";
+  ctx.font = "1.30rem PT Mono";
   ctx.fillStyle = "#FFFFFF";
   ctx.textAlign = "left";
   if (!(plaintext[word_index].toLowerCase().match(/[a-z]/i))){
-    shift_text = 'Not changing \''.concat(plaintext[word_index], 
-                                              '\' because it is not a letter');
+    shift_text = "'".concat(plaintext[word_index], '\' is not a letter');
   } else {
     shift_text = shift_text.concat(plaintext[word_index], ' by ', 
                            password_shift, ' to get ', ciphertext[word_index]);    
@@ -242,7 +243,7 @@ function draw_plaintext(plaintext, ctx){
     ctx.fillRect(box_horizontal, 0, box_width, box_height);
     ctx.fillStyle = "#000000";
     ctx.textAlign = "center";
-    ctx.font = '20px Arial';
+    ctx.font = '1.30rem PT Mono';
     ctx.fillText(plaintext[i], box_horizontal + (box_width/2), 
                                                             text_height_offset);
     ctx.beginPath();
@@ -523,15 +524,15 @@ function draw_current_index_value(ctx, angle, direction){
 
   ctx.fillStyle = "#000000";
   ctx.textAlign = "center";
-  ctx.font = '30px Arial';
+  ctx.font = '1.40rem PT Mono';
   ctx.fillText(current_word_index.toString(), 0, y);
-  ctx.font = '20px Arial';
+  ctx.font = '1.30rem PT Mono';
   ctx.fillText(given_password[current_word_index % given_password.length], 0, 
                                                           -text_height_offset);
   ctx.rotate(to_radians(direction * wheel_rotation_offset));
-  ctx.font = '30px Arial';
+  ctx.font = '1.40rem PT Mono';
   ctx.fillText((current_word_index - direction).toString(), 0, y);
-  ctx.font = '20px Arial';
+  ctx.font = '1.30rem PT Mono';
   next_letter = current_word_index - direction;
   ctx.fillText(given_password[(next_letter) % given_password.length], 0, 
                                                           -text_height_offset);
@@ -591,10 +592,10 @@ function draw_password(ctx){
     ctx.lineTo(i * box_width, box_height);
     ctx.stroke();
     //Letters
-    ctx.font = "30px Arial";    
+    ctx.font = "1.90rem PT Mono";    
     ctx.textAlign = "center";
     ctx.fillText(word[i], box_width * (i + 1.0/2), text_height_offset);
-    ctx.font = "20px Arial";    
+    ctx.font = "1.40rem PT Mono";    
     ctx.fillText(alphabet_position, box_width * (i + 1/2), 
                                               text_height_offset + box_height);
   }
@@ -628,7 +629,7 @@ function highlight_password_position(ctx, word_index){
   ctx.moveTo(box_horizontal, 0);
   ctx.lineTo(box_horizontal, box_height);
   ctx.stroke();
-  ctx.font = "30px Arial";    
+  ctx.font = "1.90rem PT Mono";    
   ctx.textAlign = "center";
   ctx.fillText(word[word_index], box_horizontal + (box_width/2), 
                                                             text_height_offset);
@@ -702,12 +703,20 @@ function convert_to_HTML(data){
   var python_line, i;
   var final_python_code = [];
   var skip_flag = false;
+  var start_flag = false;
   for (i = 0; i < python_lines.length; i++){
+    python_line = python_lines[i];
+    if (python_line == "#START#"){
+      start_flag = true;
+      continue;
+    }
+    if (!start_flag){
+      continue;
+    }
     if (skip_flag){
       skip_flag = false;
       continue;
     }
-    python_line = python_lines[i];
     if (python_line == "#END#"){
       break;
     }
@@ -746,6 +755,14 @@ if (document.title.includes('Decryption')){
     test_password_decrypt();
   });  
 }
+
+jQuery.get('encrypt.py', function(data) {
+  var python_function = convert_to_HTML(data);
+  encrypt_code.innerHTML = python_function;
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
 
 draw_index_wheel();
 draw_word_position(0);
