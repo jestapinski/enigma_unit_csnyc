@@ -56,6 +56,35 @@ app.get("/password/sandbox", function(req, res, next){
 				js_source: true});
 });
 
+app.get("/enigma/encrypt", function(req, res, next){
+	res.render('base_enigma_exercise', {'title': 'Enigma Machine Encryption',
+				'image_path': '../images/password-sandbox.png',
+				'exercise_type': 'Encrypt',
+				'input_label': 'Plaintext',
+				'output_label': 'Ciphertext',
+				'next_route': '/enigma/decrypt'
+				});
+});
+
+app.get("/enigma/decrypt", function(req, res, next){
+	res.render('base_enigma_exercise', {'title': 'Enigma Machine Decryption',
+				'image_path': '../images/password-sandbox.png',
+				'exercise_type': 'Decrypt',
+				'input_label': 'Ciphertext',
+				'output_label': 'Plaintext',
+				'next_route': '/'
+				});
+});
+
+app.get("/enigma/sandbox", function(req, res, next){
+	res.render('base_enigma_exercise', {'title': 'Enigma Machine Sandbox',
+				'image_path': '../images/password-sandbox.png',
+				'exercise_type': 'Sandbox',
+				'input_label': 'Starting Text',
+				'output_label': 'Ending Text',
+				});
+})
+
 // Running the web server
 var server = app.listen(3000, function() {
     var port = server.address().port;
