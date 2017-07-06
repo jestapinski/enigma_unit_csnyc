@@ -5,14 +5,14 @@ def password_shift_encryption(plaintext, password, password_starting_index):
   final_word = ''
   #<a href="#" class="clickable" onclick="$('#modalOrd').modal('open')">alphabet_offset = ord('a')</a>
   alphabet_offset = ord('a')
-  #<a href="#" class="clickable" onclick="$('#modalForLoop').modal('open')">for letter_index in range(len(plaintext)):</a>
+  #<a href="#" class="clickable" onclick="$('#modalForLoop1').modal('open')">for letter_index in range(len(plaintext)):</a>
   for letter_index in range(len(plaintext)):
     password_current_index = password_starting_index + letter_index
-    encryption_letter = password[password_current_index % len(password)]
-    #<a href="#" class="clickable" onclick="$('#modalOffset').modal('open')">shift_value = ord(encryption_letter.lower()) - alphabet_offset</a>
-    shift_value = ord(encryption_letter.lower()) - alphabet_offset
+    encryption_letter = password[password_current_index % len(password)].lower()
+    #<a href="#" class="clickable" onclick="$('#modalOffset').modal('open')">shift_value = ord(encryption_letter) - alphabet_offset</a>
+    shift_value = ord(encryption_letter) - alphabet_offset
     plaintext_letter = plaintext[letter_index].lower()
-    #<a href="#" class="clickable" onclick="$('#modalStrConcat').modal('open')">final_word = final_word + caesar_shift(plaintext_letter, shift_value)</a>
+    #<a href="#" class="clickable" onclick="$('#modalStrConcat1').modal('open')">final_word = final_word + caesar_shift(plaintext_letter, shift_value)</a>
     final_word = final_word + caesar_shift(plaintext_letter, shift_value)
   return final_word
 #END#

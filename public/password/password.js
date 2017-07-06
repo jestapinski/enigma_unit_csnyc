@@ -16,9 +16,11 @@ var clipboard = document.getElementById('clipboard');
 var index_input = document.getElementById('index_input');
 var success_modal_text = document.getElementById('success_modal_text');
 var retry_modal_text = document.getElementById('retry_modal_text');
+var encrypt_code = document.getElementById('encrypt_code');
 var current_word_index = 0;
 var given_word = '';
 var validate = true;
+const enable_tooltips = true;
 const box_height = 50;
 const box_height_offset = 100;
 const text_height_offset = box_height * (3.0/5);
@@ -753,6 +755,14 @@ if (document.title.includes('Decryption')){
     test_password_decrypt();
   });  
 }
+
+jQuery.get('encrypt.py', function(data) {
+  var python_function = convert_to_HTML(data);
+  encrypt_code.innerHTML = python_function;
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
 
 draw_index_wheel();
 draw_word_position(0);
