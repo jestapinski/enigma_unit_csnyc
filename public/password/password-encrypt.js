@@ -1,15 +1,35 @@
-const instructions = "Write your own <strong>plaintext message of at least 5 \
-                  letters</strong> and <strong>password of at least 5 letters\
-                  </strong> such that the encrypted text is composed of all \
-                  <strong>unique letters</strong> (i.e. no letter is in the \
-                  encrypted text twice)!";
+/*
+  Jordan Stapinski
+  password-encrypt.js
+  Instructions and logic specific to the Vigenere#Encrypt exercise
 
-const opening_text = "We have been playing with encryption and decryption of text\
-                     with a fixed shifting value for each letter. What if we\
-                    made the encryption technique more complicated?\
-                     Consider using a word to define our shift values. We can\
-                      think of each letter as having a number according to its\
-                       position in the alphabet (a is 1, b is 2, and so on).";
+  Javascript file which accompanies password.js. Required interface includes:
+    Variables
+      - instructions
+      - opening_text
+      - success_text
+      - failure_text
+    Functions
+      - check_is_win
+      - password_encrypt
+      - shift_letter
+  to operate in conjunction with the main password.js file.
+
+  ASSUMES: 'a' is position 0 in the alphabet.
+*/
+
+const instructions = "Write your own <strong>plaintext message of at least 5 \
+                    letters</strong> and <strong>password of at least 5 letters\
+                    </strong> such that the encrypted text is composed of all \
+                    <strong>unique letters</strong> (i.e. no letter is in the \
+                    encrypted text twice)!";
+
+const opening_text = "We have been playing with encryption and decryption of\
+                    text with a fixed shifting value for each letter. What if\
+                    we made the encryption technique more complicated?\
+                    Consider using a word to define our shift values. We can\
+                    think of each letter as having a number according to its\
+                    position in the alphabet (a is 1, b is 2, and so on).";
 
 const success_text = "Great work, moving on";
 
@@ -85,6 +105,16 @@ function test_password_encrypt(){
   });
 }
 
+/*
+  shift_letter
+
+  password: The password from the user
+  password_index: The index of the letter in the password we wish to obtain
+  a_value: The ASCII value of 'a'
+
+  returns the position of the letter defined by password[password_index] in the
+  alphabet.
+*/
 function shift_letter(password, password_index, a_value){
   return password[password_index].charCodeAt(0) - a_value;
 }

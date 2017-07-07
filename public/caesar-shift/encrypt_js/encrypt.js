@@ -588,6 +588,7 @@ function run_encryption(){
   new_text = mapped_array.join("");
   output_text.value = new_text;    
 }
+
 /*
   draw_vertical_box_lines
 

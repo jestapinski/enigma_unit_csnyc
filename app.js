@@ -29,30 +29,39 @@ app.get("/caesar-shift/sandbox", function(req, res, next){
 
 app.get("/password/encrypt", function(req, res, next){
 	res.render('base_password_exercise', {'title': 'Vigenere Cipher Encryption',
-				'image_path': '../images/password_encrypt.png',
 				'exercise_type': 'Encrypt',
 				'input_label': 'Plaintext',
 				'output_label': 'Ciphertext',
 				'next_route': '/password/decrypt',
+				'red': 0,
+				'green': 0,
+				'blue': 100,
+				'opacity': 0.2,
 				js_source: true});
 });
 
 app.get("/password/decrypt", function(req, res, next){
 	res.render('base_password_exercise', {'title': 'Vigenere Cipher Decryption',
-				'image_path': '../images/password-sandbox.png',
 				'exercise_type': 'Decrypt',
 				'input_label': 'Ciphertext',
 				'output_label': 'Plaintext',
-				'next_route': '/enigma/encrypt', //To be changed
+				'next_route': '/enigma/encrypt',
+				'red': 0,
+				'green': 50,
+				'blue': 50,
+				'opacity': 0.2,
 				js_source: true});
 });
 
 app.get("/password/sandbox", function(req, res, next){
 	res.render('base_password_exercise', {'title': 'Vigenere Cipher Sandbox',
-				'image_path': '../images/password-sandbox.png',
 				'exercise_type': 'Sandbox',
 				'input_label': 'Starting Text',
 				'output_label': 'Ending Text',
+				'red': 50,
+				'green': 0,
+				'blue': 50,
+				'opacity': 0.2,
 				js_source: true});
 });
 

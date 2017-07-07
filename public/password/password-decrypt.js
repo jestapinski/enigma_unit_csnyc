@@ -1,8 +1,34 @@
-const instructions = "We have a ciphertext of <strong>ulsu hzekvto</strong> that\
-                    we need to crack. We have a clue that <strong>the password is\
-                    the country which hosts the city of Paris</strong> and the\
-                    <strong>index input is the day of the month the Allies invaded\
-                    Normandy Beach</strong>. Hint: <u><a href='https://en.wikipedia.org/wiki/Normandy_landings' style='color:blue' target=_blank>The Battle of Normandy</a></u>";
+/*
+  Jordan Stapinski
+  password-decrypt.js
+  Instructions and logic specific to the Vigenere#Decrypt exercise
+
+  Javascript file which accompanies password.js. Required interface includes:
+    Variables
+      - instructions
+      - opening_text
+      - success_text
+      - failure_text
+    Functions
+      - check_is_win
+      - password_encrypt
+      - shift_letter
+  to operate in conjunction with the main password.js file.
+
+  ASSUMES: 'a' is position 0 in the alphabet.
+*/
+
+const help_url = "Hint: <u>\
+                  <a href='https://en.wikipedia.org/wiki/Normandy_landings'\
+                    style='color:blue' target=_blank> The Battle of Normandy\
+                  </a>\
+                </u>";
+const instructions = "We have a ciphertext of <strong>ulsu hzekvto</strong>\
+                    that we need to crack. We have a clue that <strong>the\
+                    password is the country which hosts the city of Paris\
+                    </strong> and the <strong>index input is the day of the\
+                    month the Allies invaded Normandy Beach\
+                    </strong>. " + (help_url);
 
 const opening_text = instructions;
 const success_text = "Great work, moving on";
@@ -30,8 +56,8 @@ function password_encrypt(plaintext, password, word_index){
   var shift_value, total_index, encryption_letter;
   for (letter_index in plaintext){
     total_index = word_index + parseInt(letter_index);
-    encryption_letter = password[total_index % password.length];
-    shift_value = alphabet_size - (encryption_letter.toLowerCase().charCodeAt(0) - a_value);
+    encryption_letter = password[total_index % password.length].toLowerCase();
+    shift_value = alphabet_size - (encryption_letter.charCodeAt(0) - a_value);
     if (shift_value === 26){
       shift_value = 0;
     }
@@ -68,8 +94,20 @@ function test_password_decrypt(){
   });
 }
 
+/*
+  shift_letter
+
+  password: The password from the user
+  password_index: The index of the letter in the password we wish to obtain
+  a_value: The ASCII value of 'a'
+
+  returns the size of the alphabet minus the position of the letter defined
+  by password[password_index] in the alphabet (this is because decryption runs
+  in the opposite means as encryption).
+*/
 function shift_letter(password, password_index, a_value){
-  return alphabet_size - (password[password_index].toLowerCase().charCodeAt(0) - a_value);
+  const password_letter = password[password_index].toLowerCase();
+  return alphabet_size - (password_letter.charCodeAt(0) - a_value);
 }
 
 // Run the password encrypt algorithm unit tests

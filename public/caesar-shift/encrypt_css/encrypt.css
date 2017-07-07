@@ -1,7 +1,7 @@
 /*
 Jordan Stapinski
-Encryption page CSS
-For use with Enigma teaching model Encryption page
+Caesar-Shift pages CSS
+For use with Enigma teaching model Caesar-Shift pages
 */
 
 .clickable {
@@ -92,8 +92,6 @@ label {
     color: white
 }
 
-.carousel-item { width:30px !important;}
-
 #scroller {
   background-color: #FFFFFF;
 }
@@ -106,4 +104,50 @@ label {
   background-color: #F8CA4D;
 }
 
-.modal { width: 85% ; max-height: 85% !important ; }  /* increase the height and width as you desire */
+.modal { 
+  width: 85%; 
+  max-height: 85% !important; 
+}
+
+.nav-wrapper {
+  background-color: #3F5666 !important;
+}
+
+input[type=text] {
+  font-size: 16px;
+  color: #000000;
+  background-color: #FFFFFF;
+  border: 2px solid #777;
+  padding-left: 4px; 
+}
+
+input[type=text][disabled] {
+  font-size: 16px;
+  color: #444444;
+  border: 2px solid #777;
+}
+
+.input-field input[type=text]:enabled{
+ border-bottom: 1px solid #777;
+ box-shadow: 0 1px 0 0 #777;
+}
+
+.input-field input[type=text]:focus {
+ border-bottom: 1px solid #F8CA4D;
+ box-shadow: 0 1px 0 0 #F8CA4D;
+}
+
+a { 
+  color: inherit; 
+}
+
+p {
+  font-size: 1.25rem !important;
+}
+
+h6, label {
+  color: #000000 !important;
+  font-size:1.38rem !important;
+  font-family:'Roboto' sans-serif; 
+  font-weight:300;
+}
