@@ -41,7 +41,7 @@ function to_radians (angle) {
 }
 var theta_right = to_radians(-60);
 var theta_left = to_radians(-120);
-var given_password = password_value.value;
+var given_password = password_value.value.toLowerCase();
 var rotation_angle = 0;
 var angle_offset = 20;
 var max_step = 50;
@@ -288,6 +288,9 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
       draw_word_position(0);
       $("#encrypt").removeClass('disabled');
       $("#spinUp").removeClass('disabled');
+      $("#plaintext_value").attr('disabled', false);
+      $("#password_value").attr('disabled', false);
+      $("#index_input").attr('disabled', false);
       if (current_word_index != 0){
         $("#spinDown").removeClass('disabled');
       }
@@ -345,6 +348,28 @@ function assert(condition) {
   }
 }
 
+function has_special_characters(password){
+  return !(/[a-z]/.test(password));
+}
+
+function multiple_words(password){
+  return (password.split(" ").length > 1);
+}
+
+function validate_password(password){
+  console.log(password);
+  if (password === ""){
+    return "Password should not be blank";
+  }
+  if (multiple_words(password)){
+    return "Password must only be one word";
+  }
+  if (has_special_characters(password)){
+    return "Password must only contain letters a-z";
+  }
+  return '';
+}
+
 /*
 	run_encryption
 
@@ -355,17 +380,26 @@ function assert(condition) {
   showing the necessary animations, and updating UI elements.
 */
 function run_encryption(){
-	var final_word, password, plaintext;
+	var final_word, password, plaintext, password_errors, box_width, ctx;
   var parent_node = document.getElementById("black-box-parent");
   var black_box_text = document.getElementById('black_box_text');
-  var box_width, ctx;
+  // Validate the password
+  password = password_value.value.toLowerCase();
+  console.log(password);
+  password_errors = validate_password(password)
+  if (password_errors){
+    alert(password_errors);
+    return;
+  }
 	$('#word_shift_text').removeAttr('hidden');
   $("#spinUp").addClass('disabled');
   $("#spinDown").addClass('disabled');
+  $("#plaintext_value").attr('disabled', true);
+  $("#password_value").attr('disabled', true);
+  $("#index_input").attr('disabled', true);
   if (shift_switch){
     $('#shift_switch').attr('disabled', 'true');
   }
-	password = password_value.value;
 	plaintext = plaintext_value.value;
 	final_word = password_encrypt(plaintext, password, current_word_index);
   if (document.getElementById("black_box_canvas")){
@@ -540,7 +574,13 @@ function draw_current_index_value(ctx, angle, direction){
 }
 
 function input_change(){
-  given_password = password_value.value;
+  var password_error;
+  given_password = password_value.value.toLowerCase();
+  password_error = validate_password(given_password);
+  if (password_error){
+    alert(password_error);
+    return;
+  }
   current_word_index = parseInt(index_input.value);
   draw_word_position(0);
   draw_index_wheel();
@@ -577,9 +617,12 @@ function draw_index_wheel(angle, pass){
   Draws the password text within the word shift canvas
 */
 function draw_password(ctx){
-  var word = password_value.value;
+  var word = password_value.value.toLowerCase();
   var canvas_width = word_shift_canvas.clientWidth;
   var box_width = canvas_width / (word.length);
+  if (validate_password(word)){
+    return;
+  }
   for (var i = 0; i < word.length; i++){
     var alphabet_position = word[i].charCodeAt(0) - a_value;
     //Background box
@@ -615,10 +658,13 @@ function draw_password(ctx){
   Helper function for draw_word_position
 */
 function highlight_password_position(ctx, word_index){
-  var word = password_value.value;
+  var word = password_value.value.toLowerCase();
   var canvas_width = word_shift_canvas.clientWidth;
   var box_width = canvas_width / (word.length);
   var box_horizontal;
+  if (validate_password(word)){
+    return;
+  }
   word_index = word_index % word.length;
   box_horizontal = word_index * box_width;
   // Draw yellow box the box_width and height as needed
