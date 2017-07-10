@@ -190,11 +190,11 @@ function swap_encryption_decryption(){
   encryption_mode = !encryption_mode;
   if (encryption_mode){
     crypto_method = encryption_function;
-    encrypt.text = 'Encrypt';
+    encrypt.innerHTML = '<strong>3.</strong> Encrypt';
     shift_letter = shift_letter_encrypt;
     password_encrypt = password_encryption;
   } else {
-    encrypt.text = 'Decrypt';
+    encrypt.innerHTML = '<strong>3.</strong> Decrypt';
     shift_letter = shift_letter_decrypt;
     password_encrypt = password_decryption;
   }
@@ -209,7 +209,7 @@ jQuery.get('password-encrypt.py', function(data) {
   var python_function = convert_to_HTML(data);
   encryption_function = python_function;
   encryption_code.innerHTML = python_function;
-  encrypt.text = 'Encrypt';
+  encrypt.innerHTML = '<strong>3.</strong> Encrypt';
   instruction_text.innerHTML = instructions;
   opening_modal_text.innerHTML = opening_text;
   $('pre code').each(function(i, block) {

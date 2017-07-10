@@ -357,7 +357,6 @@ function multiple_words(password){
 }
 
 function validate_password(password){
-  console.log(password);
   if (password === ""){
     return "Password should not be blank";
   }
@@ -385,7 +384,6 @@ function run_encryption(){
   var black_box_text = document.getElementById('black_box_text');
   // Validate the password
   password = password_value.value.toLowerCase();
-  console.log(password);
   password_errors = validate_password(password)
   if (password_errors){
     alert(password_errors);
@@ -443,7 +441,6 @@ function decrease_index(){
 }
 
 function index_wheel_timer(step, pass){
-  console.log(step);
   if (step == max_step){
     current_word_index += -pass;
     $("#spinUp").removeClass('disabled');

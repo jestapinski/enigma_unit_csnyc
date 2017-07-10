@@ -22,14 +22,21 @@ const instructions = "Write your own <strong>plaintext message of at least 5 \
                     letters</strong> and <strong>password of at least 5 letters\
                     </strong> such that the encrypted text is composed of all \
                     <strong>unique letters</strong> (i.e. no letter is in the \
-                    encrypted text twice)!";
+                    encrypted text twice)! <br/> Fill in some plaintext and\
+                    a password and click the 'Encrypt' button!";
 
 const opening_text = "We have been playing with encryption and decryption of\
                     text with a fixed shifting value for each letter. What if\
                     we made the encryption technique more complicated?\
                     Consider using a word to define our shift values. We can\
                     think of each letter as having a number according to its\
-                    position in the alphabet (a is 1, b is 2, and so on).";
+                    position in the alphabet (a is 0, b is 1, c is 2, and so\
+                    on). Thus we can shift by amounts that vary based on a given\
+                    password as we step through the password as we walk\
+                    through encrypting our starting message. <br/><br />\
+                    We can also vary the starting position in the password when\
+                    we walk through as we encrypt: This position is known as\
+                    the <strong>Start Index</strong> of the password";
 
 const success_text = "Great work, moving on";
 
