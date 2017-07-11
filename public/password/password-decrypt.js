@@ -28,7 +28,8 @@ const instructions = "We have a ciphertext of <strong>ulsu hzekvto</strong>\
                     password is the country which hosts the city of Paris\
                     </strong> and the <strong>index input is the day of the\
                     month the Allies invaded Normandy Beach\
-                    </strong>. " + (help_url);
+                    </strong>. " + (help_url) + ".<br /><br/>Find the correct\
+                    password and starting index to decrypt the text!";
 
 const opening_text = instructions;
 const success_text = "Great work, moving on";

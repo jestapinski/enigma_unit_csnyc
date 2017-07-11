@@ -1,9 +1,9 @@
 // Jordan Stapinski
-// Enigma Unit Encryption Accompanying JS file
+// Enigma Unit Caesar Shift Encryption Accompanying JS file
 
 // Gathering document elements
-var spinUp = document.getElementById('spinUp');
-var spinDown = document.getElementById('spinDown');
+var spin_up = document.getElementById('spinUp');
+var spin_down = document.getElementById('spinDown');
 var show_code = document.getElementById('show_code');
 var encrypt = document.getElementById('encrypt');
 var plaintext_value = document.getElementById('plaintext_value');
@@ -13,6 +13,7 @@ var square_box = document.getElementById('square-box');
 var canvas = document.getElementById("canvas");
 var encryption_code = document.getElementById('encryption_code');
 var clipboard = document.getElementById('clipboard');
+var instruction_text = document.getElementById('instruction_text');
 var plaintext_solution = "move north";
 var shift_solution = 3;
 
@@ -40,6 +41,11 @@ var box_center = box_width / 2;
 var text_height_offset = 30;
 var max_number_of_steps = 50;
 var canvas_margin = 10;
+
+const instructions = "Using a plaintext of: <strong>move north</strong>, perform a Caesar\
+                    Shift of <strong>up 3</strong> using the computational model (input\
+                    the needed inputs on the left, and press 'Encrypt' to run the\
+                    encryption and see the ciphertext as the output!).";
 
 /*
   draw_wheel
@@ -665,6 +671,7 @@ draw_wheel()
 jQuery.get('encrypt.py', function(data) {
   var python_function = convert_to_HTML(data);
   encryption_code.innerHTML = python_function;
+  instruction_text.innerHTML = instructions;
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
@@ -672,8 +679,8 @@ jQuery.get('encrypt.py', function(data) {
 });
 
 //Bind buttons to events
-spinUp.addEventListener("click", spin_wheel_up);
-spinDown.addEventListener("click", spin_wheel_down);
+spin_up.addEventListener("click", spin_wheel_up);
+spin_down.addEventListener("click", spin_wheel_down);
 encrypt.addEventListener("click", run_encryption);
 clipboard.addEventListener("click", copy_to_clipboard);
 

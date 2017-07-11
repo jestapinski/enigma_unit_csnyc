@@ -14,6 +14,7 @@ var canvas = document.getElementById("canvas");
 var decryption_code = document.getElementById('decryption_code');
 var clipboard = document.getElementById('clipboard');
 var encrypt_code = document.getElementById('encrypt_code');
+var instruction_text = document.getElementById('instruction_text');
 
 // Initializing Shift array constants
 var numbers = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];
@@ -42,6 +43,11 @@ var canvas_margin = 10;
 
 var plaintext_solution = "take paris";
 var shown_retry_msg = false;
+
+const instructions = "We have a ciphertext of: <strong>ryic nypgq</strong>, but\
+we do not know what shift values were used to encode this. \
+Try different shift values and press 'Decrypt' to see if we can reverse \
+the encryption to something legible!";
 
 /*
   draw_wheel
@@ -672,6 +678,7 @@ jQuery.get('decrypt.py', function(data) {
 jQuery.get('encrypt.py', function(data){
   var python_function = convert_to_HTML(data);
   encrypt_code.innerHTML = python_function;
+  instruction_text.innerHTML = instructions;
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   }); 

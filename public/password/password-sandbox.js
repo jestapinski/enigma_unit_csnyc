@@ -17,7 +17,6 @@
 
   ASSUMES: 'a' is position 0 in the alphabet.
 */
-
 var instructions = "Play around with shifting some text based on a password!\
                     When you are done, feel free to exit this tab, or click\
                     the 'Back to Exercise' button to shift back to the\

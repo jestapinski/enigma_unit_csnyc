@@ -62,11 +62,7 @@ body {
     <div id="instruction_set">
       <div class="row">
           <h4 class="col offset-s1">Instructions:</h4>        
-          <p class="flow-text col s11 offset-s1">
-            Using a plaintext of: <strong>move north</strong>, perform a Caesar 
-            Shift of <strong>up 3</strong> using the computational model (input 
-            the needed inputs on the left, and press "encrypt" to run the 
-            encryption and see the ciphertext as the output!).
+          <p class="flow-text col s11 offset-s1" id="instruction_text">
           </p>
       </div>
     </div>
@@ -299,7 +295,11 @@ def shift_by_value_in_alphabet(starting_letter, shift_value):
         <p>
           This function takes in a letter and an amount to shift by, and 
           returns the letter computed by shifting the starting letter by the 
-          <code>shift_value</code> in the alphabet.
+          <code>shift_value</code> in the alphabet. Note that <code>ord</code>
+          turns a letter into its numeric representation in the computer, and
+          <code>chr</code> converts a number into its corresponding letter. This
+          numeric system for representing letters is known as the ASCII
+          convention.
         </p>
       </div>
 
@@ -325,9 +325,8 @@ def wrap_around_a(letter):
           </code>
         </pre>
         <p>
-          This function takes in a letter past z computed by the caesar shift 
-          and computes the necessary wraparound it needs to go back around to 
-          perform the shift.
+          If the result of the shift on our input letter goes past 'z', we need
+          to wrap around the alphabet starting back at 'a'.
         </p>
       </div>
 
@@ -353,9 +352,9 @@ def wrap_around_z(letter):
           </code>
         </pre>
         <p>
-          This function takes in a letter before a computed by the caesar shift 
-          and computes the necessary wraparound it needs to go back around to 
-          perform the shift.
+          If the result of the shift on our input letter goes past 'a', we need
+          to wrap around the alphabet starting back at 'z' and moving in the
+          negative direction through the alphabet.
         </p>
       </div>
 
@@ -447,7 +446,7 @@ ciphertext = ciphertext + encoded_letter
       <div class="modal-content">
         <h4>Caesar Shift Encryption</h4>
         <p>
-          One method of encrypting some text is through a <strong>Caesar 
+          One method of encrypting a message is through a <strong>Caesar 
           Shift</strong>, in which we specify a number and direction which we 
           move in the alphabet for each letter in our original text to get our 
           encrypted text. Try the encryption example here, and feel free to 
