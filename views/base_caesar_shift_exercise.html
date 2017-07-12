@@ -1,7 +1,8 @@
 <!-- 
 Jordan Stapinski 
 Enigma Teaching Unit
-Caesar-Shift#Encrypt Page
+Caesar-Shift Pages HTML
+base_caesar_shift_exercise.html
 -->
 
 <!doctype HTML>
@@ -9,7 +10,7 @@ Caesar-Shift#Encrypt Page
                                                     media="screen,projection"/>
 <link type="text/css" rel="stylesheet" href="../css/materialize.css"  
                                                     media="screen,projection"/>
-<link type="text/css" rel="stylesheet" href="encrypt_css/encrypt.css" 
+<link type="text/css" rel="stylesheet" href="caesar-shift.css" 
                                                     media="screen,projection"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
                                                               rel="stylesheet">
@@ -17,7 +18,7 @@ Caesar-Shift#Encrypt Page
 
 <style>
 body {
-  background-color: rgba(40, 40, 20, 0.2);  
+  background-color: rgba({{red}}, {{green}}, {{blue}}, {{opacity}});
   height: 100%;
   background-size: cover;
 }
@@ -26,7 +27,9 @@ body {
 <html>
 
 	<head>
-		<title>Encryption Exercise</title>
+		<title>
+      Caesar Shift {{exercise_type}}
+    </title>
 	</head>
 
   <nav>
@@ -37,38 +40,41 @@ body {
         style="padding-right:50px">
         Enigma: An Introduction to Cryptography
       </a>
-
       <div class="col s12 pull-s1">
         <a 
-          href="#!" 
-          class="breadcrumb" 
+          href="/caesar-shift/encrypt" 
+          class="breadcrumb"
+          target = "_blank" 
           style="padding-left:50px">
           Caesar Shift
         </a>
       </div>
-
     </div>
   </nav>
 
 	<body>
-
     <div class="row">
       <div class="col s6 offset-s1">
-  		  <h3>Caesar Shift Encryption</h3>
+  		  <h3>
+          Caesar Shift {{exercise_type}}
+        </h3>
       </div>
     </div>
 
 <!-- Instructions -->
     <div id="instruction_set">
       <div class="row">
-          <h4 class="col offset-s1">Instructions:</h4>        
-          <p class="flow-text col s11 offset-s1" id="instruction_text">
+          <h4 class = "col offset-s1">
+            Instructions:
+          </h4>        
+          <p class="flow-text col s10 offset-s1" id="instruction_text">
           </p>
       </div>
     </div>
 
+
     <div class="row">
-      <div class="col s2 offset-s1">
+      <div class="col s3 offset-s1">
         <a 
           id="instruction_button" 
           class="waves-effect waves-green btn navy" 
@@ -83,18 +89,28 @@ body {
     <div class='square-box' id='square-box'>
       <div class='square-content'><div>
         <span id="black-box-parent">
-          <h4 id="black_box_text">Encryption Mechanism</h4>
+          <h4 id="black_box_text">
+          {% if exercise_type == 'Sandbox' %}
+            Caesar Shift Mechanism
+          {% else %}
+            {{exercise_type}} Mechanism
+          {% endif %}
+          </h4>
         </span>
       </div></div>
 
-<!-- Buttons within Black Box container -->
+    <!-- Buttons within Black Box container -->
       <div class="center-btn" id="button-container">
         <a 
           class="waves-effect waves-green btn beige black-text tooltipped" 
           id="encrypt" 
-          data-tooltip="Encrypt the Plaintext!">
-          Encrypt
-        </a>
+          data-tooltip="{{exercise_type}} the Plaintext!">
+          {% if exercise_type == 'Sandbox' %}
+            Encrypt/Decrypt
+          {% else %}
+            {{exercise_type}}
+          {% endif %}
+        </a> 
         <a 
           class="waves-effect waves-red btn darkyellow black-text tooltipped" 
           id="show_code" 
@@ -102,14 +118,25 @@ body {
           href="#modal1">
           Show Code
         </a>
-        <a 
-          class="waves-effect waves-red btn darkyellow black-text tooltipped" 
-          id="open_sandbox" 
-          data-tooltip="Explore using the Caesar Shift on words you choose!" 
-          href="/caesar-shift/sandbox" 
-          target="_blank">
-          Play with Caesar Shift
-        </a>
+        {% if exercise_type == 'Sandbox' %}
+          <a 
+            class="waves-effect waves-red btn deepred black-text tooltipped" 
+            id="open_sandbox" 
+            data-tooltip="Explore using the Caesar Shift on words you choose!" 
+            href="javascript:window.close();" 
+            target="_blank">
+            Go Back to the Exercise
+          </a>
+        {% else %}
+          <a 
+            class="waves-effect waves-red btn darkyellow black-text tooltipped" 
+            id="open_sandbox" 
+            data-tooltip="Explore using the Caesar Shift on words you choose!" 
+            href="/caesar-shift/sandbox" 
+            target="_blank">
+            Play with Caesar Shift
+          </a>
+        {% endif %}
       </div>
     </div>
 
@@ -118,15 +145,27 @@ body {
     <br/>
 
     <div class="row">
-      <div class="input-field col s3 pull-s2">             
+      <div class="input-field col s3 pull-s2 tooltipped" 
+          data-tooltip="This is the text we want to shift through the 
+          Caesar Shift Mechanism">
+        {% if exercise_type == 'Decrypt' %}
+        <input 
+          disabled 
+          placeholder="ryic nypgq" 
+          id="plaintext_value" 
+          value="ryic nypgq" 
+          type="text" 
+          class="validate">
+        {% else %}             
         <input 
           placeholder="I came, I saw, I conquered" 
           value="I came, I saw, I conquered" 
           id="plaintext_value" 
           type="text" 
           class="validate">
+        {% endif %}
         <label for="plaintext_value">
-          Plaintext
+          Starting Text
         </label>
       </div>
 
@@ -144,49 +183,54 @@ body {
           data-position="bottom" 
           data-delay="50" 
           data-tooltip="This is how much we want to shift by (negative means 
-          to the left, and positive means to the right!)">
-          Shift <i class="tiny material-icons">info_outline</i>
+            to the left, and positive means to the right!)">
+          Encryption Shift <i class="tiny material-icons">info_outline</i>
         </label>
       </div>
 
 <!-- Spinner -->
-
       <div class="input-field col s2 pull-s2 flow-text">
-        <canvas id="canvas" width="100" height="250"></canvas>
+        <canvas 
+          id="canvas" 
+          width="100" 
+          height="250">
+        </canvas>
       </div>
 
       <div class="col s1 pull-s3">
-        <!-- <a class="waves-effect waves-green btn" style="visibility:hidden">Up</a>
-        <a class="waves-effect waves-green btn" style="visibility:hidden">Up</a> -->
         <a 
           class="waves-effect waves-green btn navy white-text" 
           id="spinUp"
           style="width: 100% !important;
-                 margin-top: 100px !important;">
+                 margin-top: 100px !important;
+                 text-align: center;">
           Up
         </a>
         <a 
           class="waves-effect waves-green btn deepred white-text" 
           id="spinDown"
-          style="width: 100% !important;">
+          style="width: 100% !important;
+                 text-align: center;">
           Down
         </a>
       </div>
 
-<!-- Output fields -->
+      <!-- Output fields -->
 
-      <div class="input-field col s3 push-s1 flow-text">
+
+      <div class="input-field col s3 push-s1 flow-text tooltipped" 
+        data-tooltip="This is the shifted starting text using the shift value 
+        passed">
         <input 
           disabled 
           placeholder="J dbnf, J tbx, J dporvfsfe" 
           value="J dbnf, J tbx, J dporvfsfe" 
           id="output_text" 
           type="text" 
-          class="tooltipped" 
-          data-tooltip="This is the encrypted plaintext using the shift value 
-            passed">
-        <label for="output_text">
-          Ciphertext
+          class="tooltipped">
+        <label 
+          for="output_text">
+          Final Text <i class="tiny material-icons">info_outline</i>
         </label>
         <a 
           class="waves-effect waves-green btn beige black-text" 
@@ -197,26 +241,77 @@ body {
 
     </div>
 
+
 <!-- MODALS -->
 
     <div id="modal1" class="modal">
       <div class="modal-content">
-        <h4>Encryption Code</h4>
+      {% if exercise_type == 'Sandbox' %}
+        <h4>Caesar Shift Code</h4>
+      {% else %}
+        <h4>Caesar Shift {{exercise_type}} Code</h4>
+      {% endif %}
         <p 
           class="tooltipped" 
-          data-tooltip="Python is a computer programming language (like Java 
-            or C, which you may have heard of">
+          data-tooltip="Python is a computer programming language (like 
+            Java or C, which you may have heard of">
           Here is some Python computer code that performs the Caesar Shift 
-          given some plaintext and a shifting value:</p>
+          given some starting text and a shifting value:
+        </p>
 
-        <!-- Python shift code (filled in automatically) -->
-
-        <pre><code id="encryption_code">
+        <!-- Python shift code -->
+        <pre><code id="shift_code">
         </code></pre>
-
       </div>
+
       <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close btn deepred">Close</a>
+        <a 
+          href="#!" 
+          class="modal-action modal-close btn deepred">
+          Close
+        </a>
+      </div>
+    </div>
+
+<!-- Modal for displaying positive feedback -->
+
+    <div id="modalSuccess" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>Correct!</h4>
+        <p id="success_text">
+          Notice how the encryption code mechanism cycled through the alphabet 
+          at each letter the number of times as we indicated in our shift. Now 
+          we have some ciphertext to communicate our orders! Now let's try to 
+          decrypt some ciphertext using a similar mechanism.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href={{next_route}} 
+          class="modal-action modal-close waves-effect waves-green btn navy">
+          Continue
+        </a>
+      </div>
+    </div>
+
+<!-- Modal for displaying negative feedback -->
+
+    <div id="modalRetry" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>Hmm, not quite</h4>
+        <p id="retry_text">
+          We decrypted something, but this is illegible and not the intended 
+          message, keep trying!
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn deepred">
+          Try Again
+        </a>
       </div>
     </div>
 
@@ -371,7 +466,9 @@ def wrap_around_z(letter):
 
     <div id="modalStrConcat" class="modal bottom-sheet">
       <div class="modal-content">
-        <h4>String Concatenation</h4>
+        <h4>
+          String Concatenation
+        </h4>
         <pre>
           <code>
 ciphertext = ciphertext + encoded_letter
@@ -398,68 +495,48 @@ ciphertext = ciphertext + encoded_letter
       </div>
     </div>
 
-<!-- Modal for displaying positive feedback -->
-
-    <div id="modalSuccess" class="modal bottom-sheet">
-      <div class="modal-content">
-        <h4>Correct!</h4>
-        <p>
-          Notice how the encryption code mechanism cycled through the alphabet 
-          at each letter the number of times as we indicated in our shift. Now 
-          we have some ciphertext to communicate our orders! Now let's try to 
-          decrypt some ciphertext using a similar mechanism.
-        </p>
-      </div>
-
-      <div class="modal-footer">
-        <a 
-          href="/caesar-shift/decrypt" 
-          class="modal-action modal-close waves-effect waves-green btn navy">
-          Continue
-        </a>
-      </div>
-    </div>
-
-<!-- Modal for displaying positive feedback -->
-
-    <div id="modalRetry" class="modal bottom-sheet">
-      <div class="modal-content">
-        <h4>Hmm, not quite</h4>
-        <p>
-          It seems like something was encrypted, but not exactly the message 
-          and shift amount we were going for. Are you sure your plaintext value 
-          is <strong>move north</strong> and your encryption shift is <strong>
-          up (positive) 3</strong>?
-        </p>
-      </div>
-
-      <div class="modal-footer">
-        <a 
-          href="#!" 
-          class="modal-action modal-close waves-effect waves-green btn deepred">
-          Try Again
-        </a>
-      </div>
-    </div>
-
-    <div id="modal_encrypt" class="modal">
+    <div id="modalDecryptEncrypt" class="modal">
       <div class="modal-content">
         <h4>Caesar Shift Encryption</h4>
+        <pre>
+          <code id="encrypt_code">
+encoded_letter = ord(c) + shift_value
+...
+ciphertext = ciphertext + (chr(encoded_letter))
+          </code>
+        </pre>
         <p>
-          One method of encrypting a message is through a <strong>Caesar 
-          Shift</strong>, in which we specify a number and direction which we 
-          move in the alphabet for each letter in our original text to get our 
-          encrypted text. Try the encryption example here, and feel free to 
-          click on the "Play with Caesar Shift" button to insert your own text 
-          and shift values to see the Caesar Shift in action!
+          Here is the Caesar Shift algorithm from the encryption exercise. We 
+          can use the same algorithm, but flip the direction we move through 
+          the alphabet in order to perform a decryption (which we performed
+          before coming into this function by setting:<br/> <code>shift_value = 
+          -shift_value</code>.
         </p>
       </div>
 
       <div class="modal-footer">
         <a 
           href="#!" 
-          class="modal-action modal-close waves-effect waves-green btn navy">
-          Go!
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+          Close
+        </a>
+      </div>
+    </div>
+
+<!-- Modal for displaying sandbox intro -->
+
+    <div id="modal_sandbox" class="modal">
+      <div class="modal-content">
+        <h4>Caesar Shift {{exercise_type}}</h4>
+        <p id="opening_modal_text">
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+          Close
         </a>
       </div>
     </div>
@@ -469,8 +546,15 @@ ciphertext = ciphertext + encoded_letter
     <script src="../js/highlight.pack.js"></script>
     <!-- Initialize code syntax highlighting -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="encrypt_js/encrypt.js"></script>
     <script type="text/javascript" src="../js/materialize.js"></script>
+    {% if exercise_type == 'Sandbox' %}
+      <script type="text/javascript" src="sandbox.js"></script>
+    {% elif exercise_type == 'Encrypt' %}
+      <script type="text/javascript" src="encrypt.js"></script>
+    {% elif exercise_type == 'Decrypt' %}
+      <script type="text/javascript" src="decrypt.js"></script>
+    {% endif %}
+    <script type="text/javascript" src="caesar-shift.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 	</body>
 </html>

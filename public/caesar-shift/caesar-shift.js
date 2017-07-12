@@ -1,9 +1,9 @@
 // Jordan Stapinski
-// Enigma Unit Sandbox Accompanying JS file
+// Enigma Unit Caesar Shift Accompanying JS file
 
 // Gathering document elements
-var spinUp = document.getElementById('spinUp');
-var spinDown = document.getElementById('spinDown');
+var spin_up = document.getElementById('spinUp');
+var spin_down = document.getElementById('spinDown');
 var show_code = document.getElementById('show_code');
 var encrypt = document.getElementById('encrypt');
 var plaintext_value = document.getElementById('plaintext_value');
@@ -12,9 +12,17 @@ var output_text = document.getElementById('output_text');
 var square_box = document.getElementById('square-box');
 var canvas = document.getElementById("canvas");
 var shift_code = document.getElementById('shift_code');
+var encrypt_code = document.getElementById('encrypt_code');
 var clipboard = document.getElementById('clipboard');
-var plaintext_solution = "move north";
-var shift_solution = 3;
+var instruction_text = document.getElementById('instruction_text');
+var opening_modal_text = document.getElementById('opening_modal_text');
+var retry_modal = document.getElementById('retry_text');
+var success_modal = document.getElementById('success_text');
+var code_file = 'encrypt.py';
+var decrypt = false;
+
+// var plaintext_solution = "move north";
+// var shift_solution = 3;
 
 // Initializing Shift array constants
 var numbers = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];
@@ -166,107 +174,6 @@ function establish_context_settings(ctx, plaintext_length){
     ctx.font = "1.30rem PT Mono";    
   }
   ctx.textAlign = "center";
-}
-
-/*
-  caesar_encrypt_one_letter
-
-  initial char: The single character to encrypt (ASSUMES this is one character)
-  shift_value: The amount to shift by (positive means increasing in the 
-  alphabet, negative is decreasing)
-
-  returns a single character encoded using the caesar shift method shifted by 
-  shift_value letters
-
-  caesar_encrypt_one_letter takes in an initial character and a shift_value and 
-  performs a caesar substitution on the initial character by the passed 
-  shift_value, returning the encoded result. If the passed character is not a 
-  letter, it is simply returned.
-*/
-function caesar_encrypt_one_letter(initial_char, shift_value){
-  var letter_ascii = initial_char.toLowerCase().charCodeAt(0);
-  var z_value = 'z'.charCodeAt(0);
-  var a_value = 'a'.charCodeAt(0);
-  var letter_difference = 0;
-  var new_letter_ascii;
-  //If this is not a letter, just pass it along.
-  if (!(initial_char.toLowerCase().match(/[a-z]/i))){
-    return initial_char;
-  }
-  new_letter_ascii = letter_ascii + shift_value;
-  //Wrap-around if too high or low
-  if (new_letter_ascii > z_value){
-    letter_difference = new_letter_ascii - z_value;
-    new_letter_ascii = a_value + letter_difference - 1;
-  } else if (new_letter_ascii < a_value){
-    letter_difference = a_value - new_letter_ascii;
-    new_letter_ascii = z_value - (letter_difference - 1);
-  }
-  return String.fromCharCode(new_letter_ascii);
-}
-
-/*
-  overall_encryption
-
-  str: The input string to encrypt
-  shift_value: The amount to shift by (positive means increasing in the 
-  alphabet, negative is decreasing)
-
-  TESTED: test_encryption
-*/
-function overall_encryption(str, shift_value){
-  var final_string = [];
-  for (var i = 0; i < str.length; i++) {
-    final_string.push(caesar_encrypt_one_letter(str[i], shift_value));
-  }
-  return final_string.join("");
-}
-
-/*
-  assert
-
-  condition: The condition we want to check true or false ASSUMES a boolean
-  No return value
-
-  assert simply continues if the passed condition is true, and throws an 
-  exception otherwise
-*/
-function assert(condition) {
-  if (!condition) {
-    throw "Encryption Test failed";
-  }
-}
-
-/*
-  test_encryption
-  
-  No input value
-  No return value but outputs pass or error to the console
-
-  test_encryption runs the testing data defined in encryption_tests.txt, parsing
-  according to the folowing logic for the tests:
-
-  ##Sample Test Data Format##
-  input_text,shift_value,expected_output
-
-  These values are separated by a comma, and no commas are expected in the input
-  or output strings. This format is used for the test data to cross-use with
-  the equivalent Python function.
-*/
-function test_encryption(){
-  var tests, test_case_num, test_case, input_str, input_shift, output_str;
-  jQuery.get('encryption_tests.txt', function(data) {
-    tests = data.split("\n");
-    for (test_case_num = 0; test_case_num < tests.length; test_case_num++){
-      test_case = tests[test_case_num].split(",");
-      input_str = test_case[0];
-      input_shift = parseInt(test_case[1]);
-      output_str = test_case[2];
-      assert(overall_encryption(input_str, input_shift) === output_str);
-    }
-    shift_code.value = data;
-    console.log("Javascript encryption passed");
-  });
 }
 
 /*
@@ -430,6 +337,7 @@ function encryption_redraw(i, passed_text_value, current_shift_value,
     if (i == (passed_text_value.length - 1)){
       $("#encrypt").removeClass('disabled');
       ctx.clearRect(0, box_height, canvas_width, box_height);
+      check_for_win(overall_encryption(passed_text_value, shifting_value));
       return;       
     } else {
       setTimeout(encryption_redraw, encryption_scrolling_speed, i + 1, 
@@ -505,7 +413,7 @@ function run_encryption(){
   var height_offset = 0;
   var max_box_height = 50;
   var canvas, this_letter, button_parent_node, canvas_size, box_width, i;
-  var string_array, mapped_array, new_text;
+  var string_array, mapped_array, new_text, passed_shift_value;
   remove_tooltip();
   if (plaintext_not_valid(passed_text_value)){
     alert("Plaintext should not be blank!");
@@ -538,6 +446,11 @@ function run_encryption(){
   $("#encrypt").addClass('disabled');
 
   if (canvas.getContext){
+    if (decrypt){
+      passed_shift_value = -shifting_value;
+    } else {
+      passed_shift_value = shifting_value;
+    }
     canvas_size = square_box.clientWidth - 2 * canvas_margin;
     box_width = canvas_size / passed_text_value.length;
     box_width = Math.min(box_width, max_box_height);
@@ -556,12 +469,12 @@ function run_encryption(){
       draw_vertical_box_lines(ctx, i, box_height, box_width, height_offset);
     }
     setTimeout(encryption_redraw, encryption_scrolling_speed, 0, 
-                  passed_text_value, 0, shifting_value, 0, ctx, shifting_value);
+                  passed_text_value, 0, passed_shift_value, 0, ctx, passed_shift_value);
   }
   //Fix to place at end of animation
   string_array = passed_text_value.split("");
   mapped_array = string_array.map(function(c){
-    return caesar_encrypt_one_letter(c, shifting_value);
+    return caesar_encrypt_one_letter(c, passed_shift_value);
   })
   new_text = mapped_array.join("");
   output_text.value = new_text;    
@@ -635,11 +548,47 @@ function copy_to_clipboard(){
   }
 }
 
+// Allowing for modularity in different versions of the password exercise
+
+if (document.title.includes('Encrypt')){
+  $.getScript('encrypt.js', function(){
+    console.log('Loaded Encrypt');
+    instruction_text.innerHTML = instructions;
+    opening_modal_text.innerHTML = modal_text;
+    retry_modal.innerHTML = retry_text;
+    test_encryption();
+  });  
+}
+console.log(document.title);
+console.log(document.title.includes('Sandbox'));
+if (document.title.includes('Sandbox')){
+  //Turn off validations while in the Sandbox
+  console.log("This is the sandbox");
+  $.getScript('sandbox.js', function(){
+    console.log('Loaded Sandbox');
+    instruction_text.innerHTML = instructions;
+    opening_modal_text.innerHTML = modal_text;
+    test_encryption();
+  });    
+}
+
+if (document.title.includes('Decrypt')){
+  decrypt = true;
+  code_file = 'decrypt.py';
+  $.getScript('decrypt.js', function(){
+    console.log('Loaded Decryption');
+    instruction_text.innerHTML = instructions;
+    opening_modal_text.innerHTML = modal_text;
+    success_modal.innerHTML = success_text;
+    test_decryption();
+  });  
+}
+
 //Run the following when instantiating the web page
-test_encryption();
+// test_encryption();
 draw_wheel()
 //Convert the Python code to HTML and highlight
-jQuery.get('encrypt.py', function(data) {
+jQuery.get(code_file, function(data) {
   var python_function = convert_to_HTML(data);
   shift_code.innerHTML = python_function;
   $('pre code').each(function(i, block) {
@@ -648,9 +597,19 @@ jQuery.get('encrypt.py', function(data) {
   $('#modal_sandbox').modal('open');
 });
 
+if (decrypt){
+  jQuery.get('encrypt.py', function(data){
+    var python_function = convert_to_HTML(data);
+    encrypt_code.innerHTML = python_function;
+    $('pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+  });
+}
+
 //Bind buttons to events
-spinUp.addEventListener("click", spin_wheel_up);
-spinDown.addEventListener("click", spin_wheel_down);
+spin_up.addEventListener("click", spin_wheel_up);
+spin_down.addEventListener("click", spin_wheel_down);
 encrypt.addEventListener("click", run_encryption);
 clipboard.addEventListener("click", copy_to_clipboard);
 

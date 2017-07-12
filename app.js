@@ -16,15 +16,30 @@ app.get("/", function(req, res, next) {
 });
 
 app.get("/caesar-shift/encrypt", function(req, res, next) {
-	res.render('encrypt', {});
+	res.render('base_caesar_shift_exercise', {'exercise_type': 'Encrypt',
+				'next_route': '/caesar-shift/decrypt',
+				'red': 40,
+				'green': 40,
+				'blue': 20,
+				'opacity': 0.2});
 });
 
 app.get("/caesar-shift/decrypt", function(req, res, next){
-	res.render('decrypt', {})
+	res.render('base_caesar_shift_exercise', {'exercise_type': 'Decrypt',
+				'next_route': '/password/encrypt',
+				'red': 80,
+				'green': 20,
+				'blue': 40,
+				'opacity': 0.2})
 });
 
 app.get("/caesar-shift/sandbox", function(req, res, next){
-	res.render('caesar-sandbox', {});
+	res.render('base_caesar_shift_exercise', {'exercise_type': 'Sandbox',
+				'next_route': '',
+				'red': 40,
+				'green': 20,
+				'blue': 40,
+				'opacity': 0.2});
 });
 
 app.get("/password/encrypt", function(req, res, next){

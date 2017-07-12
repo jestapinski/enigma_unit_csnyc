@@ -3,5 +3,6 @@
 
 /EncryptionWireframes/
 EncryptionWireframes/
-
+*.sketch
+*.png
 .DS_Store

@@ -5,7 +5,7 @@ from encrypt import caesar_shift
 def caesar_shift_decrypt(ciphertext, shift_value=5):
   #we can flip the shift value we think the encryptor used to decrypt the message!
   shift_value = -shift_value
-    #<a href="#" class="clickable" onclick="if(enable_tooltips){$('#modalOrdChr').modal('open')}">return caesar_shift(ciphertext, shift_value)</a>
+    #<a href="#" class="clickable" onclick="if(enable_tooltips){$('#modalDecryptEncrypt').modal('open')}">return caesar_shift(ciphertext, shift_value)</a>
   return caesar_shift(ciphertext, shift_value)
 #END#
 
