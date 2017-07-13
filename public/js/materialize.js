@@ -8301,3 +8301,42 @@ Picker.extend( 'pickadate', DatePicker )
 $(document).ready(function(){
       $('.parallax').parallax();
     });
+
+$(document).ready(function(){
+      $('.carousel').carousel();
+    });
+
+$(document).ready(function(){
+  // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+  $('.modal').modal();
+});
+
+$(document).ready(function() {
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  $('#modalSuccess').modal({
+      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+      opacity: .5, // Opacity of modal background
+      inDuration: 300, // Transition in duration
+      outDuration: 200, // Transition out duration
+      // startingTop: '4%', // Starting top style attribute
+      // endingTop: '10%', // Ending top style attribute
+      // complete: function() { $(location).attr('href', '/caesar-shift/decrypt'); } // Callback for Modal close
+    }
+  );
+});
+
+$('#for_loop_explanation').hover(function (){
+	console.log("Got something lol");
+})
+
+function runTooltip(e){
+	console.log(e);
+	$(e).tooltip();
+}
+
+
+function remove_tooltip(){
+	$('#encrypt').tooltip('remove');
+}

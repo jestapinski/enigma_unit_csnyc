@@ -16,6 +16,30 @@
   height:100%;
 }
 
+.deepred {
+  background-color: #EA6045 !important;
+}
+
+.darkyellow {
+  background-color: #F8CA4D !important;
+}
+
+.beige {
+  background-color: #F5E5C0 !important;
+}
+
+.beige-text {
+  color: #F5E5C0 !important;
+}
+
+.navy {
+  background-color: #3F5666 !important;
+}
+
+.royal {
+  background-color: #2F3440 !important;
+}
+
 .parallax-container {
   height: 100%;
 }
@@ -5598,8 +5622,8 @@ button.btn-floating {
   right: 0;
   background-color: #fafafa;
   padding: 0;
-  max-height: 70%;
-  width: 55%;
+  max-height: 75%;
+  width: 75%;
   margin: auto;
   overflow-y: auto;
   border-radius: 2px;
