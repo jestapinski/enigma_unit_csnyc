@@ -12,7 +12,7 @@
 
 <style>
 body {
-  background-image: url({{image_path}});
+  background-color: rgba(40, 70, 40, 0.2);
   height: 100%;
   background-size: cover;
 }
@@ -68,40 +68,40 @@ body {
       <div class="col s2 offset-s1"
            style="margin-top: 20px">
         <div class="input-field">
-        <input 
-          placeholder="I came, I saw, I conquered" 
-          value="I came, I saw, I conquered" 
-          id="plaintext_value" 
-          type="text">
-        <label for="plaintext_value"
-               class="tooltipped"
-               data-tooltip="This is our starting text which we will modify 
-                with the Vigenere Cipher encryption algorithm">
-          <strong>1.</strong> Starting Text
-          <i class="tiny material-icons">
-            info_outline
-          </i>
-        </label>
+          <input 
+            placeholder="I came, I saw, I conquered" 
+            value="I came, I saw, I conquered" 
+            id="plaintext_value" 
+            type="text">
+          <label for="plaintext_value"
+                 class="tooltipped"
+                 data-tooltip="This is our starting text which we will modify 
+                  with the Vigenere Cipher encryption algorithm">
+            <strong>1.</strong> Starting Text
+            <i class="tiny material-icons">
+              info_outline
+            </i>
+          </label>
 
-        <div style="margin-top: 50px;">
+          <div style="margin-top: 50px;">
 
-        <a 
-          class="waves-effect waves-green btn darkyellow black-text tooltipped s6" 
-          id="show_code" 
-          data-tooltip="Show Code!"
-          style="width: 49%;">
-          Code View
-        </a>
+            <a 
+              class="waves-effect waves-green btn darkyellow black-text tooltipped s6" 
+              id="show_code" 
+              data-tooltip="Show Code!"
+              style="width: 49%;">
+              Code View
+            </a>
 
-        <a 
-          class="waves-effect waves-green btn beige black-text tooltipped s6" 
-          id="encrypt" 
-          data-tooltip="Encrypt the Plaintext!"
-          style="width: 49%;">
-          Run Encryption
-        </a>
+            <a 
+              class="waves-effect waves-green btn beige black-text tooltipped s6" 
+              id="encrypt" 
+              data-tooltip="Encrypt the Starting Text!"
+              style="width: 49%;">
+              Run Encryption
+            </a>
 
-        </div>
+          </div>
 
         </div>
         <div class="input-field"
@@ -124,7 +124,7 @@ body {
       </div>
 
       <canvas
-        class="col s8"
+        width='1000px' height='500px'
         id="rotor_canvas">
       </canvas>     
 

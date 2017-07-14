@@ -5,16 +5,64 @@
   Accompanies enigma.js, overall logic for Enigma Machine exercise
 */
 
+var outer_radius_offset = 70;
+var middle_radius_offset = outer_radius_offset + 30;
+var inner_radius_offset = middle_radius_offset + 30;
+
+function corrected_mod(n, m){
+  return ((((n) % m) + m) % m);
+}
+
+function draw_spinning_gears(cx, cy, rotor, spin_angle=0, count=0){
+    var rect_radius = 15;
+    var ovr_radius = cy - outer_radius_offset;
+    var i, theta;
+    var angle_difference = (2 * Math.PI) / rotor.num_notches;
+    if (count == 50 * rotor.num_notches){
+      rotor.next_rotor.rotate();
+      count = 0;
+    }
+    rotor.ctx.clearRect(rotor.offset, 0, rotor.canvas_width / 2 - 20, rotor.canvas_height);
+    rotor.draw_gears(cx, cy, spin_angle);
+    rotor.ctx.beginPath();
+    rotor.ctx.arc(cx, cy, cy - outer_radius_offset, 0, 2 * Math.PI, false);
+    rotor.ctx.fillStyle = '#EA6045';
+    rotor.ctx.fill();
+
+    rotor.ctx.beginPath();
+    rotor.ctx.arc(cx, cy, cy - middle_radius_offset, 0, 2 * Math.PI, false);
+    rotor.ctx.fillStyle = '#F8CA4D';
+    rotor.ctx.fill();
+
+    rotor.ctx.beginPath();
+    rotor.ctx.arc(cx, cy, cy - inner_radius_offset, 0, 2 * Math.PI, false);
+    rotor.ctx.fillStyle = '#888888';
+    rotor.ctx.fill();
+
+    rotor.draw_outer_text(cx, cy, spin_angle);
+    rotor.draw_inner_text(cx, cy, spin_angle);
+
+    setTimeout(this.draw_spinning_gears, 5, cx, cy, rotor, spin_angle + angle_difference / 50, count + 1);
+  }
+
 class Rotor {
   constructor(position, seed, ctx, rotor){
     this.next_rotor = rotor;
     this.position = position;
     this.seed = seed;
     this.ctx = ctx;
+    if (ctx){
+      this.canvas_height = ctx.canvas.height;
+      this.canvas_width = ctx.canvas.width;      
+    }
     this.num_rotations = 0;
+    this.offset = 0;
     this.num_notches = 26;
     this.inner_array = [];
     this.outer_array = [];
+    if (position === "Right"){
+      this.offset = canvas_width / 2;
+    }
     this.initialize_arrays();
   }
 
@@ -77,9 +125,91 @@ class Rotor {
     this.inner_array = temp_array;
   }
 
+  draw_gears(cx, cy, spin_angle=0){
+    var rect_radius = 15;
+    var ovr_radius = cy - outer_radius_offset;
+    var i, theta;
+    const angle_difference = (2 * Math.PI) / this.num_notches;
+    this.ctx.translate(cx, cy);
+    this.ctx.rotate(spin_angle);
+    for (i = 0; i < this.num_notches; i++){
+      theta = i * angle_difference + spin_angle;
+      
+      this.ctx.rotate(angle_difference);
+      var x = cx + ovr_radius * (Math.cos(theta)) - rect_radius;
+      var y = cy + ovr_radius * (Math.sin(theta)) - rect_radius;
+      var notch_num = corrected_mod(4 - this.num_rotations, this.num_notches);
+      this.ctx.fillStyle = '#888888';
+      this.ctx.fillRect(0, -(ovr_radius + rect_radius), 2 * rect_radius, 2 * rect_radius);
+      if (i == notch_num){
+        this.ctx.fillStyle = '#000000';
+        this.ctx.fillRect(0, -(ovr_radius + 3 * rect_radius), 2 * rect_radius, 4 * rect_radius);
+      }
+    }
+    this.ctx.rotate(-this.num_notches * angle_difference);
+    this.ctx.rotate(-spin_angle);
+    this.ctx.translate(-cx, -cy);
+  }
+
+  draw_outer_text(cx, cy, spin_angle=0){
+    var i, theta;
+    var angle_difference = (2 * Math.PI) / this.num_notches;
+    var ovr_radius = cy - middle_radius_offset;
+    for (i = 0; i < this.num_notches; i++){
+      theta = i * angle_difference + spin_angle;
+      var x = cx + (ovr_radius + 15) * (Math.cos(theta));
+      var y = cy + (ovr_radius + 15) * (Math.sin(theta)) + 5;
+      this.ctx.textAlign = 'center';
+      this.ctx.fillStyle = '#000000';
+      this.ctx.font = '1.30rem PT Mono';
+      this.ctx.fillText(this.outer_array[i], x, y)
+    }
+  }
+
+  draw_inner_text(cx, cy, spin_angle=0){
+    var i, theta;
+    var angle_difference = (2 * Math.PI) / this.num_notches;
+    var ovr_radius = cy - inner_radius_offset;
+    for (i = 0; i < this.num_notches; i++){
+      theta = i * angle_difference + spin_angle;
+      var x = cx + (ovr_radius + 15) * (Math.cos(theta));
+      var y = cy + (ovr_radius + 15) * (Math.sin(theta)) + 5;
+      this.ctx.textAlign = 'center';
+      this.ctx.fillStyle = '#000000';
+      this.ctx.font = '1.30rem PT Mono';
+      this.ctx.fillText(this.inner_array[i], x, y)
+    }
+  }
+
   draw_rotor(){
+    console.log(this.num_rotations);
+    var cx = this.offset + 3 * (this.canvas_width / 16);
+    var cy = this.canvas_height / 2;
+
+    this.ctx.clearRect(this.offset - 20, 0, this.canvas_width / 2 - 60, this.canvas_height);
+
+    this.draw_gears(cx, cy);
+
+    this.ctx.beginPath();
+    this.ctx.arc(cx, cy, cy - outer_radius_offset, 0, 2 * Math.PI, false);
+    this.ctx.fillStyle = '#EA6045';
+    this.ctx.fill();
+
+    this.ctx.beginPath();
+    this.ctx.arc(cx, cy, cy - middle_radius_offset, 0, 2 * Math.PI, false);
+    this.ctx.fillStyle = '#F8CA4D';
+    this.ctx.fill();
+
+    this.ctx.beginPath();
+    this.ctx.arc(cx, cy, cy - inner_radius_offset, 0, 2 * Math.PI, false);
+    this.ctx.fillStyle = '#888888';
+    this.ctx.fill();
+
+    this.draw_inner_text(cx, cy);
+    this.draw_outer_text(cx, cy);
     //draw on canvas represented by this.ctx
     // use num_rotations times an angle
+
   }
 
   rotate(clockwise=true){
@@ -104,6 +234,9 @@ class Rotor {
       this.num_rotations = 0;
     }
     //animate
+    if ((this.ctx)){
+      this.draw_rotor();      
+    }
   }
 
   static test_rotor(){

@@ -8,6 +8,9 @@ var hidden_text = false;
 var instruction_speed = 500;
 var instruction_button = document.getElementById('instruction_button');
 var rotor_canvas = document.getElementById('rotor_canvas');
+var canvas_width, canvas_height;
+var left_rotor, right_rotor;
+var ctx = rotor_canvas.getContext('2d');
 /*
   modify_instructions
 
@@ -30,6 +33,16 @@ function modify_instructions(){
 
 function convert_to_letter(letter, shift){
   return String.fromCharCode(letter.charCodeAt(0) + shift);
+}
+
+function enigma_machine_encryption(plaintext){
+  //rotate rotor left
+  //rotor left
+  //rotor right
+  //reflector
+  //inv rotor right
+  //inv rotor left
+  //return
 }
 
 /*
@@ -65,10 +78,25 @@ function array_equal(a, b){
 
 //Sets up two Rotor objects on ONE HTML canvas
 function initialize_rotors(){
+  canvas_width = rotor_canvas.width;
+  canvas_height = rotor_canvas.height;
+  right_rotor = new Rotor('Right', 0, ctx);
+  left_rotor = new Rotor('Left', 0, ctx, right_rotor);
+  left_rotor.draw_rotor();
+  right_rotor.draw_rotor();
+  draw_spinning_gears((left_rotor.canvas_width / 4), left_rotor.canvas_height / 2, left_rotor, 0);
+}
 
+function initialize_reflector(){
+  ctx.fillStyle = '#888888';
+  ctx.strokeStyle='#000000';
+  ctx.lineWidth = 1;
+  ctx.fillRect(15 * rotor_canvas.width / 16, 0, rotor_canvas.width / 16, rotor_canvas.height);
+  ctx.strokeRect(15 * rotor_canvas.width / 16, 0, rotor_canvas.width / 16, rotor_canvas.height);
 }
 
 $.getScript('rotor.js', function(){
   Rotor.test_rotor();
-  initialize_rotors();  
+  initialize_rotors();
+  initialize_reflector();  
 });
