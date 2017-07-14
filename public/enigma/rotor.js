@@ -5,7 +5,7 @@
   Accompanies enigma.js, overall logic for Enigma Machine exercise
 */
 
-var outer_radius_offset = 70;
+var outer_radius_offset = 90;
 var middle_radius_offset = outer_radius_offset + 30;
 var inner_radius_offset = middle_radius_offset + 30;
 
@@ -45,6 +45,34 @@ function draw_spinning_gears(cx, cy, rotor, spin_angle=0, count=0){
     setTimeout(this.draw_spinning_gears, 5, cx, cy, rotor, spin_angle + angle_difference / 50, count + 1);
   }
 
+function animate_rotation(rotor, clockwise, steps=0){
+    const max_steps = 50;
+    if (steps == max_steps){
+      if (clockwise){
+      //   this.num_rotations++;
+        const initial_element = rotor.outer_array[0];
+        rotor.outer_array = rotor.outer_array.splice(1);
+        rotor.outer_array.push(initial_element);
+        rotor.num_rotations++;
+      } else {
+      //   this.num_rotations--;
+        const arr_length = rotor.outer_array.length - 1;
+        const final_element = rotor.outer_array[arr_length];
+        rotor.outer_array = [final_element].concat(rotor.outer_array.splice(0, arr_length));
+        rotor.num_rotations--;
+      }
+      rotor.draw_rotor();
+      return;
+    }
+    var angle = (2 * Math.PI) / (50 * rotor.num_notches);
+    if (clockwise){
+      angle = -angle;
+    }
+    console.log(angle * steps);
+    rotor.draw_rotor(angle * steps);
+    setTimeout(animate_rotation, 5, rotor, clockwise, steps + 1);
+  }
+
 class Rotor {
   constructor(position, seed, ctx, rotor){
     this.next_rotor = rotor;
@@ -61,7 +89,7 @@ class Rotor {
     this.inner_array = [];
     this.outer_array = [];
     if (position === "Right"){
-      this.offset = canvas_width / 2;
+      this.offset = 6 * (this.canvas_width / 16);;
     }
     this.initialize_arrays();
   }
@@ -178,6 +206,7 @@ class Rotor {
     var i, theta;
     var angle_difference = (2 * Math.PI) / this.num_notches;
     var ovr_radius = cy - inner_radius_offset;
+    spin_angle = 0;
     for (i = 0; i < this.num_notches; i++){
       theta = i * angle_difference + spin_angle;
       var x = cx + (ovr_radius + 15) * (Math.cos(theta));
@@ -189,13 +218,20 @@ class Rotor {
     }
   }
 
-  draw_rotor(){
-    console.log(this.num_rotations);
+  draw_rotor(step_angle=0){
+    // console.log(this.num_rotations);
+    // console.log(step_angle);
     var cx = this.offset + 3 * (this.canvas_width / 16);
     var cy = this.canvas_height / 2;
-
-    this.ctx.clearRect(this.offset, 0, this.canvas_width / 2 - 20, this.canvas_height);
-    this.draw_gears(cx, cy, 0);
+    if (this.next_rotor){
+      this.ctx.clearRect(0, 0, 14 * (this.canvas_width / 16) + 50, this.canvas_height);
+      this.next_rotor.draw_rotor();
+      this.ctx.translate(50, 0);
+    } else {
+      this.ctx.translate(50, 0);
+      this.ctx.clearRect(this.offset, 0, 8 * (this.canvas_width / 16), this.canvas_height);      
+    }
+    this.draw_gears(cx, cy, step_angle);
     this.ctx.beginPath();
     this.ctx.arc(cx, cy, cy - outer_radius_offset, 0, 2 * Math.PI, false);
     this.ctx.fillStyle = '#EA6045';
@@ -211,8 +247,9 @@ class Rotor {
     this.ctx.fillStyle = '#888888';
     this.ctx.fill();
 
-    this.draw_outer_text(cx, cy, 0);
-    this.draw_inner_text(cx, cy, 0);
+    this.draw_outer_text(cx, cy, step_angle);
+    this.draw_inner_text(cx, cy, step_angle);
+    this.ctx.translate(-50, 0);
     //draw on canvas represented by this.ctx
     // use num_rotations times an angle
 
@@ -221,17 +258,6 @@ class Rotor {
   rotate(clockwise=true){
     //Add to number of rotations
     //Shift outer array by 1
-    if (clockwise){
-      const initial_element = this.outer_array[0];
-      this.outer_array = this.outer_array.splice(1);
-      this.outer_array.push(initial_element);
-      this.num_rotations++;
-    } else {
-      const arr_length = this.outer_array.length - 1;
-      const final_element = this.outer_array[arr_length];
-      this.outer_array = [final_element].concat(this.outer_array.splice(0, arr_length));
-      this.num_rotations--;
-    }
     //if number of rotations == number of notches, push next one
     if (Math.abs(this.num_rotations) >= this.num_notches){
       this.num_rotations -= this.num_notches;
@@ -242,11 +268,18 @@ class Rotor {
     }
     //animate
     if ((this.ctx)){
-      this.draw_rotor();      
+      // if (clockwise){
+      //   this.num_rotations--;
+      // } else {
+      //   this.num_rotations++;
+      // }
+      animate_rotation(this, clockwise);
+      // this.draw_rotor();      
     }
   }
 
   static test_rotor(){
+    return true;
     var test_rotor = new Rotor('Left', 0);
 
     //Testing initializations

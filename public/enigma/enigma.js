@@ -74,34 +74,60 @@ function run_encryption(){
   }
   plaintext_value.value = plaintext;
   ciphertext = enigma_machine_encryption(plaintext);
-  ciphertext_value.value = ciphertext;
-  return ciphertext;
+  // return ciphertext;
 }
 
-function enigma_machine_encryption(plaintext){
-  var ciphertext = [];
+// function enigma_machine_encryption(plaintext){
+//   var ciphertext = [];
+//   var intermediate_letter;
+//   for (var i = 0; i < plaintext.length; i++){
+//     //rotate rotor left
+//     left_rotor.rotate(false);
+//     //rotor left
+//     intermediate_letter = left_rotor.process_letter(plaintext[i]);
+//     console.log(intermediate_letter);
+//     //rotor right
+//     intermediate_letter = right_rotor.process_letter(intermediate_letter);
+//     console.log(intermediate_letter);
+//     //reflector
+//     intermediate_letter = reflector_process_letter(intermediate_letter);
+//     console.log(intermediate_letter);
+//     //inverse rotor right
+//     intermediate_letter = right_rotor.inverse_process_letter(intermediate_letter);
+//     console.log(intermediate_letter);
+//     //inverse rotor left
+//     intermediate_letter = left_rotor.inverse_process_letter(intermediate_letter);
+//     console.log(intermediate_letter);
+//     ciphertext.push(intermediate_letter);    
+//   } 
+//   return ciphertext.join('');
+// }
+
+function enigma_machine_encryption(plaintext, ciphertext='', i=0){
+  if (i == plaintext.length){
+    console.log(ciphertext);
+    ciphertext_value.value = ciphertext;
+    return;
+  }
   var intermediate_letter;
-  for (var i = 0; i < plaintext.length; i++){
-    //rotate rotor left
-    left_rotor.rotate(false);
-    //rotor left
-    intermediate_letter = left_rotor.process_letter(plaintext[i]);
-    console.log(intermediate_letter);
-    //rotor right
-    intermediate_letter = right_rotor.process_letter(intermediate_letter);
-    console.log(intermediate_letter);
-    //reflector
-    intermediate_letter = reflector_process_letter(intermediate_letter);
-    console.log(intermediate_letter);
-    //inverse rotor right
-    intermediate_letter = right_rotor.inverse_process_letter(intermediate_letter);
-    console.log(intermediate_letter);
-    //inverse rotor left
-    intermediate_letter = left_rotor.inverse_process_letter(intermediate_letter);
-    console.log(intermediate_letter);
-    ciphertext.push(intermediate_letter);    
-  } 
-  return ciphertext.join('');
+  left_rotor.rotate(false);
+  //rotor left
+  intermediate_letter = left_rotor.process_letter(plaintext[i]);
+  // console.log(intermediate_letter);
+  //rotor right
+  intermediate_letter = right_rotor.process_letter(intermediate_letter);
+  // console.log(intermediate_letter);
+  //reflector
+  intermediate_letter = reflector_process_letter(intermediate_letter);
+  // console.log(intermediate_letter);
+  //inverse rotor right
+  intermediate_letter = right_rotor.inverse_process_letter(intermediate_letter);
+  // console.log(intermediate_letter);
+  //inverse rotor left
+  intermediate_letter = left_rotor.inverse_process_letter(intermediate_letter);
+  // console.log(intermediate_letter);
+  setTimeout(enigma_machine_encryption, 500, plaintext, ciphertext + intermediate_letter, i + 1);
+  // ciphertext.push(intermediate_letter); 
 }
 
 /*
@@ -139,11 +165,13 @@ function array_equal(a, b){
 function initialize_rotors(){
   canvas_width = rotor_canvas.width;
   canvas_height = rotor_canvas.height;
+  // ctx.translate(50, 0);
   right_rotor = new Rotor('Right', 0, ctx);
   left_rotor = new Rotor('Left', 0, ctx, right_rotor);
   left_rotor.draw_rotor();
   right_rotor.draw_rotor();
-  draw_spinning_gears((left_rotor.canvas_width / 4), left_rotor.canvas_height / 2, left_rotor, 0);
+  // ctx.translate(-50, 0);
+  // draw_spinning_gears((left_rotor.canvas_width / 4), left_rotor.canvas_height / 2, left_rotor, 0);
 }
 
 function initialize_reflector(){
