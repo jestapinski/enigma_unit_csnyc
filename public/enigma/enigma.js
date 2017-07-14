@@ -8,6 +8,9 @@ var hidden_text = false;
 var instruction_speed = 500;
 var instruction_button = document.getElementById('instruction_button');
 var rotor_canvas = document.getElementById('rotor_canvas');
+var encrypt = document.getElementById('encrypt');
+var plaintext_value = document.getElementById('plaintext_value');
+var ciphertext_value = document.getElementById('ciphertext_value');
 var canvas_width, canvas_height;
 var left_rotor, right_rotor;
 var ctx = rotor_canvas.getContext('2d');
@@ -35,14 +38,70 @@ function convert_to_letter(letter, shift){
   return String.fromCharCode(letter.charCodeAt(0) + shift);
 }
 
+function reflector_process_letter(letter){
+  //TODO add mapping for reflector
+  return letter;
+}
+
+function has_special_characters(plaintext){
+  return !(/[a-z]/.test(plaintext));
+}
+
+function multiple_words(plaintext){
+  return (plaintext.split(" ").length > 1);
+}
+
+function validate_plaintext(plaintext){
+  if (plaintext === ""){
+    return "Plaintext should not be blank";
+  }
+  if (multiple_words(plaintext)){
+    return "Plaintext must only be one word";
+  }
+  if (has_special_characters(plaintext)){
+    return "Plaintext must only contain letters a-z";
+  }
+  return '';
+}
+
+function run_encryption(){
+  const plaintext = plaintext_value.value.toLowerCase();
+  const validation_errors = validate_plaintext(plaintext);
+  var ciphertext;
+  if (validation_errors){
+    alert(validation_errors);
+    return;
+  }
+  plaintext_value.value = plaintext;
+  ciphertext = enigma_machine_encryption(plaintext);
+  ciphertext_value.value = ciphertext;
+  return ciphertext;
+}
+
 function enigma_machine_encryption(plaintext){
-  //rotate rotor left
-  //rotor left
-  //rotor right
-  //reflector
-  //inv rotor right
-  //inv rotor left
-  //return
+  var ciphertext = [];
+  var intermediate_letter;
+  for (var i = 0; i < plaintext.length; i++){
+    //rotate rotor left
+    left_rotor.rotate(false);
+    //rotor left
+    intermediate_letter = left_rotor.process_letter(plaintext[i]);
+    console.log(intermediate_letter);
+    //rotor right
+    intermediate_letter = right_rotor.process_letter(intermediate_letter);
+    console.log(intermediate_letter);
+    //reflector
+    intermediate_letter = reflector_process_letter(intermediate_letter);
+    console.log(intermediate_letter);
+    //inverse rotor right
+    intermediate_letter = right_rotor.inverse_process_letter(intermediate_letter);
+    console.log(intermediate_letter);
+    //inverse rotor left
+    intermediate_letter = left_rotor.inverse_process_letter(intermediate_letter);
+    console.log(intermediate_letter);
+    ciphertext.push(intermediate_letter);    
+  } 
+  return ciphertext.join('');
 }
 
 /*
@@ -100,3 +159,5 @@ $.getScript('rotor.js', function(){
   initialize_rotors();
   initialize_reflector();  
 });
+
+encrypt.addEventListener("click", run_encryption);

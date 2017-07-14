@@ -125,6 +125,14 @@ class Rotor {
     this.inner_array = temp_array;
   }
 
+  process_letter(letter){
+    return this.inner_array[this.outer_array.indexOf(letter)];
+  }
+
+  inverse_process_letter(letter){
+    return this.outer_array[this.inner_array.indexOf(letter)];
+  }
+
   draw_gears(cx, cy, spin_angle=0){
     var rect_radius = 15;
     var ovr_radius = cy - outer_radius_offset;
@@ -186,10 +194,8 @@ class Rotor {
     var cx = this.offset + 3 * (this.canvas_width / 16);
     var cy = this.canvas_height / 2;
 
-    this.ctx.clearRect(this.offset - 20, 0, this.canvas_width / 2 - 60, this.canvas_height);
-
-    this.draw_gears(cx, cy);
-
+    this.ctx.clearRect(this.offset, 0, this.canvas_width / 2 - 20, this.canvas_height);
+    this.draw_gears(cx, cy, 0);
     this.ctx.beginPath();
     this.ctx.arc(cx, cy, cy - outer_radius_offset, 0, 2 * Math.PI, false);
     this.ctx.fillStyle = '#EA6045';
@@ -205,8 +211,8 @@ class Rotor {
     this.ctx.fillStyle = '#888888';
     this.ctx.fill();
 
-    this.draw_inner_text(cx, cy);
-    this.draw_outer_text(cx, cy);
+    this.draw_outer_text(cx, cy, 0);
+    this.draw_inner_text(cx, cy, 0);
     //draw on canvas represented by this.ctx
     // use num_rotations times an angle
 
@@ -227,7 +233,8 @@ class Rotor {
       this.num_rotations--;
     }
     //if number of rotations == number of notches, push next one
-    if (this.num_rotations == this.num_notches){
+    if (Math.abs(this.num_rotations) >= this.num_notches){
+      this.num_rotations -= this.num_notches;
       if (this.next_rotor){
         this.next_rotor.rotate();
       }
@@ -241,6 +248,9 @@ class Rotor {
 
   static test_rotor(){
     var test_rotor = new Rotor('Left', 0);
+
+    //Testing initializations
+
     assert(!test_rotor.next_rotor, "Expected next_rotor to be undefined");
     assert(test_rotor.num_rotations == 0, "Expected initial number of rotations\
                                                                   to be zero");
@@ -249,14 +259,38 @@ class Rotor {
             "Expected outer array to be the array [a-z]");
     assert(!array_equal(test_rotor.inner_array, test_rotor.outer_array), 
                   "Expected the inner and outer arrays of the rotor to differ");
+
+    //Testing mappings
+
+    assert(test_rotor.process_letter('a') === 'b',
+                  "Expected 'a' to map to 'b' in the initial rotor processing");
+    assert(test_rotor.inverse_process_letter('b') === 'a',
+          "Expected 'b' to map back to 'a' in the initial rotor inverse processing");
+    assert(test_rotor.inverse_process_letter(test_rotor.process_letter('a')) === 'a',
+        "Expected a 1 to 1 mapping between process_letter and inverse_process_letter");
+
+    //Testing rotation effects
+
     test_rotor.rotate();
+    assert(test_rotor.process_letter('a') === 'a',
+              "Expected 'a' to map to 'a' post rotation");
+
     assert(test_rotor.outer_array[0] === 'b', "Expected first element of outer\
        array of rotor to be 'b' after first rotation");
     assert(test_rotor.outer_array[25] === 'a', "Expected last element of outer\
        array of rotor to be 'a' after first rotation");
+    assert(test_rotor.inverse_process_letter(test_rotor.process_letter('a')) === 'a',
+        "Expected a 1 to 1 mapping between process_letter and inverse_process_letter");
+
+    //Testing opposite direction rotation
+
     test_rotor.rotate(false);
+    assert(test_rotor.process_letter('a') === 'b',
+                  "Expected 'a' to map to 'b' after two opposite rotor rotations");
     assert(array_equal(test_rotor.outer_array, test_rotor.initialize_alphabet_array()),
       "Expected rotor array position to be reset after opposite rotations");
+
+    //Testing rotor interactions
 
     var second_rotor = new Rotor('Right', 0);
     assert(array_equal(second_rotor.outer_array, test_rotor.outer_array),
