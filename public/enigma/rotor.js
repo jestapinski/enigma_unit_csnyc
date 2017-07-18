@@ -45,32 +45,35 @@ function draw_spinning_gears(cx, cy, rotor, spin_angle=0, count=0){
     setTimeout(this.draw_spinning_gears, 5, cx, cy, rotor, spin_angle + angle_difference / 50, count + 1);
   }
 
-function animate_rotation(rotor, clockwise, steps=0){
+function animate_rotation(rotor, clockwise, steps=0, chain=false){
     const max_steps = 50;
     if (steps == max_steps){
       if (clockwise){
-      //   this.num_rotations++;
         const initial_element = rotor.outer_array[0];
         rotor.outer_array = rotor.outer_array.splice(1);
         rotor.outer_array.push(initial_element);
         rotor.num_rotations++;
       } else {
-      //   this.num_rotations--;
         const arr_length = rotor.outer_array.length - 1;
         const final_element = rotor.outer_array[arr_length];
         rotor.outer_array = [final_element].concat(rotor.outer_array.splice(0, arr_length));
         rotor.num_rotations--;
       }
       rotor.draw_rotor();
+
+      //If this causes a chained rotation, draw the effects of such rotation after completing
+      //the animation for the initial rotor
+      if (chain){
+        setTimeout(animate_rotation, 5, rotor.next_rotor, !clockwise, 0, false);
+      }
       return;
     }
     var angle = (2 * Math.PI) / (50 * rotor.num_notches);
     if (clockwise){
       angle = -angle;
     }
-    console.log(angle * steps);
     rotor.draw_rotor(angle * steps);
-    setTimeout(animate_rotation, 5, rotor, clockwise, steps + 1);
+    setTimeout(animate_rotation, 5, rotor, clockwise, steps + 1, chain);
   }
 
 class Rotor {
@@ -88,6 +91,7 @@ class Rotor {
     this.num_notches = 26;
     this.inner_array = [];
     this.outer_array = [];
+    this.previous_rotor;
     if (position === "Right"){
       this.offset = 6 * (this.canvas_width / 16);;
     }
@@ -219,8 +223,6 @@ class Rotor {
   }
 
   draw_rotor(step_angle=0){
-    // console.log(this.num_rotations);
-    // console.log(step_angle);
     var cx = this.offset + 3 * (this.canvas_width / 16);
     var cy = this.canvas_height / 2;
     if (this.next_rotor){
@@ -255,26 +257,23 @@ class Rotor {
 
   }
 
-  rotate(clockwise=true){
+  rotate(clockwise=true, chain=false){
     //Add to number of rotations
     //Shift outer array by 1
     //if number of rotations == number of notches, push next one
     if (Math.abs(this.num_rotations) >= this.num_notches){
       this.num_rotations -= this.num_notches;
       if (this.next_rotor){
-        this.next_rotor.rotate();
+        this.next_rotor.rotate(true, true);
+        chain = true;
+        animate_rotation(this, clockwise, 0, chain);
       }
       this.num_rotations = 0;
     }
     //animate
-    if ((this.ctx)){
-      // if (clockwise){
-      //   this.num_rotations--;
-      // } else {
-      //   this.num_rotations++;
-      // }
-      animate_rotation(this, clockwise);
-      // this.draw_rotor();      
+    if ((this.ctx) && !(chain)){
+      //chain parameter sets up concurrency UI fix by chaining draw calls
+      animate_rotation(this, clockwise, 0, chain);
     }
   }
 

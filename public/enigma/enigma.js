@@ -77,40 +77,17 @@ function run_encryption(){
   // return ciphertext;
 }
 
-// function enigma_machine_encryption(plaintext){
-//   var ciphertext = [];
-//   var intermediate_letter;
-//   for (var i = 0; i < plaintext.length; i++){
-//     //rotate rotor left
-//     left_rotor.rotate(false);
-//     //rotor left
-//     intermediate_letter = left_rotor.process_letter(plaintext[i]);
-//     console.log(intermediate_letter);
-//     //rotor right
-//     intermediate_letter = right_rotor.process_letter(intermediate_letter);
-//     console.log(intermediate_letter);
-//     //reflector
-//     intermediate_letter = reflector_process_letter(intermediate_letter);
-//     console.log(intermediate_letter);
-//     //inverse rotor right
-//     intermediate_letter = right_rotor.inverse_process_letter(intermediate_letter);
-//     console.log(intermediate_letter);
-//     //inverse rotor left
-//     intermediate_letter = left_rotor.inverse_process_letter(intermediate_letter);
-//     console.log(intermediate_letter);
-//     ciphertext.push(intermediate_letter);    
-//   } 
-//   return ciphertext.join('');
-// }
-
 function enigma_machine_encryption(plaintext, ciphertext='', i=0){
   if (i == plaintext.length){
     console.log(ciphertext);
     ciphertext_value.value = ciphertext;
     return;
   }
-  var intermediate_letter;
+  var intermediate_letter, timer_delay = 500;
   left_rotor.rotate(false);
+  if (left_rotor.num_rotations == 0){
+    timer_delay = 1000;
+  }
   //rotor left
   intermediate_letter = left_rotor.process_letter(plaintext[i]);
   // console.log(intermediate_letter);
@@ -126,7 +103,8 @@ function enigma_machine_encryption(plaintext, ciphertext='', i=0){
   //inverse rotor left
   intermediate_letter = left_rotor.inverse_process_letter(intermediate_letter);
   // console.log(intermediate_letter);
-  setTimeout(enigma_machine_encryption, 500, plaintext, ciphertext + intermediate_letter, i + 1);
+  console.log(timer_delay);
+  setTimeout(enigma_machine_encryption, timer_delay, plaintext, ciphertext + intermediate_letter, i + 1);
   // ciphertext.push(intermediate_letter); 
 }
 
@@ -168,10 +146,9 @@ function initialize_rotors(){
   // ctx.translate(50, 0);
   right_rotor = new Rotor('Right', 0, ctx);
   left_rotor = new Rotor('Left', 0, ctx, right_rotor);
-  left_rotor.draw_rotor();
   right_rotor.draw_rotor();
-  // ctx.translate(-50, 0);
-  // draw_spinning_gears((left_rotor.canvas_width / 4), left_rotor.canvas_height / 2, left_rotor, 0);
+  left_rotor.draw_rotor();
+  right_rotor.previous_rotor = left_rotor;
 }
 
 function initialize_reflector(){
