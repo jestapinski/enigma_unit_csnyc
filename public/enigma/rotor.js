@@ -22,7 +22,7 @@ function draw_spinning_gears(cx, cy, rotor, spin_angle=0, count=0){
       rotor.next_rotor.rotate();
       count = 0;
     }
-    rotor.ctx.clearRect(rotor.offset, 0, rotor.canvas_width / 2 - 20, rotor.canvas_height);
+    rotor.ctx.clearRect(rotor.offset, 60, rotor.canvas_width / 2 - 20, rotor.canvas_height);
     rotor.draw_gears(cx, cy, spin_angle);
     rotor.ctx.beginPath();
     rotor.ctx.arc(cx, cy, cy - outer_radius_offset, 0, 2 * Math.PI, false);
@@ -59,7 +59,11 @@ function animate_rotation(rotor, clockwise, steps=0, chain=false){
         rotor.outer_array = [final_element].concat(rotor.outer_array.splice(0, arr_length));
         rotor.num_rotations--;
       }
-      rotor.draw_rotor();
+      rotor.draw_rotor(true, 0, false);
+
+      // if (rotor.next_rotor){
+      //   rotor.next_rotor.draw_rotor(true, 0, false);
+      // }
 
       //If this causes a chained rotation, draw the effects of such rotation after completing
       //the animation for the initial rotor
@@ -72,9 +76,59 @@ function animate_rotation(rotor, clockwise, steps=0, chain=false){
     if (clockwise){
       angle = -angle;
     }
-    rotor.draw_rotor(angle * steps);
+    rotor.draw_rotor(true, angle * steps);
     setTimeout(animate_rotation, 5, rotor, clockwise, steps + 1, chain);
   }
+
+function highlight_letter(rotor, letter, spin_angle=0, outer=true, stroke_color='#3f5666'){
+  var letter_index;
+  letter_index = rotor.outer_array.indexOf(letter);
+  var theta = letter_index * (2 * Math.PI) / (rotor.num_notches) + spin_angle;
+  var cx = rotor.offset + 3 * (rotor.canvas_width / 16);
+  var cy = rotor.canvas_height / 2;
+  var ovr_radius = cy - middle_radius_offset;
+  if (!outer){
+    ovr_radius = cy - inner_radius_offset;
+    // stroke_color = '#00FF00';
+  }
+  var x = cx + (ovr_radius + 15) * (Math.cos(theta)) + 40;
+  var y = cy + (ovr_radius + 15) * (Math.sin(theta)) - 5;
+
+  rotor.begin_x = x;
+  rotor.begin_y = y;
+  // rotor.ctx.fillStyle = '#000000';
+  ctx.strokeStyle = stroke_color;
+  rotor.ctx.strokeRect(x, y - 5, 20, 20);
+}
+
+
+// Adapted from: https://stackoverflow.com/questions/8211745/draw-an-arrow-on-html5-canvas-between-two-objects
+function arrow(ctx,p1,p2,size){
+  ctx.save();
+
+  // Rotate the context to point along the path
+  var dx = p2.x-p1.x, dy=p2.y-p1.y, len=Math.sqrt(dx*dx+dy*dy);
+  ctx.translate(p2.x,p2.y);
+  ctx.rotate(Math.atan2(dy,dx));
+
+  // line
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.lineTo(-len,0);
+  ctx.closePath();
+  ctx.stroke();
+
+  // arrowhead
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.lineTo(-size,-size);
+  ctx.lineTo(-size, size);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.restore();
+}
 
 class Rotor {
   constructor(position, seed, ctx, rotor){
@@ -82,6 +136,7 @@ class Rotor {
     this.position = position;
     this.seed = seed;
     this.ctx = ctx;
+    this.locked = false;
     if (ctx){
       this.canvas_height = ctx.canvas.height;
       this.canvas_width = ctx.canvas.width;      
@@ -158,6 +213,7 @@ class Rotor {
   }
 
   process_letter(letter){
+    this.current_letter = letter;
     return this.inner_array[this.outer_array.indexOf(letter)];
   }
 
@@ -222,16 +278,17 @@ class Rotor {
     }
   }
 
-  draw_rotor(step_angle=0){
+  draw_rotor(highlight=false, step_angle=0, outer=true){
+    console.log(highlight);
     var cx = this.offset + 3 * (this.canvas_width / 16);
     var cy = this.canvas_height / 2;
     if (this.next_rotor){
-      this.ctx.clearRect(0, 0, 14 * (this.canvas_width / 16) + 50, this.canvas_height);
-      this.next_rotor.draw_rotor();
+      this.ctx.clearRect(0, 60, 14 * (this.canvas_width / 16) + 50, this.canvas_height);
+      this.next_rotor.draw_rotor(false);
       this.ctx.translate(50, 0);
     } else {
       this.ctx.translate(50, 0);
-      this.ctx.clearRect(this.offset, 0, 8 * (this.canvas_width / 16), this.canvas_height);      
+      this.ctx.clearRect(this.offset, 60, 8 * (this.canvas_width / 16), this.canvas_height);      
     }
     this.draw_gears(cx, cy, step_angle);
     this.ctx.beginPath();
@@ -252,6 +309,9 @@ class Rotor {
     this.draw_outer_text(cx, cy, step_angle);
     this.draw_inner_text(cx, cy, step_angle);
     this.ctx.translate(-50, 0);
+    if (this.current_letter && highlight){
+      highlight_letter(this, this.current_letter, step_angle, outer);     
+    }
     //draw on canvas represented by this.ctx
     // use num_rotations times an angle
 
