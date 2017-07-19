@@ -11,6 +11,7 @@ var rotor_canvas = document.getElementById('rotor_canvas');
 var encrypt = document.getElementById('encrypt');
 var plaintext_value = document.getElementById('plaintext_value');
 var ciphertext_value = document.getElementById('ciphertext_value');
+var encrypt_code = document.getElementById('encrypt_code');
 var canvas_width, canvas_height;
 var left_rotor, right_rotor, first_point, p2, pt, ct, new_i;
 var ctx = rotor_canvas.getContext('2d');
@@ -315,6 +316,52 @@ function initialize_reflector(){
   ctx.lineWidth = 2;
 }
 
+/*
+  convert_to_HTML
+
+  data: The raw test from the Python file we want to parse
+  returns an HTML-formatted piece of Python code
+
+  convert_to_HTML takes in raw python text which follows the following
+  conventions and converts it to formatted HTML:
+    - for each line that is formatted, a commented line should be above with
+      the exact HTML we wish to use in the application
+    - the formats begin with a <a tag directly after the comment (i.e. #<a)
+    - the code portion we wish to use ends with a #END# line
+    - see encrypt.py for an example
+*/
+function convert_to_HTML(data){
+  var python_lines = data.split("\n");
+  var python_line, i;
+  var final_python_code = [];
+  var skip_flag = false;
+  var start_flag = false;
+  for (i = 0; i < python_lines.length; i++){
+    python_line = python_lines[i];
+    if (python_line == "#START#"){
+      start_flag = true;
+      continue;
+    }
+    if (!start_flag){
+      continue;
+    }
+    if (skip_flag){
+      skip_flag = false;
+      continue;
+    }
+    if (python_line == "#END#"){
+      break;
+    }
+    if (python_line.trim().substring(0, 3) == "#<a"){
+      final_python_code.push(python_line.replace("#", ""));
+      skip_flag = true;
+    } else {
+      final_python_code.push(python_line);
+    }
+  }
+  return final_python_code.join("\n");
+}
+
 $.getScript('rotor.js', function(){
   Rotor.test_rotor();
   initialize_rotors();
@@ -326,5 +373,13 @@ if (document.title.includes('Sandbox')){
   console.log('in sandbox');
   validate = false;
 }
+
+jQuery.get('rotor.py', function(data) {
+  var python_function = convert_to_HTML(data);
+  encrypt_code.innerHTML = python_function;
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
 
 encrypt.addEventListener("click", run_encryption);
