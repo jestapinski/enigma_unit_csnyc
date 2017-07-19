@@ -8,6 +8,7 @@
 var outer_radius_offset = 90;
 var middle_radius_offset = outer_radius_offset + 30;
 var inner_radius_offset = middle_radius_offset + 30;
+var right_shuffle = ["g", "n", "w", "q", "r", "a", "x", "e", "l", "j", "d", "z", "f", "k", "b", "v", "o", "h", "y", "p", "i", "t", "m", "s", "c", "u"];
 
 function corrected_mod(n, m){
   return ((((n) % m) + m) % m);
@@ -210,6 +211,9 @@ class Rotor {
     var temp_array = this.initialize_alphabet_array('b');
     temp_array[25] = 'a';
     this.inner_array = temp_array;
+    if (this.position != 'Left'){
+      this.inner_array = right_shuffle;
+    }
   }
 
   process_letter(letter){
@@ -285,6 +289,9 @@ class Rotor {
     if (this.next_rotor){
       this.ctx.clearRect(0, 60, 14 * (this.canvas_width / 16) + 50, this.canvas_height);
       this.next_rotor.draw_rotor(false);
+      this.ctx.clearRect(14 * (this.canvas_width / 16) + 20, this.canvas_height - 40, 14 * (this.canvas_width / 16) + 50, this.canvas_height);
+      this.ctx.fillText("Reflector", 15 * rotor_canvas.width / 16, rotor_canvas.height - 20);
+      this.ctx.fillText("(Caesar Shift 1)", 29 * rotor_canvas.width / 32, rotor_canvas.height);
       this.ctx.translate(50, 0);
     } else {
       this.ctx.translate(50, 0);
@@ -312,6 +319,12 @@ class Rotor {
     if (this.current_letter && highlight){
       highlight_letter(this, this.current_letter, step_angle, outer);     
     }
+    this.ctx.textAlign = 'center';
+    if (this.position === 'Left'){
+      this.ctx.fillText("Rotor 1", cx + 40, this.canvas_height);
+    } else {
+      this.ctx.fillText("Rotor 2", cx + 40, this.canvas_height);      
+    }
     //draw on canvas represented by this.ctx
     // use num_rotations times an angle
 
@@ -321,9 +334,22 @@ class Rotor {
     //Add to number of rotations
     //Shift outer array by 1
     //if number of rotations == number of notches, push next one
+    if (!this.ctx){
+      if (clockwise){
+        const initial_element = this.outer_array[0];
+        this.outer_array = this.outer_array.splice(1);
+        this.outer_array.push(initial_element);
+        this.num_rotations++;
+      } else {
+        const arr_length = this.outer_array.length - 1;
+        const final_element = this.outer_array[arr_length];
+        this.outer_array = [final_element].concat(this.outer_array.splice(0, arr_length));
+        this.num_rotations--;
+      }
+    }
     if (Math.abs(this.num_rotations) >= this.num_notches){
       this.num_rotations -= this.num_notches;
-      if (this.next_rotor){
+      if (this.next_rotor && this.ctx){
         this.next_rotor.rotate(true, true);
         chain = true;
         animate_rotation(this, clockwise, 0, chain);
@@ -338,11 +364,10 @@ class Rotor {
   }
 
   static test_rotor(){
-    return true;
     var test_rotor = new Rotor('Left', 0);
 
     //Testing initializations
-
+    console.log("Testing Rotor");
     assert(!test_rotor.next_rotor, "Expected next_rotor to be undefined");
     assert(test_rotor.num_rotations == 0, "Expected initial number of rotations\
                                                                   to be zero");
@@ -364,6 +389,7 @@ class Rotor {
     //Testing rotation effects
 
     test_rotor.rotate();
+    console.log(test_rotor.process_letter('a'));
     assert(test_rotor.process_letter('a') === 'a',
               "Expected 'a' to map to 'a' post rotation");
 
@@ -392,9 +418,10 @@ class Rotor {
     for (var i = 0; i < test_rotor.num_notches; i++){
       test_rotor.rotate();
     }
+    console.log(test_rotor.num_rotations);
     assert(test_rotor.num_rotations == 0);
-    assert(!array_equal(second_rotor.outer_array, test_rotor.outer_array),
-      "Expected non equal outer arrays for both rotors post-rotate");
+    assert(array_equal(second_rotor.outer_array, test_rotor.outer_array),
+      "Expected equal outer arrays for both rotors post-rotate");
 
     console.log("Rotor tests passed");
   }

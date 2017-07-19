@@ -30,9 +30,21 @@ body {
     <div class="nav-wrapper">
       <a href="#" class="brand-logo right" style="padding-right:50px">Enigma: An Introduction to Cryptography</a>
       <div class="col s12 pull-s1">
-        <a href="#!" class="breadcrumb" style="padding-left:50px">Caesar Shift</a>
-        <a href="#!" class="breadcrumb">Vigenere Cipher</a>
-        <a href="#!" class="breadcrumb">Enigma Machine</a>
+        <a 
+          href="/caesar-shift/encrypt" 
+          class="breadcrumb"
+          target = "_blank" 
+          style="padding-left:50px">
+          Caesar Shift
+        </a>
+        <a 
+          href="/password/sandbox" 
+          class="breadcrumb"
+          target = "_blank">Vigenere Cipher</a>
+        <a 
+          href="/enigma/sandbox" 
+          class="breadcrumb"
+          target = "_blank">Enigma Machine</a>
       </div>
     </div>
   </nav>
@@ -48,7 +60,10 @@ body {
       <div class="row">
           <h4 class="col offset-s1">Instructions:</h4>
           <p class="flow-text col s10 offset-s1" id="instructions_text">
-          Run the Enigma Machine
+          The Enigma Machine is a series of rotors which break encryption into multiple steps
+          and changes each time as the rotors rotate.<br><br>
+          Encrypt the text <strong>hello</strong> twice to see this effect in action and
+          watch the Enigma Machine encrypt!
           </p>        
       </div>
     </div>
@@ -99,7 +114,7 @@ body {
               id="encrypt" 
               data-tooltip="Encrypt the Starting Text!"
               style="width: 49%;">
-              <strong>2. </strong>Run Encryption
+              Run
             </a>
 
             {% if exercise_type != 'Sandbox' %}

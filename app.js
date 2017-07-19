@@ -86,7 +86,7 @@ app.get("/enigma/encrypt", function(req, res, next){
 				'exercise_type': 'Encrypt',
 				'input_label': 'Plaintext',
 				'output_label': 'Ciphertext',
-				'next_route': '/enigma/decrypt'
+				'next_route': 'end'
 				});
 });
 
@@ -97,6 +97,10 @@ app.get("/enigma/sandbox", function(req, res, next){
 				'input_label': 'Starting Text',
 				'output_label': 'Ending Text',
 				});
+});
+
+app.get("/end", function(req, res, next){
+	res.render('end_screen');
 })
 
 // Running the web server
