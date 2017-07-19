@@ -814,3 +814,9 @@ spin_up.addEventListener('click', increase_index);
 spin_down.addEventListener('click', decrease_index);
 clipboard.addEventListener('click', copy_to_clipboard);
 setTimeout(run_start_modal, 600);
+$(document).keypress(function(e){
+  console.log(e.charCode);
+    if (e.charCode == 13){
+        encrypt.click();
+    }
+});

@@ -612,4 +612,9 @@ spin_up.addEventListener("click", spin_wheel_up);
 spin_down.addEventListener("click", spin_wheel_down);
 encrypt.addEventListener("click", run_encryption);
 clipboard.addEventListener("click", copy_to_clipboard);
-
+$(document).keypress(function(e){
+  console.log(e.charCode);
+    if (e.charCode == 13){
+        encrypt.click();
+    }
+});

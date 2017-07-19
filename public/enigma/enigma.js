@@ -417,3 +417,9 @@ jQuery.get('rotor.py', function(data) {
 });
 
 encrypt.addEventListener("click", run_encryption);
+$(document).keypress(function(e){
+  console.log(e.charCode);
+    if (e.charCode == 13){
+        encrypt.click();
+    }
+});
