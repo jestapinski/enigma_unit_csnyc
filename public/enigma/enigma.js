@@ -352,12 +352,20 @@ function convert_to_HTML(data){
     if (python_line == "#END#"){
       break;
     }
-    if (python_line.trim().substring(0, 3) == "#<a"){
-      final_python_code.push(python_line.replace("#", ""));
-      skip_flag = true;
-    } else {
-      final_python_code.push(python_line);
+    if (python_line.trim().substring(0, 3) == "def"){
+      final_python_code.push(python_lines[i - 2]);
+      final_python_code.push(python_lines[i - 1].replace("#", ""));
+      final_python_code.push(" ");
     }
+    if (python_line.trim().substring(0, 3) == "cla"){
+      final_python_code.push(python_lines[i - 1].replace("#", ""));
+    }
+    // if (python_line.trim().substring(0, 3) == "#<a"){
+    //   final_python_code.push(python_line.replace("#", ""));
+    //   skip_flag = true;
+    // } else {
+    //   final_python_code.push(python_line);
+    // }
   }
   return final_python_code.join("\n");
 }

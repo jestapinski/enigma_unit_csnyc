@@ -87,7 +87,8 @@ body {
 
             <a 
               class="waves-effect waves-green btn darkyellow black-text tooltipped s6" 
-              id="show_code" 
+              id="show_code"
+              href = "#modal_rotor"
               data-tooltip="Show Code!"
               style="width: 49%;">
               Code View
@@ -150,6 +151,297 @@ body {
         id="rotor_canvas">
       </canvas>     
 
+    </div>
+
+    <div id="modal_rotor" class="modal">
+      <div class="modal-content">
+        <h4>
+          Coding the Rotors
+        </h4>
+        <p>
+          One method of programming is called <strong>Object-Oriented Programming</strong>. We can
+          represent things as general outlines, called objects. Objects are like stencils: we can
+          make a general stencil and create copies of the same thing quickly. These copies are called
+          <strong>instances</strong>.
+          <br><br>
+          Here, we create a general outline
+          for an Enigma rotor and think of the properties it should have, like outer and inner
+          wheels, the ability to rotate, and the ability to process the encryption of a letter.
+          <br><br>
+          With this in mind, we can write functions for our rotor to generalize, so we don't have
+          to repeat code to make another rotor!
+        </p>
+        <pre>
+          <code id="encrypt_code">
+encoded_letter = ord(c) + shift_value
+...
+ciphertext = ciphertext + (chr(encoded_letter))
+          </code>
+        </pre>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+          Close
+        </a>
+      </div>
+    </div>
+
+<!-- Modal for explaining the concept of classes and OOP -->
+
+    <div id="modal_class" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>
+          Python Classes
+        </h4>
+        <pre>
+          <code>
+class Rotor(object):
+          </code>
+        </pre>
+        <p>
+          In Python, we have what is called a <strong>class</strong>. A <strong>class</strong> defines an object where we can generalize the properties of a thing and make copies quickly.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+           Close
+        </a>
+      </div>
+    </div>
+
+<!-- Modal for explaining the concept of class initialization -->
+
+    <div id="modal_init" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>
+          Rotor Class Initialization
+        </h4>
+        <p>
+          In Python, <code>__init__</code> is a special function that is run when we make a copy of the class (say by <code>x = Rotor()</code>). It is for initializing all of the variables and such
+          for the class. Here we initialize the following:
+          <ul>
+            <li>The inner and outer wheels (through a helper function)</li>
+            <li>The next rotor (for chaining rotations) which is passed as an argument</li>
+            <li>The number of notches (or gears) in the rotor</li>
+            <li>The number of rotations the rotor has made</li>
+          </ul>
+        </p>
+        <pre>
+          <code>
+def __init__(this_rotor, next_rotor):
+  # We will use lists to represent the inner and outer rings of the rotor
+  this_rotor.initialize_inner_and_outer_wheels()
+
+  # We will keep track of the next rotor for rotations
+  this_rotor.next_rotor = next_rotor
+
+  this_rotor.number_of_notches = 26
+  this_rotor.number_of_rotations = 0
+          </code>
+        </pre>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+           Close
+        </a>
+      </div>
+    </div>
+
+<!-- Modal for explaining the initialization of the wheel arrays -->
+
+    <div id="modal_init_wheels" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>
+          Rotor Wheels
+        </h4>
+        <p>
+          For the rotor wheels, we will use Python lists to represent the outer and inner lists.
+          The position of the letters in the two lists determines the mapping between the outer
+          and inner wheels.<br><br>
+          i.e. The letter in position 1 in the outer wheel array maps to the letter in position 1
+          in the inner wheel array.
+        </p>
+        <pre>
+          <code>
+def initialize_inner_and_outer_wheels(this_rotor):
+  # Set up the outer array to be a list of the letters a-z
+  this_rotor.outer_array = this_rotor.initialize_alphabet_array()
+
+  # For the inner array, we will have it go from b-z and add 'a' on the end
+  inner_array = this_rotor.initialize_alphabet_array()
+  inner_array = rotate_first_element_to_last(inner_array)
+  this_rotor.inner_array = inner_array
+          </code>
+        </pre>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+           Close
+        </a>
+      </div>
+    </div>
+
+<!-- Modal for explaining the initialization of an alphabet array -->
+
+    <div id="modal_init_array" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>
+          Alphabet Array
+        </h4>
+        <p>
+          To create our rotor arrays, we need to create an array of the letters a-z.
+          Fortunately <code>string.ascii_lowercase</code> gives us the word
+          'abcdefghijklmnopqrstuvwxyz', so we just use the <code>list</code> function
+          to turn this into a list/array.
+        </p>
+        <pre>
+          <code>
+def initialize_alphabet_array(this_rotor):
+  import string
+  # string.ascii_lowercase returns a word containing the letters from a-z
+  lowercase_letters = string.ascii_lowercase
+  # We convert this word to a list
+  return list(lowercase_letters)
+          </code>
+        </pre>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+           Close
+        </a>
+      </div>
+    </div>
+
+<!-- Modal for explaining the processing of a letter -->
+
+    <div id="modal_process" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>
+          Processing a Letter
+        </h4>
+        <p>
+          When running a letter through the rotor, we find where it is in the outer wheel
+          and then map it to the corresponding spot in the inner wheel. We do the same with
+          our arrays. We find where the letter is in the outer array, then return whatever
+          is in the inner array at that location.
+        </p>
+        <pre>
+          <code>
+def process_letter(this_rotor, letter):
+  # We find where in the outer array the letter is, then find the letter
+  # at that position in the inner array
+  place_in_outer_array = this_rotor.outer_array.index(letter)
+  return this_rotor.inner_array[place_in_outer_array]
+          </code>
+        </pre>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+           Close
+        </a>
+      </div>
+    </div>
+
+<!-- Modal for explaining the inverse processing of a letter -->
+
+    <div id="modal_inv" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>
+          Inversely Processing a Letter
+        </h4>
+        <p>
+          When running a letter inversely through the rotor, we find where it is in the inner 
+          wheel and then map it to the corresponding spot in the outer wheel. We do the same with
+          our arrays. We find where the letter is in the inner array, then return whatever
+          is in the outer array at that location.
+        </p>
+        <pre>
+          <code>
+def inverse_process_letter(this_rotor, letter):
+  # We find where in the inner array the letter is, then find the letter
+  # at that position in the outer array
+  place_in_inner_array = this_rotor.inner_array.index(letter)
+  return this_rotor.outer_array[place_in_inner_array]
+          </code>
+        </pre>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+           Close
+        </a>
+      </div>
+    </div>
+
+<!-- Modal for explaining the rotation of the rotor -->
+
+    <div id="modal_rotate" class="modal">
+      <div class="modal-content">
+        <h4>
+          Rotating the Rotor
+        </h4>
+        <p>
+          When rotating the rotor, we simply rotate the positions of the letters in our outer
+          array to match the rotation, and then adjust the number of rotations based on the
+          direction of our rotation.<br><br>
+          If we rotate clockwise:
+          <ul>
+            <li>- Rotate the last element of the outer array to the front</li>
+            <li>- Add one rotation</li>
+          </ul>
+          <p>If we rotate counterclockwise:</p>
+          <ul>
+            <li>- Rotate the first element of the outer array to the end</li>
+            <li>- Subtract one rotation</li>            
+          </ul>
+          <p>If we rotated a full circle, we then rotate the next rotor this one connected to.</p>
+        </p>
+        <pre>
+          <code>
+def rotate(this_rotor, clockwise):
+  if (clockwise):
+    # Rotate the outer array to wrap the last element to the front
+    this_rotor.outer_array = rotate_last_element_to_front(this_rotor.outer_array)
+    this_rotor.number_of_rotations = this_rotor.number_of_rotations + 1
+  else:
+    # Rotate the outer array to wrap the front element to the back
+    this_rotor.outer_array = rotate_first_element_to_last(this_rotor.outer_array)
+    this_rotor.number_of_rotations = this_rotor.number_of_rotations - 1
+  if (this_rotor.number_of_rotations == this_rotor.number_of_notches):
+    if (this_rotor.next_rotor != None):
+      this_rotor.next_rotor.rotate(not clockwise)
+  return
+          </code>
+        </pre>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+           Close
+        </a>
+      </div>
     </div>
 
   </body>

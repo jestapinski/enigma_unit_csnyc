@@ -21,18 +21,22 @@ def rotate_first_element_to_last(l):
   return trim_duplicate_front_element
 
 #START#
+#<a href="#" class="clickable" onclick="$('#modal_class').modal('open')">class Rotor(object):</a>
 class Rotor(object):
   # Initialize all of the properties of a Rotor
+  #<a href="#" class="clickable" onclick="$('#modal_init').modal('open')">def __init__(this_rotor, next_rotor):</a>
   def __init__(this_rotor, next_rotor):
     # We will use lists to represent the inner and outer rings of the rotor
-    this_rotor.initialize_arrays()
+    this_rotor.initialize_inner_and_outer_wheels()
     # We will keep track of the next rotor for rotations
     this_rotor.next_rotor = next_rotor
 
     this_rotor.number_of_notches = 26
     this_rotor.number_of_rotations = 0
 
-  def initialize_arrays(this_rotor):
+  # Initialize the outer and inner wheels of the rotor as arrays
+  #<a href="#" class="clickable" onclick="$('#modal_init_wheels').modal('open')">def initialize_inner_and_outer_wheels(this_rotor):</a>
+  def initialize_inner_and_outer_wheels(this_rotor):
     # Set up the outer array to be a list of the letters a-z
     this_rotor.outer_array = this_rotor.initialize_alphabet_array()
 
@@ -41,6 +45,8 @@ class Rotor(object):
     inner_array = rotate_first_element_to_last(inner_array)
     this_rotor.inner_array = inner_array
 
+  # Initialize an array of letters from a to z
+  #<a href="#" class="clickable" onclick="$('#modal_init_array').modal('open')">def initialize_alphabet_array(this_rotor):</a>
   def initialize_alphabet_array(this_rotor):
     import string
     # string.ascii_lowercase returns a word containing the letters from a-z
@@ -48,18 +54,24 @@ class Rotor(object):
     # We convert this word to a list
     return list(lowercase_letters)
 
+  # Process the encryption of a single letter from the outside to the inside arrays
+  #<a href="#" class="clickable" onclick="$('#modal_process').modal('open')">def process_letter(this_rotor, letter):</a>
   def process_letter(this_rotor, letter):
     # We find where in the outer array the letter is, then find the letter
     # at that position in the inner array
     place_in_outer_array = this_rotor.outer_array.index(letter)
     return this_rotor.inner_array[place_in_outer_array]
 
+  # Process the inverse encryption of a single letter from the inside to the outside arrays
+  #<a href="#" class="clickable" onclick="$('#modal_inv').modal('open')">def inverse_process_letter(this_rotor, letter):</a>
   def inverse_process_letter(this_rotor, letter):
     # We find where in the inner array the letter is, then find the letter
     # at that position in the outer array
     place_in_inner_array = this_rotor.inner_array.index(letter)
     return this_rotor.outer_array[place_in_inner_array]
 
+  # Process a rotation of the rotor in either the clockwise or counterclockwise direction
+  #<a href="#" class="clickable" onclick="$('#modal_rotate').modal('open')">def rotate(this_rotor, clockwise):</a>
   def rotate(this_rotor, clockwise):
     if (clockwise):
       # Rotate the outer array to wrap the last element to the front
