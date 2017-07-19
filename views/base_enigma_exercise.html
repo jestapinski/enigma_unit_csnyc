@@ -98,16 +98,30 @@ body {
               id="encrypt" 
               data-tooltip="Encrypt the Starting Text!"
               style="width: 49%;">
-              Run Encryption
+              <strong>2. </strong>Run Encryption
             </a>
 
-            <a 
-              class="waves-effect waves-green btn beige black-text tooltipped s6" 
-              id="sandbox" 
-              data-tooltip="Play with the Enigma Machine in Sandbox Mode!"
-              style="width: 100%; margin-top: 15px">
-              Sandbox Mode
-            </a>
+            {% if exercise_type != 'Sandbox' %}
+              <a 
+                class="waves-effect waves-green btn beige black-text tooltipped s6" 
+                id="sandbox" 
+                data-tooltip="Play with the Enigma Machine in Sandbox Mode!"
+                style="width: 100%; margin-top: 15px"
+                href="/enigma/sandbox"
+                target="_blank">
+                Sandbox Mode
+              </a>
+          {% else %}
+              <a 
+                class="waves-effect waves-green btn deepred black-text tooltipped s6" 
+                id="sandbox" 
+                data-tooltip="Close this tab!" 
+                href="javascript:window.close();"                 
+                style="width: 100%; margin-top: 15px"
+                target="_blank">
+                Close the Sandbox
+              </a>
+          {% endif %}
 
           </div>
 

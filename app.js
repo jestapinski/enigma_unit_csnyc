@@ -90,16 +90,6 @@ app.get("/enigma/encrypt", function(req, res, next){
 				});
 });
 
-app.get("/enigma/decrypt", function(req, res, next){
-	res.render('base_enigma_exercise', {'title': 'Enigma Machine Decryption',
-				'image_path': '../images/password-sandbox.png',
-				'exercise_type': 'Decrypt',
-				'input_label': 'Ciphertext',
-				'output_label': 'Plaintext',
-				'next_route': '/'
-				});
-});
-
 app.get("/enigma/sandbox", function(req, res, next){
 	res.render('base_enigma_exercise', {'title': 'Enigma Machine Sandbox',
 				'image_path': '../images/password-sandbox.png',

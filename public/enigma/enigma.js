@@ -15,6 +15,7 @@ var canvas_width, canvas_height;
 var left_rotor, right_rotor, first_point, p2, pt, ct, new_i;
 var ctx = rotor_canvas.getContext('2d');
 var step_delay = 500;
+var validate = true;
 /*
   modify_instructions
 
@@ -32,6 +33,17 @@ function modify_instructions(){
     $('#instruction_set').hide(instruction_speed);
     instruction_button.text = 'Show Instructions';
     hidden_text = true;
+  }
+}
+
+function check_is_win(){
+  if (validate){
+    // Some validation logic
+    console.log('validating');
+    return;
+  } else {
+    console.log('not validating');
+    return;
   }
 }
 
@@ -76,7 +88,6 @@ function run_encryption(){
   }
   plaintext_value.value = plaintext;
   ciphertext = enigma_machine_encryption(plaintext);
-  // return ciphertext;
 }
 
 function draw_plaintext(letter=0){
@@ -88,7 +99,6 @@ function draw_plaintext(letter=0){
   ctx.translate(300, 0);
   ctx.strokeStyle = '#000000';
   for (var i = 0; i < word.length; i++){
-    // var alphabet_position = word[i].charCodeAt(0) - a_value;
     //Background box
     console.log(i * box_width);
     if (i == letter){
@@ -249,9 +259,7 @@ function encryption_process(plaintext, ciphertext, i){
   pt = plaintext;
   ct = ciphertext + intermediate_letter;
   new_i = i + 1;
-  
-  // enigma_machine_encryption(plaintext, ciphertext + intermediate_letter, i + 1);
-  // setTimeout(enigma_machine_encryption, 1000, plaintext, ciphertext + intermediate_letter, i + 1);  
+   
 }
 
 
@@ -291,7 +299,6 @@ function array_equal(a, b){
 function initialize_rotors(){
   canvas_width = rotor_canvas.width;
   canvas_height = rotor_canvas.height;
-  // ctx.translate(50, 0);
   right_rotor = new Rotor('Right', 0, ctx);
   left_rotor = new Rotor('Left', 0, ctx, right_rotor);
   right_rotor.draw_rotor();
@@ -313,5 +320,11 @@ $.getScript('rotor.js', function(){
   initialize_rotors();
   initialize_reflector();
 });
+
+if (document.title.includes('Sandbox')){
+  //Turn off validations while in the Sandbox
+  console.log('in sandbox');
+  validate = false;
+}
 
 encrypt.addEventListener("click", run_encryption);
