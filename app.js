@@ -86,7 +86,7 @@ app.get("/enigma/encrypt", function(req, res, next){
 				'exercise_type': 'Encrypt',
 				'input_label': 'Plaintext',
 				'output_label': 'Ciphertext',
-				'next_route': 'end'
+				'next_route': '/end'
 				});
 });
 

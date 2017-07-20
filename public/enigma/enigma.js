@@ -14,6 +14,7 @@ var ciphertext_value = document.getElementById('ciphertext_value');
 var encrypt_code = document.getElementById('encrypt_code');
 var delay_text = document.getElementById('delay_text');
 var comment_text = document.getElementById('comment_text');
+var final_correct = document.getElementById('final_correct');
 var canvas_width, canvas_height;
 var left_rotor, right_rotor, first_point, p2, pt, ct, new_i;
 var ctx = rotor_canvas.getContext('2d');
@@ -23,7 +24,7 @@ var hello_count = 0;
 var solution_word = 'hello';
 var is_animating = false;
 var step_mode = false;
-var first_encryption, second_encryption, at_r2_letter;
+var first_encryption = '', second_encryption = '', at_r2_letter;
 var next_step_function = function(){run_encryption();};
 
 var step_1 = 'The first rotor spins, creating a new mapping of letters.';
@@ -34,6 +35,9 @@ var step_4 = ' is sent to the reflector, where it is encrypted with a Caesar Shi
 var step_5 = ' is sent back to rotor 2 where it is encrypted inversely (inside to outside) to get ';
 var step_6 = ' is then sent back through rotor 1 inversely (inside to outside) to get ';
 var step_7 = ' is added to our ending text.'
+var final_msg = 'Great job encrypting hello again! Note that you got ';
+var final_msg_2 = ' so can you imagine how hard it must have been to crack this?';
+var final_msg_3 = ' fortunately for you, we will not be covering that. Onward to the end!';
 
 /*
   modify_instructions
@@ -55,19 +59,19 @@ function modify_instructions(){
   }
 }
 
-function check_is_win(){
-  if (validate){
-    // Some validation logic
-    console.log('validating');
-    if (hello_count >= 2){
-      console.log("Correct!");
-    }
-    return;
-  } else {
-    console.log('not validating');
-    return;
-  }
-}
+// function check_is_win(){
+//   if (validate){
+//     // Some validation logic
+//     console.log('validating');
+//     if (hello_count >= 2){
+//       console.log("Correct!");
+//     }
+//     return;
+//   } else {
+//     console.log('not validating');
+//     return;
+//   }
+// }
 
 function convert_to_letter(letter, shift){
   return String.fromCharCode(letter.charCodeAt(0) + shift);
@@ -162,17 +166,24 @@ function enigma_machine_encryption(plaintext, ciphertext='', i=0){
     console.log(ciphertext);
     ciphertext_value.value = ciphertext;
     // draw_plaintext(plaintext.length - 1);
-    if (plaintext == solution_word){
-      if (hello_count){
+    if (plaintext == solution_word && validate){
+      console.log(hello_count);
+      if (!hello_count){
         first_encryption = ciphertext;
+        $('#modal_hello_1').modal('open');
       } else {
         second_encryption = ciphertext;
+        final_correct.innerHTML = final_msg.concat(first_encryption, ' and ', 
+                                  second_encryption, final_msg_2, final_msg_3);
+        $('#modal_hello_2').modal('open');
       }
       hello_count++;
     }
-    check_is_win();
+    if (plaintext != solution_word && validate){
+      $('#modal_failure').modal('open');
+    }
+    // check_is_win();
     $('#plaintext_value').attr('disabled', false);
-    // $('#encrypt').removeClass('disabled');
     is_animating = false;
     next_step_function = function(){
       run_encryption();
@@ -199,8 +210,6 @@ function enigma_machine_encryption(plaintext, ciphertext='', i=0){
   };
   if (!step_mode){
     setTimeout(encryption_process, timer_delay, plaintext, ciphertext, i);    
-  // } else {
-  //   next_step_function();
   }
 }
 
@@ -493,6 +502,10 @@ function convert_to_HTML(data){
 */
 function run_start_modal(){
   $('#modal_enigma').modal('open');
+  $('#modal_hello_2').modal({
+      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+    }
+  );
 }
 
 $.getScript('rotor.js', function(){

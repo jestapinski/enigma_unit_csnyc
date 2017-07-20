@@ -536,6 +536,67 @@ def rotate(this_rotor, clockwise):
       </div>
     </div>
 
+<!-- Modal for explaining the inverse processing of a letter -->
+
+    <div id="modal_hello_1" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>
+          Halfway There!
+        </h4>
+        <p>
+          Great job encrypting <strong>hello</strong>! Hopefully you got a sense of how the
+          Enigma Machine encrypts some text. Try encrypting <strong>hello</strong> again to
+          see how the Enigma Machine changes the encryption each time it runs!
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+           Close
+        </a>
+      </div>
+    </div>
+
+    <div id="modal_hello_2" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>
+          You got it!
+        </h4>
+        <p id='final_correct'>
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="{{next_route}}" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+           Close
+        </a>
+      </div>
+    </div>
+
+    <div id="modal_failure" class="modal bottom-sheet">
+      <div class="modal-content">
+        <h4>
+          Not Quite
+        </h4>
+        <p>
+          Be sure to encrypt <strong>hello</strong> or feel free to play around with 
+          the Sandbox!
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <a 
+          href="{{next_route}}" 
+          class="modal-action modal-close waves-effect waves-green btn-flat">
+           Close
+        </a>
+      </div>
+    </div>
+
   </body>
 
   <script src="../js/highlight.pack.js"></script>
