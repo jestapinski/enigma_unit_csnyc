@@ -396,6 +396,18 @@ function convert_to_HTML(data){
   return final_python_code.join("\n");
 }
 
+/*
+  run_start_modal
+
+  No input values
+  No return value
+
+  Opens the starting modal (wrapped in a function for cleanliness)
+*/
+function run_start_modal(){
+  $('#modal_enigma').modal('open');
+}
+
 $.getScript('rotor.js', function(){
   Rotor.test_rotor();
   initialize_rotors();
@@ -423,3 +435,5 @@ $(document).keypress(function(e){
         encrypt.click();
     }
 });
+
+setTimeout(run_start_modal, 500);

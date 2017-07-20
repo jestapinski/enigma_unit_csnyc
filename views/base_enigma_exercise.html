@@ -139,6 +139,15 @@ body {
               </a>
           {% endif %}
 
+              <a 
+                class="waves-effect waves-green btn darkyellow black-text tooltipped s6" 
+                id="enigma_help" 
+                data-tooltip="What is the Enigma Machine?"
+                style="width: 100%; margin-top: 15px"
+                href="#modal_enigma">
+                What is Enigma?
+              </a>
+
           </div>
 
         </div>
@@ -166,6 +175,55 @@ body {
         id="rotor_canvas">
       </canvas>     
 
+    </div>
+
+    <div id="modal_enigma" class="modal">
+      <div class="modal-content">
+        <h4>
+          The Enigma Machine
+        </h4>
+        <p id='opening_modal_text'>
+          During World War II, one means of encrypting communication was through the use of 
+          the 'Enigma Machine'. The Enigma Machine consisted of a series of rotors (similar 
+          to gears) which each mapped one letter to another and a reflector.
+          <br><br> The Enigma Machine encryption worked as follows:
+          <ol>
+            <li>A letter from the message would be sent to rotor 1.</li>
+            <li>The <strong>first rotor spins</strong>, creating a new mapping of letters.</li>
+            <li>The original letter is encrypted using the mapping on <strong>rotor 1</strong> (outside to inside).</li>
+            <li>The encrypted letter is sent to <strong>rotor 2</strong>, where it is encrypted again (outside to inside).</li>
+            <li>The letter is sent to the <strong>reflector</strong>, where it is encrypted again (perhaps with a Caesar Shift).</li>
+            <li>The letter is then <strong>sent back to rotor 2</strong>, where it is encrypted using the opposite mapping (inside to outside). This is called the <strong>inverse</strong>.</li>
+            <li>The letter is finally <strong>sent back to rotor 1</strong>, encrypted again using the inverse mapping (inside to outside).</li>
+          </ol>
+          <p>In other words, for each letter in the message:<br>
+          <div style='text-align: center;'>
+            <p>
+              original letter <i class="tiny material-icons arrow">arrow_forward</i> 
+              rotor 1 (after rotating) <i class="tiny material-icons arrow">arrow_forward</i> 
+              rotor 2 <i class="tiny material-icons arrow">arrow_forward</i> 
+              reflector <i class="tiny material-icons arrowback">arrow_forward</i> 
+              inverse rotor 2 <i class="tiny material-icons arrowback">arrow_forward</i> 
+              inverse rotor 1 <i class="tiny material-icons arrowback">arrow_forward</i>
+              encrypted letter
+            </p>
+          </div>
+            </p>
+        </p>
+        {% if exercise_type != 'Sandbox' %}
+        <p>
+          Try the example below, and encrypt the text <strong>hello</strong> twice to
+          see the changing encryption caused by rotating the rotors.
+        </p>
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn navy">
+          Go!
+        </a>
+      </div>
     </div>
 
     <div id="modal_rotor" class="modal">

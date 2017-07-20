@@ -73,3 +73,11 @@ h6, label {
   font-family:'Roboto' sans-serif; 
   font-weight:300;
 }
+
+.arrow{
+  color: #3F5666;
+}
+
+.arrowback{
+  color: green;
+}
