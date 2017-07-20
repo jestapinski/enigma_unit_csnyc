@@ -98,8 +98,24 @@ body {
             </i>
           </label>
 
-          <div style="margin-top: 50px;">
+            <h6 id='delay_text'>Animation Delay:</h6>
 
+            <p class="range-field">
+              <input type="range" id="speed_limit" min="200" max="2000" default="500" onchange="javascript:step_delay = this.value; delay_text.innerHTML = 'Animation Delay: '.concat(this.value, 'ms')" />
+            </p>
+
+
+    </p>
+
+            <a 
+              class="waves-effect waves-green btn beige black-text tooltipped s6" 
+              id="encrypt" 
+              data-tooltip="Encrypt the Starting Text!"
+              style="width: 100%;">
+              Run
+            </a>
+
+          <div style="margin-top: 15px;">
             <a 
               class="waves-effect waves-green btn darkyellow black-text tooltipped s6" 
               id="show_code"
@@ -110,11 +126,12 @@ body {
             </a>
 
             <a 
-              class="waves-effect waves-green btn beige black-text tooltipped s6" 
-              id="encrypt" 
-              data-tooltip="Encrypt the Starting Text!"
+              class="waves-effect waves-green btn darkyellow black-text tooltipped" 
+              id="show_code2"
+              data-tooltip="Step manually through the animation!"
+              onclick="javascript:step_mode=true;next_step_function();" 
               style="width: 49%;">
-              Run
+              Step Through
             </a>
 
             {% if exercise_type != 'Sandbox' %}
@@ -152,16 +169,15 @@ body {
 
         </div>
         <div class="input-field"
-           style="margin-top: 100px">
-        <input 
+           style="margin-top: 50px">
+        <input disabled
           placeholder="" 
           value="" 
           id="ciphertext_value" 
           type="text">
         <label for="ciphertext_value"
                class="tooltipped"
-               data-tooltip="This is our starting text which we will modify 
-                with the Enigma Machine">
+               data-tooltip="This is our ending text from the Enigma Machine">
           Ending Text
           <i class="tiny material-icons">
             info_outline

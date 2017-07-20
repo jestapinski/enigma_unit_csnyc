@@ -12,6 +12,7 @@ var encrypt = document.getElementById('encrypt');
 var plaintext_value = document.getElementById('plaintext_value');
 var ciphertext_value = document.getElementById('ciphertext_value');
 var encrypt_code = document.getElementById('encrypt_code');
+var delay_text = document.getElementById('delay_text');
 var canvas_width, canvas_height;
 var left_rotor, right_rotor, first_point, p2, pt, ct, new_i;
 var ctx = rotor_canvas.getContext('2d');
@@ -19,7 +20,10 @@ var step_delay = 500;
 var validate = true;
 var hello_count = 0;
 var solution_word = 'hello';
+var is_animating = false;
+var step_mode = false;
 var first_encryption, second_encryption;
+var next_step_function = function(){run_encryption();};
 /*
   modify_instructions
 
@@ -91,11 +95,17 @@ function run_encryption(){
   const plaintext = plaintext_value.value.toLowerCase();
   const validation_errors = validate_plaintext(plaintext);
   var ciphertext;
+  if (is_animating){
+    return;
+  }
+  is_animating = true;
   if (validation_errors){
     alert(validation_errors);
     return;
   }
   plaintext_value.value = plaintext;
+  $('#plaintext_value').attr('disabled', true);
+  // $('#encrypt').addClass('disabled');
   ciphertext = enigma_machine_encryption(plaintext);
 }
 
@@ -144,7 +154,13 @@ function enigma_machine_encryption(plaintext, ciphertext='', i=0){
       }
       hello_count++;
     }
-    check_is_win()
+    check_is_win();
+    $('#plaintext_value').attr('disabled', false);
+    // $('#encrypt').removeClass('disabled');
+    is_animating = false;
+    next_step_function = function(){
+      run_encryption();
+    }
     return;
   }
   ciphertext_value.value = ciphertext;
@@ -160,7 +176,14 @@ function enigma_machine_encryption(plaintext, ciphertext='', i=0){
   if (left_rotor.num_rotations == 0){
     timer_delay = 1000;
   }
-  setTimeout(encryption_process, timer_delay, plaintext, ciphertext, i);
+  next_step_function = function(){
+    encryption_process(plaintext, ciphertext, i);
+  };
+  // if (!step_mode){
+  setTimeout(encryption_process, timer_delay, plaintext, ciphertext, i);    
+  // } else {
+  //   next_step_function();
+  // }
 }
 
 function reflector_hit(letter){
@@ -172,19 +195,30 @@ function reflector_hit(letter){
   ctx.font = '1.30rem PT Mono';
   ctx.fillText(right_rotor.inner_array[right_rotor.outer_array.indexOf(letter)], x, y);
   arrow(ctx, {x: right_rotor.begin_x + 20, y: right_rotor.begin_y}, {x: x - 5, y: y}, 5);
-  setTimeout(reflector_down, step_delay, letter, x, y);
+  next_step_function = function(){
+    reflector_down(letter, x, y);
+  }
+  if (!step_mode){
+    setTimeout(reflector_down, step_delay, letter, x, y);    
+  }
 }
 
 function reflector_down(letter, x1, y1){
   var encrypted_letter = right_rotor.process_letter(letter);
   var x2 = x1;
   var y2 = y1 + 200;
+  var reflect_letter = reflector_process_letter(encrypted_letter);
   arrow(ctx, {x: x1, y: y1 + 10}, {x: x2, y: y2 - 20}, 5);
   ctx.textAlign = 'center';
   ctx.fillStyle = '#000000';
   ctx.font = '1.30rem PT Mono';
-  ctx.fillText(reflector_process_letter(encrypted_letter), x2, y2);
-  setTimeout(reflector_out, step_delay, reflector_process_letter(encrypted_letter), x2, y2);
+  ctx.fillText(reflect_letter, x2, y2);
+  if (!step_mode){
+    setTimeout(reflector_out, step_delay, reflect_letter, x2, y2);
+  }
+  next_step_function = function(){
+    reflector_out(reflect_letter, x2, y2);
+  }
 }
 
 function reflector_out(letter, x1, y1){
@@ -201,7 +235,12 @@ function reflector_out(letter, x1, y1){
   var x = cx + (out_radius + 15) * (Math.cos(theta)) + 40;
   var y = cy + (out_radius + 15) * (Math.sin(theta)) - 5;
   ctx.strokeRect(x, y - 5, 20, 20);
-  setTimeout(inverse_r1, step_delay, right_rotor.inverse_process_letter(letter), x, y);
+  if (!step_mode){
+    setTimeout(inverse_r1, step_delay, right_rotor.inverse_process_letter(letter), x, y);
+  }
+  next_step_function = function() {
+    inverse_r1(right_rotor.inverse_process_letter(letter), x, y);
+  }
 }
 
 function inverse_r1(letter, x1, y1){
@@ -214,15 +253,32 @@ function inverse_r1(letter, x1, y1){
   var x2 = cx + (ovr_radius + 15) * (Math.cos(theta));
   var y2 = cy + (ovr_radius + 15) * (Math.sin(theta)) + 5;
   arrow(ctx, {x: x1, y: y1}, {x: x2 + 60, y: y2 - 10}, 5);
-  setTimeout(to_end, 500, theta, out_radius, cx, cy);  
+  var x = cx + (out_radius + 15) * (Math.cos(theta)) + 40;
+  var y = cy + (out_radius + 15) * (Math.sin(theta)) - 5;
+  ctx.strokeRect(x, y - 5, 20, 20);
+  if (!step_mode){
+    setTimeout(to_end, step_delay, theta, out_radius, cx, cy);  
+  }
+  next_step_function = function(){
+    to_end(theta, out_radius, cx, cy);
+  }
 }
 
 function to_end(theta, out_radius, cx, cy){
   var x = cx + (out_radius + 15) * (Math.cos(theta)) + 40;
   var y = cy + (out_radius + 15) * (Math.sin(theta)) - 5;
-  ctx.strokeRect(x, y - 5, 20, 20);
-  arrow(ctx, {x: x, y: y}, {x: 0, y: 380}, 5);
-  setTimeout(enigma_machine_encryption, 500, pt, ct, new_i); 
+  // ctx.strokeRect(x, y - 5, 20, 20);
+  arrow(ctx, {x: x, y: y}, {x: 0, y: 460}, 5);
+  ciphertext_value.value = ct;
+  if (new_i == pt.length){
+    $('#plaintext_value').attr('disabled', false);
+  }
+  // if (!step_mode){
+    setTimeout(enigma_machine_encryption, step_delay, pt, ct, new_i); 
+  // }
+  // next_step_function = function(){
+  //   enigma_machine_encryption(pt, ct, new_i);
+  // }
 }
 
 function encryption_process(plaintext, ciphertext, i){
@@ -275,9 +331,12 @@ function encryption_process(plaintext, ciphertext, i){
   ct = ciphertext + intermediate_letter;
   new_i = i + 1;
 
-  setTimeout(to_r2, 500, first_point, p2, letter);
-  
-  // reflector_hit(letter);
+  next_step_function = function(){
+    to_r2(first_point, p2, letter);
+  }
+  if (!step_mode){
+    setTimeout(to_r2, step_delay, first_point, p2, letter);
+  }
    
 }
 
@@ -289,7 +348,12 @@ function to_r2(first_point, p2, letter){
   ctx.clearRect(14 * (rotor.canvas_width / 16) + 20, rotor.canvas_height - 40, 14 * (rotor.canvas_width / 16) + 50, this.canvas_height);
   ctx.fillText("Reflector", 15 * rotor_canvas.width / 16, rotor_canvas.height - 20);
   ctx.fillText("(Caesar Shift 1)", 29 * rotor_canvas.width / 32, rotor_canvas.height);
-  setTimeout(reflector_hit, 500, letter);
+  next_step_function = function(){
+    reflector_hit(letter);
+  }
+  if (!step_mode){
+    setTimeout(reflector_hit, step_delay, letter);    
+  }
 }
 
 
@@ -428,7 +492,7 @@ jQuery.get('rotor.py', function(data) {
   });
 });
 
-encrypt.addEventListener("click", run_encryption);
+encrypt.addEventListener("click", function(){step_mode=false; next_step_function();});
 $(document).keypress(function(e){
   console.log(e.charCode);
     if (e.charCode == 13){
