@@ -13,6 +13,7 @@ var plaintext_value = document.getElementById('plaintext_value');
 var ciphertext_value = document.getElementById('ciphertext_value');
 var encrypt_code = document.getElementById('encrypt_code');
 var delay_text = document.getElementById('delay_text');
+var comment_text = document.getElementById('comment_text');
 var canvas_width, canvas_height;
 var left_rotor, right_rotor, first_point, p2, pt, ct, new_i;
 var ctx = rotor_canvas.getContext('2d');
@@ -22,8 +23,18 @@ var hello_count = 0;
 var solution_word = 'hello';
 var is_animating = false;
 var step_mode = false;
-var first_encryption, second_encryption;
+var first_encryption, second_encryption, at_r2_letter;
 var next_step_function = function(){run_encryption();};
+
+var step_1 = 'The first rotor spins, creating a new mapping of letters.';
+var step_2 = ' is sent to rotor 1 and is encrypted using the mapping on rotor 1 to get ';
+var step_3 = ' is sent to rotor 2 where it is mapped outside in to get ';
+var step_3_5 = ' is sent to the reflector.'
+var step_4 = ' is sent to the reflector, where it is encrypted with a Caesar Shift 1 to get ';
+var step_5 = ' is sent back to rotor 2 where it is encrypted inversely (inside to outside) to get ';
+var step_6 = ' is then sent back through rotor 1 inversely (inside to outside) to get ';
+var step_7 = ' is added to our ending text.'
+
 /*
   modify_instructions
 
@@ -98,6 +109,11 @@ function run_encryption(){
   if (is_animating){
     return;
   }
+  if (!hidden_text){
+    $('#instruction_set').hide(instruction_speed);
+    instruction_button.text = 'Show Instructions';
+    hidden_text = true;    
+  }
   is_animating = true;
   if (validation_errors){
     alert(validation_errors);
@@ -161,6 +177,7 @@ function enigma_machine_encryption(plaintext, ciphertext='', i=0){
     next_step_function = function(){
       run_encryption();
     }
+    comment_text.innerHTML = 'Our text is encrypted!';
     return;
   }
   ciphertext_value.value = ciphertext;
@@ -169,7 +186,8 @@ function enigma_machine_encryption(plaintext, ciphertext='', i=0){
   ctx.clearRect(14 * rotor_canvas.width / 16, 0, 2*rotor_canvas.width / 16, rotor_canvas.height);
   initialize_reflector();
   pt = plaintext;
-  draw_plaintext(i);  
+  draw_plaintext(i);
+  comment_text.innerHTML = step_1;  
   left_rotor.rotate(false);
   pt = plaintext;
   draw_plaintext(i);
@@ -179,11 +197,11 @@ function enigma_machine_encryption(plaintext, ciphertext='', i=0){
   next_step_function = function(){
     encryption_process(plaintext, ciphertext, i);
   };
-  // if (!step_mode){
-  setTimeout(encryption_process, timer_delay, plaintext, ciphertext, i);    
+  if (!step_mode){
+    setTimeout(encryption_process, timer_delay, plaintext, ciphertext, i);    
   // } else {
   //   next_step_function();
-  // }
+  }
 }
 
 function reflector_hit(letter){
@@ -193,7 +211,8 @@ function reflector_hit(letter){
   ctx.textAlign = 'center';
   ctx.fillStyle = '#000000';
   ctx.font = '1.30rem PT Mono';
-  ctx.fillText(right_rotor.inner_array[right_rotor.outer_array.indexOf(letter)], x, y);
+  ctx.fillText(right_rotor.process_letter(letter), x, y);
+  comment_text.innerHTML = '"'.concat(right_rotor.process_letter(letter), '"', step_3_5);
   arrow(ctx, {x: right_rotor.begin_x + 20, y: right_rotor.begin_y}, {x: x - 5, y: y}, 5);
   next_step_function = function(){
     reflector_down(letter, x, y);
@@ -208,6 +227,7 @@ function reflector_down(letter, x1, y1){
   var x2 = x1;
   var y2 = y1 + 200;
   var reflect_letter = reflector_process_letter(encrypted_letter);
+  comment_text.innerHTML = '"'.concat(encrypted_letter, '"', step_4, '"', reflect_letter, '"');
   arrow(ctx, {x: x1, y: y1 + 10}, {x: x2, y: y2 - 20}, 5);
   ctx.textAlign = 'center';
   ctx.fillStyle = '#000000';
@@ -230,16 +250,18 @@ function reflector_out(letter, x1, y1){
   var out_radius = cy - middle_radius_offset;
   var x2 = cx + (ovr_radius + 15) * (Math.cos(theta));
   var y2 = cy + (ovr_radius + 15) * (Math.sin(theta)) + 5;
+  var inv_letter = right_rotor.inverse_process_letter(letter);
   ctx.strokeStyle = '#00ff00';
   arrow(ctx, {x: x1 - 10, y: y1}, {x: x2 + 60, y: y2 - 10}, 5);
   var x = cx + (out_radius + 15) * (Math.cos(theta)) + 40;
   var y = cy + (out_radius + 15) * (Math.sin(theta)) - 5;
   ctx.strokeRect(x, y - 5, 20, 20);
+  comment_text.innerHTML = '"'.concat(letter, '"', step_5, '"', inv_letter, '"');
   if (!step_mode){
-    setTimeout(inverse_r1, step_delay, right_rotor.inverse_process_letter(letter), x, y);
+    setTimeout(inverse_r1, step_delay, inv_letter, x, y);
   }
   next_step_function = function() {
-    inverse_r1(right_rotor.inverse_process_letter(letter), x, y);
+    inverse_r1(inv_letter, x, y);
   }
 }
 
@@ -252,33 +274,31 @@ function inverse_r1(letter, x1, y1){
   var out_radius = cy - middle_radius_offset;
   var x2 = cx + (ovr_radius + 15) * (Math.cos(theta));
   var y2 = cy + (ovr_radius + 15) * (Math.sin(theta)) + 5;
+  var inv_letter = left_rotor.inverse_process_letter(letter);
   arrow(ctx, {x: x1, y: y1}, {x: x2 + 60, y: y2 - 10}, 5);
   var x = cx + (out_radius + 15) * (Math.cos(theta)) + 40;
   var y = cy + (out_radius + 15) * (Math.sin(theta)) - 5;
   ctx.strokeRect(x, y - 5, 20, 20);
+  comment_text.innerHTML = '"'.concat(letter, '"', step_6, '"', inv_letter, '"');
   if (!step_mode){
-    setTimeout(to_end, step_delay, theta, out_radius, cx, cy);  
+    setTimeout(to_end, step_delay, theta, out_radius, cx, cy, inv_letter);  
   }
   next_step_function = function(){
-    to_end(theta, out_radius, cx, cy);
+    to_end(theta, out_radius, cx, cy, inv_letter);
   }
 }
 
-function to_end(theta, out_radius, cx, cy){
+function to_end(theta, out_radius, cx, cy, letter){
   var x = cx + (out_radius + 15) * (Math.cos(theta)) + 40;
   var y = cy + (out_radius + 15) * (Math.sin(theta)) - 5;
   // ctx.strokeRect(x, y - 5, 20, 20);
   arrow(ctx, {x: x, y: y}, {x: 0, y: 460}, 5);
+  comment_text.innerHTML = '"'.concat(letter, '"', step_7);
   ciphertext_value.value = ct;
   if (new_i == pt.length){
     $('#plaintext_value').attr('disabled', false);
   }
-  // if (!step_mode){
-    setTimeout(enigma_machine_encryption, step_delay, pt, ct, new_i); 
-  // }
-  // next_step_function = function(){
-  //   enigma_machine_encryption(pt, ct, new_i);
-  // }
+  setTimeout(enigma_machine_encryption, step_delay, pt, ct, new_i); 
 }
 
 function encryption_process(plaintext, ciphertext, i){
@@ -295,6 +315,8 @@ function encryption_process(plaintext, ciphertext, i){
   arrow(ctx, {x: 0, y: 50}, {x: x2, y: y2}, 5);
   intermediate_letter = left_rotor.process_letter(plaintext[i]);
   console.log(intermediate_letter);
+  comment_text.innerHTML = '"'.concat(plaintext[i], '"', step_2, '"', intermediate_letter, '"');
+  at_r2_letter = intermediate_letter;
   //rotor right
   intermediate_letter = right_rotor.process_letter(intermediate_letter);
   console.log(intermediate_letter);
@@ -345,6 +367,7 @@ function to_r2(first_point, p2, letter){
 
   rotor.draw_rotor(true, 0, false);
   arrow(left_rotor.ctx, first_point, p2, 5);
+  comment_text.innerHTML = '"'.concat(at_r2_letter, '"', step_3, '"', right_rotor.process_letter(letter), '"');
   ctx.clearRect(14 * (rotor.canvas_width / 16) + 20, rotor.canvas_height - 40, 14 * (rotor.canvas_width / 16) + 50, this.canvas_height);
   ctx.fillText("Reflector", 15 * rotor_canvas.width / 16, rotor_canvas.height - 20);
   ctx.fillText("(Caesar Shift 1)", 29 * rotor_canvas.width / 32, rotor_canvas.height);

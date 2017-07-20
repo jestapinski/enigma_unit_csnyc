@@ -104,9 +104,6 @@ body {
               <input type="range" id="speed_limit" min="200" max="2000" default="500" onchange="javascript:step_delay = this.value; delay_text.innerHTML = 'Animation Delay: '.concat(this.value, 'ms')" />
             </p>
 
-
-    </p>
-
             <a 
               class="waves-effect waves-green btn beige black-text tooltipped s6" 
               id="encrypt" 
@@ -191,6 +188,12 @@ body {
         id="rotor_canvas">
       </canvas>     
 
+    </div>
+
+    <div class='row'>
+      <div class='col offset-s4 s6'>
+        <p id='comment_text'></p>
+      </div>  
     </div>
 
     <div id="modal_enigma" class="modal">
