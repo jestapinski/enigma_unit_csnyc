@@ -360,7 +360,13 @@ def __init__(this_rotor, next_rotor):
           The position of the letters in the two lists determines the mapping between the outer
           and inner wheels.<br><br>
           i.e. The letter in position 1 in the outer wheel array maps to the letter in position 1
-          in the inner wheel array.
+          in the inner wheel array.<br><br>
+          An <strong>array</strong> (or list) is an ordered series of things. For 
+          our rotors, the syntax ['a', 'b', ..., 'z'] describes how we represent our wheels. We
+          check out the mapping, such as:<br>
+          Outer Array: ['a', 'b', ..., 'z']<br>
+          Inner Array: ['z', 'a', ..., 'y']<br>
+          To see how to map one letter to another by matching vertically.
         </p>
         <pre>
           <code>
@@ -393,10 +399,14 @@ def initialize_inner_and_outer_wheels(this_rotor):
           Alphabet Array
         </h4>
         <p>
-          To create our rotor arrays, we need to create an array of the letters a-z.
+          To create our rotor arrays, we need to create an array (or a list) of the letters a-z.
           Fortunately <code>string.ascii_lowercase</code> gives us the word
           'abcdefghijklmnopqrstuvwxyz', so we just use the <code>list</code> function
-          to turn this into a list/array.
+          to turn this into a list/array. <br><br>
+          An <strong>array</strong> (or list) is an ordered series of things. In Python, 
+          the syntax [0, 1, 2] describes an ordered series of the numbers 0, 1, and 2.
+          We want to create an array of the letters a-z, like ['a', 'b', ..., 'z'] to
+          manipulate later.
         </p>
         <pre>
           <code>
@@ -430,7 +440,13 @@ def initialize_alphabet_array(this_rotor):
           When running a letter through the rotor, we find where it is in the outer wheel
           and then map it to the corresponding spot in the inner wheel. We do the same with
           our arrays. We find where the letter is in the outer array, then return whatever
-          is in the inner array at that location.
+          is in the inner array at that location. <br><br>
+          Remember An <strong>array</strong> (or list) is an ordered series of things. For 
+          our rotors, the syntax ['a', 'b', ..., 'z'] describes how we represent our wheels. We
+          check out the mapping, such as:<br>
+          Outer Array: ['a', 'b', ..., 'z']<br>
+          Inner Array: ['z', 'a', ..., 'y']<br>
+          To see how to map one letter to another by matching vertically.
         </p>
         <pre>
           <code>
@@ -463,7 +479,13 @@ def process_letter(this_rotor, letter):
           When running a letter inversely through the rotor, we find where it is in the inner 
           wheel and then map it to the corresponding spot in the outer wheel. We do the same with
           our arrays. We find where the letter is in the inner array, then return whatever
-          is in the outer array at that location.
+          is in the outer array at that location.<br><br>
+          Remember An <strong>array</strong> (or list) is an ordered series of things. For 
+          our rotors, the syntax ['a', 'b', ..., 'z'] describes how we represent our wheels. We
+          check out the mapping, such as:<br>
+          Inner Array: ['z', 'a', ..., 'y']<br>
+          Outer Array: ['a', 'b', ..., 'z']<br>
+          To see how to map one letter to another by matching vertically.
         </p>
         <pre>
           <code>
@@ -497,15 +519,17 @@ def inverse_process_letter(this_rotor, letter):
           array to match the rotation, and then adjust the number of rotations based on the
           direction of our rotation.<br><br>
           If we rotate clockwise:
-          <ul>
-            <li>- Rotate the last element of the outer array to the front</li>
-            <li>- Add one rotation</li>
-          </ul>
+          <ol>
+            <li>Rotate the last element of the outer array to the front</li>
+              (i.e. Outer Array: ['z', 'a', ..., 'y'] <i class="tiny material-icons arrow">arrow_forward</i> ['y', 'z', 'a', ..., 'x']) <br>
+            <li>Add one rotation</li>
+          </ol>
           <p>If we rotate counterclockwise:</p>
-          <ul>
-            <li>- Rotate the first element of the outer array to the end</li>
-            <li>- Subtract one rotation</li>            
-          </ul>
+          <ol>
+            <li>Rotate the first element of the outer array to the end</li>
+              (i.e. Outer Array: ['z', 'a', ..., 'y'] <i class="tiny material-icons arrow">arrow_forward</i> ['a', ..., 'y', 'z']) <br>
+            <li>Subtract one rotation</li>            
+          </ol>
           <p>If we rotated a full circle, we then rotate the next rotor this one connected to.</p>
         </p>
         <pre>
@@ -571,7 +595,7 @@ def rotate(this_rotor, clockwise):
       <div class="modal-footer">
         <a 
           href="{{next_route}}" 
-          class="modal-action modal-close waves-effect waves-green btn-flat">
+          class="modal-action modal-close waves-effect waves-green btn navy">
            Close
         </a>
       </div>
