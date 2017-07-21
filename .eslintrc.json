@@ -1,0 +1,12 @@
+{
+    "extends": "airbnb-base",
+    "plugins": [
+        "import"
+    ],
+    "rules": {
+    	"camelcase": ["off", "always"],
+        "no-continue":["off", "always"],
+        "no-undef":["off", "always"],
+        "no-alert":["off", "always"]
+    }
+}
