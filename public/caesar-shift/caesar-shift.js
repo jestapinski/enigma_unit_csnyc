@@ -212,8 +212,8 @@ function convert_to_HTML(data){
     if (python_line == "#END#"){
       break;
     }
-    if (python_line.trim().substring(0, 3) == "#<a"){
-      final_python_code.push(python_line.replace("#", ""));
+    if (python_line.trim().substring(0, 4) == "# <a"){
+      final_python_code.push(python_line.replace("# ", ""));
       skip_flag = true;
     } else {
       final_python_code.push(python_line);
