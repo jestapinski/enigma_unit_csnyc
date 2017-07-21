@@ -3,6 +3,7 @@ var express = require('express'),
     engines = require('consolidate'),
     nunjucks = require('nunjucks'),
     bodyParser = require('body-parser'),
+	port = process.env.PORT || 8080;
     assert = require('assert');
 
 app.engine('html', engines.nunjucks);
@@ -104,7 +105,6 @@ app.get("/end", function(req, res, next){
 })
 
 // Running the web server
-var server = app.listen(3000, function() {
-    var port = server.address().port;
-    console.log('Express server listening on port %s.', port);
+var server = app.listen(port, function() {
+    console.log('Express server listening on port %s.', server.address().port);
 });
