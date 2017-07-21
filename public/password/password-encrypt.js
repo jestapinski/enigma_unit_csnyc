@@ -22,8 +22,11 @@ const instructions = "Write your own <strong>plaintext message of at least 5 \
                     letters</strong> and <strong>password of at least 5 letters\
                     </strong> such that the encrypted text is composed of all \
                     <strong>unique letters</strong> (i.e. no letter is in the \
-                    encrypted text twice)! <br/> Fill in some plaintext and\
-                    a password and click the 'Encrypt' button!";
+                    encrypted text twice)! <br/> Think about how the password\
+                    works with the original text to create the new, encrypted text.\
+                    <br/><br/>Feel free to click 'About Vigenere Cipher' to see an \
+                    example! Fill in some plaintext and a password and click the \
+                    'Encrypt' button!";
 
 const opening_text = "We have been playing with encryption and decryption of\
                     text with a fixed shifting value for each letter. What if\
@@ -36,7 +39,10 @@ const opening_text = "We have been playing with encryption and decryption of\
                     through encrypting our starting message. <br/><br />\
                     We can also vary the starting position in the password when\
                     we walk through as we encrypt: This position is known as\
-                    the <strong>Start Index</strong> of the password";
+                    the <strong>Start Index</strong> of the password.<br/><br/>\
+                    For example, if we have <strong>abc</strong> and a password\
+                    of <strong>bcd</strong>, we would shift 'a' by 1, 'b' by 2,\
+                    and 'c' by 3 to get an ending text of <strong>'bdf'</strong>.";
 
 const success_text = "Great work, moving on";
 

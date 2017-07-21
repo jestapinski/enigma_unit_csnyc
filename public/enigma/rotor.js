@@ -8,7 +8,9 @@
 var outer_radius_offset = 90;
 var middle_radius_offset = outer_radius_offset + 30;
 var inner_radius_offset = middle_radius_offset + 30;
-var right_shuffle = ["g", "n", "w", "q", "r", "a", "x", "e", "l", "j", "d", "z", "f", "k", "b", "v", "o", "h", "y", "p", "i", "t", "m", "s", "c", "u"];
+var right_shuffle = ["g", "n", "w", "q", "r", "a", "x", "e", "l", "j", 
+  "d", "z", "f", "k", "b", "v", "o", "h", "y", "p", "i", "t", "m", "s", 
+  "c", "u"];
 
 function corrected_mod(n, m){
   return ((((n) % m) + m) % m);
@@ -62,10 +64,6 @@ function animate_rotation(rotor, clockwise, steps=0, chain=false){
       }
       rotor.draw_rotor(true, 0, false);
 
-      // if (rotor.next_rotor){
-      //   rotor.next_rotor.draw_rotor(true, 0, false);
-      // }
-
       //If this causes a chained rotation, draw the effects of such rotation after completing
       //the animation for the initial rotor
       if (chain){
@@ -90,14 +88,12 @@ function highlight_letter(rotor, letter, spin_angle=0, outer=true, stroke_color=
   var ovr_radius = cy - middle_radius_offset;
   if (!outer){
     ovr_radius = cy - inner_radius_offset;
-    // stroke_color = '#00FF00';
   }
   var x = cx + (ovr_radius + 15) * (Math.cos(theta)) + 40;
   var y = cy + (ovr_radius + 15) * (Math.sin(theta)) - 5;
 
   rotor.begin_x = x;
   rotor.begin_y = y;
-  // rotor.ctx.fillStyle = '#000000';
   ctx.strokeStyle = stroke_color;
   rotor.ctx.strokeRect(x, y - 5, 20, 20);
 }
@@ -131,6 +127,29 @@ function arrow(ctx,p1,p2,size){
   ctx.restore();
 }
 
+/*
+
+Outline for representation of a state Enigma Machine
+
+Attributes
+inner_array: Char Array representing the inner circle of a rotor
+  - randomized but seedable
+outer_array: Char Array representing the outer circle of a rotor
+  - A-Z
+num_rotations: Int representing the number of rotations on
+        the rotor [0, 26)
+next_rotor: Rotor representing the next in the chain, can be undefined
+- position: considering multiple canvases we 
+
+Methods
+- draw_rotor(ctx) - draws scalable rotor in provided canvas
+- rotate(clockwise=true) - rotates a rotor and chains effects to
+    next rotor if necessary. Rotates either clockwise or 
+    counterclockwise
+- process_letter(letter) and inverse_process_letter(letter)
+  to handle encryption
+- test_rotor - Tests specs for the Rotor class
+*/
 class Rotor {
   constructor(position, seed, ctx, rotor){
     this.next_rotor = rotor;
@@ -425,25 +444,4 @@ class Rotor {
 
     console.log("Rotor tests passed");
   }
-/*
-
-Outline for representation of a state Enigma Machine
-
-Attributes
-inner_array: Char Array representing the inner circle of a rotor
-  - randomized but seedable
-outer_array: Char Array representing the outer circle of a rotor
-  - A-Z
-num_rotations: Int representing the number of rotations on
-        the rotor [0, 26)
-next_rotor: Rotor representing the next in the chain, can be undefined
-- position: considering multiple canvases we 
-
-Methods
-- draw_rotor(ctx) - draws scalable rotor in provided canvas
-- rotate(clockwise=true) - rotates a rotor and chains effects to
-    next rotor if necessary. Rotates either clockwise or 
-    counterclockwise
-- test_rotor - Tests specs for the Rotor class
-*/
 }

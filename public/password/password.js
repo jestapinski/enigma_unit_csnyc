@@ -570,8 +570,15 @@ function draw_current_index_value(ctx, angle, direction){
 	return;
 }
 
+function validate_index(index){
+  if (index < 0){
+    return 'Please enter a non-negative index!';
+  }
+  return;
+}
+
 function input_change(){
-  var password_error;
+  var password_error, index_error;
   given_password = password_value.value.toLowerCase();
   password_error = validate_password(given_password);
   if (password_error){
@@ -579,6 +586,15 @@ function input_change(){
     return;
   }
   current_word_index = parseInt(index_input.value);
+  index_error = validate_index(current_word_index);
+  if (index_error){
+    current_word_index = 0;
+    alert(index_error);
+    index_input.value = 0;
+    draw_word_position(0);
+    draw_index_wheel();
+    return;
+  }
   draw_word_position(0);
   draw_index_wheel();
 }
