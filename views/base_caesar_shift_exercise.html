@@ -579,14 +579,14 @@ ciphertext = ciphertext + (chr(encoded_letter))
           {% if exercise_type != 'Decrypt' %}
             Often, we wish to <strong>encrypt</strong> a message, or convert it to come secret language to hide it. <br/>
             One way to hide a message is by shifting each letter in the message by some number of letters through the alphabet.
-            <img src="images/cs.png"/>
+            <img src="/images/cs.png"/>
             <p style='text-align: center'>Here we <strong>shift each letter by 1</strong> in the alphabet.<br/>
             This turns <strong>abc to bcd</strong>!</p>
             <p>This is called a <strong>Caesar Shift</strong> encryption.</p>            
           {% else %}
             Often, we wish to <strong>decrypt</strong> a message, or convert it from some secret language to an original message. <br/>
             We can do this, if the Caesar Shift was used, by shifting by the negative of the initial shift value.
-            <img src="images/cs_inv.png"/>
+            <img src="/images/cs_inv.png"/>
             <p style='text-align: center'>Here we <strong>shift each letter by -1</strong> in the alphabet.<br/>
             This turns <strong>bcd back to abc</strong>!</p>
             <p>Do you see a connection between encrypting and decrypting with the Caesar Shift?</p>
