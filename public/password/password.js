@@ -45,6 +45,7 @@ var given_password = password_value.value.toLowerCase();
 var rotation_angle = 0;
 var angle_offset = 20;
 var max_step = 50;
+var decrypt = false;
 var shift_switch;
 
 /*
@@ -288,7 +289,9 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
       draw_word_position(0);
       $("#encrypt").removeClass('disabled');
       $("#spinUp").removeClass('disabled');
-      $("#plaintext_value").attr('disabled', false);
+      if (!decrypt){
+        $("#plaintext_value").attr('disabled', false);
+      }
       $("#password_value").attr('disabled', false);
       $("#index_input").attr('disabled', false);
       if (current_word_index != 0){
@@ -328,6 +331,12 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
   clear_text_overflow(ctx, canvas_width);
   draw_process_text(ctx, plaintext, password_shift, word_index, ciphertext);
 
+  if ((step >= max_step - 1) && (word_index === ciphertext.length - 1) && validate){
+    setTimeout(animate_ciphertext, 100*time_duration, word_index, step + 1, ciphertext,
+                                         ctx, box_width, plaintext, password);
+    return
+  }
+
   //Set the timeout to continue the animation
   setTimeout(animate_ciphertext, time_duration, word_index, step + 1, 
                                ciphertext, ctx, box_width, plaintext, password);
@@ -349,7 +358,7 @@ function assert(condition) {
 }
 
 function has_special_characters(password){
-  return !(/[a-z]/.test(password));
+  return (/[^a-zA-Z]+/.test(password));
 }
 
 function multiple_words(password){
@@ -544,11 +553,19 @@ function draw_current_index_value(ctx, angle, direction){
   var next_letter;
   const text_height = 60;
   const y = - text_height + 10;
+  let this_letter = given_password[current_word_index % given_password.length];
+  let upcoming_letter = given_password[(next_letter) % given_password.length];
 	if (!angle){
 		angle = 0;
 	}
   if (!direction){
     direction = 0;
+  }
+  if (this_letter === undefined){
+    this_letter = '';
+  }
+  if (upcoming_letter === undefined){
+    upcoming_letter = '';
   }
   ctx.translate(cx, cy);
   ctx.rotate(to_radians(direction * angle));
@@ -558,15 +575,14 @@ function draw_current_index_value(ctx, angle, direction){
   ctx.font = '1.40rem PT Mono';
   ctx.fillText(current_word_index.toString(), 0, y);
   ctx.font = '1.30rem PT Mono';
-  ctx.fillText(given_password[current_word_index % given_password.length], 0, 
-                                                          -text_height_offset);
+  // Check undefined here!
+  ctx.fillText(this_letter, 0, -text_height_offset);
   ctx.rotate(to_radians(direction * wheel_rotation_offset));
   ctx.font = '1.40rem PT Mono';
   ctx.fillText((current_word_index - direction).toString(), 0, y);
   ctx.font = '1.30rem PT Mono';
   next_letter = current_word_index - direction;
-  ctx.fillText(given_password[(next_letter) % given_password.length], 0, 
-                                                          -text_height_offset);
+  ctx.fillText(upcoming_letter, 0, -text_height_offset);
 	return;
 }
 
@@ -812,6 +828,7 @@ if (document.title.includes('Decryption')){
   $.getScript('password-decrypt.js', function(){
     console.log('Loaded Decryption');
     test_password_decrypt();
+    decrypt = true;
   });  
 }
 

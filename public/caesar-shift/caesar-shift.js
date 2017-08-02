@@ -594,8 +594,6 @@ function copy_to_clipboard() {
 
 if (document.title.includes('Encrypt')) {
   $.getScript('encrypt.js', () => {
-    instruction_text.innerHTML = instructions;
-    opening_modal_text.innerHTML = modal_text;
     retry_modal.innerHTML = retry_text;
     test_encryption();
   });
@@ -603,8 +601,6 @@ if (document.title.includes('Encrypt')) {
 
 if (document.title.includes('Sandbox')) {
   $.getScript('sandbox.js', () => {
-    instruction_text.innerHTML = instructions;
-    opening_modal_text.innerHTML = modal_text;
     test_encryption();
   });
 }
@@ -613,8 +609,6 @@ if (document.title.includes('Decrypt')) {
   decrypt = true;
   code_file = 'decrypt.py';
   $.getScript('decrypt.js', () => {
-    instruction_text.innerHTML = instructions;
-    opening_modal_text.innerHTML = modal_text;
     success_modal.innerHTML = success_text;
     test_decryption();
   });
@@ -622,6 +616,10 @@ if (document.title.includes('Decrypt')) {
 
 // Run the following when instantiating the web page
 draw_wheel();
+
+function open_start_modal(){
+  $('#modal_sandbox').modal('open');
+}
 
 // Convert the Python code to HTML and highlight
 jQuery.get(code_file, (data) => {

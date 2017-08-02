@@ -44,7 +44,7 @@ const opening_text = "We have been playing with encryption and decryption of\
                     of <strong>bcd</strong>, we would shift 'a' by 1, 'b' by 2,\
                     and 'c' by 3 to get an ending text of <strong>'bdf'</strong>.";
 
-const success_text = "Great work, moving on";
+const success_text = "Great work, see how the password changes each letter of the message?";
 
 const failure_text = "Not quite, make sure you are following the instructions";
 
@@ -136,8 +136,6 @@ function shift_letter(password, password_index, a_value){
 jQuery.get('password-encrypt.py', function(data) {
   var python_function = convert_to_HTML(data);
   encryption_code.innerHTML = python_function;
-  instruction_text.innerHTML = instructions;
-  opening_modal_text.innerHTML = opening_text;
   success_modal_text.innerHTML = success_text;
   retry_modal_text.innerHTML = failure_text;
   $('pre code').each(function(i, block) {

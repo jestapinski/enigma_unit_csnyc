@@ -14,8 +14,8 @@ For use with Enigma teaching model Caesar-Shift pages
 }
 
 ::-webkit-input-placeholder {
-  font-size: 20px;
-  color: #000000; 
+  font-size: 16px;
+  color: #444; 
 }
 
 input[type=text] {
@@ -125,6 +125,7 @@ input[type=text][disabled] {
   font-size: 16px;
   color: #444444;
   border: 2px solid #777;
+  background-color: #CCCCCC;
 }
 
 .input-field input[type=text]:enabled{
@@ -145,9 +146,19 @@ p {
   font-size: 1.25rem !important;
 }
 
+li {
+  font-size: 1.25rem !important;
+}
+
 h6, label {
   color: #000000 !important;
   font-size:1.38rem !important;
   font-family:'Roboto' sans-serif; 
   font-weight:300;
+}
+
+img {
+    display: block;
+    margin: auto;
+    margin-top: 20px;
 }

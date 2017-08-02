@@ -67,8 +67,24 @@ body {
           <h4 class = "col offset-s1">
             Instructions:
           </h4>        
-          <p class="flow-text col s10 offset-s1" id="instruction_text">
-          </p>
+          <span class="flow-text col s10 offset-s1">
+          {% if exercise_type == 'Encrypt' %}
+            <ol>
+              <li class="flow-text">Set the starting text to <b>move north</b>.</li>
+              <li class="flow-text">Set the 'Shift Each Letter By' value to <b>3</b>.</li>
+              <li class="flow-text">Click <b>'Encrypt'</b>.</li>
+            </ol>
+          {% elif exercise_type == 'Decrypt' %}
+            <ol>
+              <li class="flow-text">Pick a value we think the text was shifted by.</li>
+              <li class="flow-text">Click 'Decrypt'.</li>
+              <li class="flow-text">See if the final text is legible!</li>
+              <li class="flow-text">If the final text is illegible then try another value!</li>
+            </ol>
+          {% else %}
+          <p>Play around with encrypting and decrypting text!</p>
+          {% endif %}
+          </span>
       </div>
     </div>
 
@@ -78,8 +94,21 @@ body {
         <a 
           id="instruction_button" 
           class="waves-effect waves-green btn navy" 
-          onclick="modify_instructions()">
+          onclick="modify_instructions()"
+          style='width: 70%'>
           Hide Instructions
+        </a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s3 offset-s1">
+        <a 
+          id="instruction_button" 
+          class="waves-effect waves-green btn darkyellow black-text" 
+          onclick="open_start_modal()"
+          style='width: 70%'>
+          Help!
         </a>
       </div>
     </div>
@@ -104,7 +133,7 @@ body {
         <a 
           class="waves-effect waves-green btn beige black-text tooltipped" 
           id="encrypt" 
-          data-tooltip="{{exercise_type}} the Plaintext!">
+          data-tooltip="{{exercise_type}} the Starting Text!">
           {% if exercise_type == 'Sandbox' %}
             Encrypt/Decrypt
           {% else %}
@@ -114,7 +143,7 @@ body {
         <a 
           class="waves-effect waves-red btn darkyellow black-text tooltipped" 
           id="show_code" 
-          data-tooltip="Show some real computer code that encrypts the plaintext" 
+          data-tooltip="Show some real computer code that encrypts the Starting Text" 
           href="#modal1">
           Show Code
         </a>
@@ -158,8 +187,7 @@ body {
           class="validate">
         {% else %}             
         <input 
-          placeholder="I came, I saw, I conquered" 
-          value="I came, I saw, I conquered" 
+          placeholder="Starting Text Goes Here" 
           id="plaintext_value" 
           type="text" 
           class="validate">
@@ -177,19 +205,30 @@ body {
 
 <!-- Shift Value inputs -->
 
-      <div class="col s1 pull-s2 flow-text">
-        <label 
-          class="flow-text tooltipped" 
-          data-position="bottom" 
-          data-delay="50" 
-          data-tooltip="This is how much we want to shift by (negative means 
-            to the left, and positive means to the right!)">
-          Encryption Shift <i class="tiny material-icons">info_outline</i>
+      <div class="col s2 pull-s2 flow-text">
+
+          {% if exercise_type != 'Decrypt' %}
+            <label 
+              class="flow-text tooltipped" 
+              data-position="bottom" 
+              data-delay="50"
+              data-tooltip="This is how much we want to shift by (negative means 
+                to the left, and positive means to the right!)">
+            Shift Each Letter By:
+          {% else %}
+            <label 
+              class="flow-text tooltipped" 
+              data-position="bottom" 
+              data-delay="50"
+              data-tooltip="This is how much we guess the text was shifted by to get the secret message.">
+            Possible Initial Shift:
+          {% endif %} 
+          <i class="tiny material-icons">info_outline</i>
         </label>
       </div>
 
 <!-- Spinner -->
-      <div class="input-field col s2 pull-s2 flow-text">
+      <div class="input-field col s2 pull-s3 flow-text" style='margin-top: 50px;'>
         <canvas 
           id="canvas" 
           width="100" 
@@ -197,7 +236,7 @@ body {
         </canvas>
       </div>
 
-      <div class="col s1 pull-s3">
+      <div class="col s1 pull-s4" style='margin-top: 50px;'>
         <a 
           class="waves-effect waves-green btn navy white-text" 
           id="spinUp"
@@ -218,18 +257,18 @@ body {
       <!-- Output fields -->
 
 
-      <div class="input-field col s3 push-s1 flow-text tooltipped" 
-        data-tooltip="This is the shifted starting text using the shift value 
-        passed">
+      <div class="input-field col s3 flow-text" >
         <input 
           disabled 
           placeholder="J dbnf, J tbx, J dporvfsfe" 
           value="J dbnf, J tbx, J dporvfsfe" 
           id="output_text" 
-          type="text" 
-          class="tooltipped">
+          type="text">
         <label 
-          for="output_text">
+          for="output_text"
+          class="tooltipped"
+          data-tooltip="This is the shifted starting text using the shift value 
+            passed">
           Final Text <i class="tiny material-icons">info_outline</i>
         </label>
         <a 
@@ -301,8 +340,16 @@ body {
       <div class="modal-content">
         <h4>Hmm, not quite</h4>
         <p id="retry_text">
-          We decrypted something, but this is illegible and not the intended 
-          message, keep trying!
+          {% if exercise_type == 'Encrypt' %}
+          Be sure you are:
+            <ol>
+              <li class="flow-text">Set the starting text to <b>move north</b></li>
+              <li class="flow-text">Set the 'Shift Each Letter By' value to <b>3</b></li>
+              <li class="flow-text">Click <b>'Encrypt'</b></li>
+            </ol>
+          {% else %}
+          Try another possible encryption shift value!
+          {% endif %}
         </p>
       </div>
 
@@ -475,7 +522,7 @@ ciphertext = ciphertext + encoded_letter
           </code>
         </pre>
         <p>
-          In computers, words (like your plaintext or ciphertext message) are 
+          In computers, words (like your Starting Text or Final Text message) are 
           referred to as strings. This is just some vocabulary about how 
           computers work with literal words. In the Python programming language, 
           when we want to combine two words (perhaps we want to combine "Alan" 
@@ -529,6 +576,21 @@ ciphertext = ciphertext + (chr(encoded_letter))
       <div class="modal-content">
         <h4>Caesar Shift {{exercise_type}}</h4>
         <p id="opening_modal_text">
+          {% if exercise_type != 'Decrypt' %}
+            Often, we wish to <strong>encrypt</strong> a message, or convert it to come secret language to hide it. <br/>
+            One way to hide a message is by shifting each letter in the message by some number of letters through the alphabet.
+            <img src="/images/cs.png"/>
+            <p style='text-align: center'>Here we <strong>shift each letter by 1</strong> in the alphabet.<br/>
+            This turns <strong>abc to bcd</strong>!</p>
+            <p>This is called a <strong>Caesar Shift</strong> encryption.</p>            
+          {% else %}
+            Often, we wish to <strong>decrypt</strong> a message, or convert it from some secret language to an original message. <br/>
+            We can do this, if the Caesar Shift was used, by shifting by the negative of the initial shift value.
+            <img src="/images/cs_inv.png"/>
+            <p style='text-align: center'>Here we <strong>shift each letter by -1</strong> in the alphabet.<br/>
+            This turns <strong>bcd back to abc</strong>!</p>
+            <p>Do you see a connection between encrypting and decrypting with the Caesar Shift?</p>
+          {% endif %}
         </p>
       </div>
 

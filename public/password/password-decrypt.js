@@ -32,7 +32,7 @@ const instructions = "We have a ciphertext of <strong>ulsu hzekvto</strong>\
                     password and starting index to decrypt the text!";
 
 const opening_text = instructions;
-const success_text = "Great work, moving on";
+const success_text = "Great work, dective! Note how we shifted each letter by 26 - its position in the alphabet.";
 const failure_text = "Not quite, make sure you are following the instructions";
 const alphabet_size = 26;
 const answer = 'push dunkirk'
@@ -115,8 +115,6 @@ function shift_letter(password, password_index, a_value){
 jQuery.get('password-decrypt.py', function(data) {
   var python_function = convert_to_HTML(data);
   encryption_code.innerHTML = python_function;
-  instruction_text.innerHTML = instructions;
-  opening_modal_text.innerHTML = opening_text;
   success_modal_text.innerHTML = success_text;
   retry_modal_text.innerHTML = failure_text;
   $('pre code').each(function(i, block) {

@@ -59,24 +59,39 @@ body {
     <div id="instruction_set">
       <div class="row">
           <h4 class="col offset-s1">Instructions:</h4>
-          <p class="flow-text col s10 offset-s1" id="instructions_text">
-          The Enigma Machine is a series of rotors which break encryption into multiple steps
-          and changes each time as the rotors rotate.<br><br>
-          Encrypt the text <strong>hello</strong> twice to see this effect in action and
-          watch the Enigma Machine encrypt!
-          </p>        
+          <span class="flow-text col s10 offset-s1" id="instructions_text">
+          <ol>
+            <li>Encrypt the starting text <strong>hello</strong>.</li>
+            <li>Write down the ending text produced by the Enigma Machine.</li>
+            <li>Encrypt the starting text <strong>hello</strong> another time.</li>
+            <li>Compare the initial encryption result from step 2 with this new encryption result.</li>
+          </ol>
+          </span>        
       </div>
     </div>
 
     <div class="row">
       <div class="col s2 offset-s1">
         <a id="instruction_button" class="waves-effect waves-green btn navy" 
-          onclick="modify_instructions()">
+          onclick="modify_instructions()"
+          style="width: 100%;">
           Hide Instructions
         </a>
       </div>
     </div>
 
+    <div class="row">
+      <div class="col s2 offset-s1">    
+        <a 
+          class="waves-effect waves-green btn darkyellow black-text tooltipped s6" 
+          id="enigma_help" 
+          data-tooltip="What is the Enigma Machine?"
+          style="width: 100%; margin-top: 5px"
+          href="#modal_enigma_help">
+          What is Enigma?
+        </a>
+      </div>
+    </div>
     <br/>
 
     <div class="row">
@@ -139,7 +154,7 @@ body {
                 style="width: 100%; margin-top: 15px"
                 href="/enigma/sandbox"
                 target="_blank">
-                Sandbox Mode
+                Play with Enigma
               </a>
           {% else %}
               <a 
@@ -152,15 +167,6 @@ body {
                 Close the Sandbox
               </a>
           {% endif %}
-
-              <a 
-                class="waves-effect waves-green btn darkyellow black-text tooltipped s6" 
-                id="enigma_help" 
-                data-tooltip="What is the Enigma Machine?"
-                style="width: 100%; margin-top: 15px"
-                href="#modal_enigma">
-                What is Enigma?
-              </a>
 
           </div>
 
@@ -196,7 +202,7 @@ body {
       </div>  
     </div>
 
-    <div id="modal_enigma" class="modal">
+    <div id="modal_enigma_help" class="modal">
       <div class="modal-content">
         <h4>
           The Enigma Machine
@@ -235,6 +241,26 @@ body {
           see the changing encryption caused by rotating the rotors.
         </p>
         {% endif %}
+      </div>
+      <div class="modal-footer">
+        <a 
+          href="#!" 
+          class="modal-action modal-close waves-effect waves-green btn navy">
+          Go!
+        </a>
+      </div>
+    </div>
+
+    <div id="modal_enigma" class="modal">
+      <div class="modal-content">
+        <h4>
+          The Enigma Machine
+        </h4>
+        <p id='opening_modal_text'>
+          The Enigma Machine is a series of rotors which break encryption into multiple steps
+          and changes each time as the rotors rotate.<br><br>
+          Try out encrypting some text, and click 'What is Enigma?' for more detailed information.
+        </p>
       </div>
       <div class="modal-footer">
         <a 

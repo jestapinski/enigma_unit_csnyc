@@ -209,7 +209,6 @@ jQuery.get('password-encrypt.py', function(data) {
   encryption_function = python_function;
   encryption_code.innerHTML = python_function;
   encrypt.innerHTML = '<strong>3.</strong> Encrypt';
-  instruction_text.innerHTML = instructions;
   opening_modal_text.innerHTML = opening_text;
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);

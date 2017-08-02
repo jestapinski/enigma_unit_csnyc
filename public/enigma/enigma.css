@@ -99,3 +99,7 @@ input[type=range] + .thumb {
 input[type=range] + .thumb.active .value {
   color: white;
 }
+
+li {
+  font-size: 1.25rem !important;
+}

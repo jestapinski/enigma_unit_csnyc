@@ -59,20 +59,6 @@ function modify_instructions(){
   }
 }
 
-// function check_is_win(){
-//   if (validate){
-//     // Some validation logic
-//     console.log('validating');
-//     if (hello_count >= 2){
-//       console.log("Correct!");
-//     }
-//     return;
-//   } else {
-//     console.log('not validating');
-//     return;
-//   }
-// }
-
 function convert_to_letter(letter, shift){
   return String.fromCharCode(letter.charCodeAt(0) + shift);
 }
@@ -301,7 +287,7 @@ function to_end(theta, out_radius, cx, cy, letter){
   var x = cx + (out_radius + 15) * (Math.cos(theta)) + 40;
   var y = cy + (out_radius + 15) * (Math.sin(theta)) - 5;
   // ctx.strokeRect(x, y - 5, 20, 20);
-  arrow(ctx, {x: x, y: y}, {x: 0, y: 460}, 5);
+  arrow(ctx, {x: x, y: y}, {x: 0, y: 430}, 5);
   comment_text.innerHTML = '"'.concat(letter, '"', step_7);
   ciphertext_value.value = ct;
   if (new_i == pt.length){

@@ -6,7 +6,7 @@
 
 const plaintext_solution = 'move north';
 const shift_solution = 3;
-const instructions = 'Using a plaintext of: <strong>move north</strong>, perform a Caesar Shift of <strong>up 3</strong> using the computational model (input the needed inputs on the left, and press "Encrypt" to run the encryption and see the ciphertext as the output!).';
+const instructions = 'Using a starting text of <strong>move north</strong>, perform a Caesar Shift of <strong>3</strong> (input the needed inputs on the left, and click "Encrypt" to run the encryption).';
 const modal_text = 'One method of encrypting a message is through a <strong>Caesar Shift</strong>, in which we specify a number and direction which we move in the alphabet for each letter in our original text to get our encrypted text. Try the encryption example here, and feel free to click on the "Play with Caesar Shift" button to insert your own text and shift values to see the Caesar Shift in action!';
 const retry_text = 'It seems like something was encrypted, but not exactly the message and shift amount we were going for. Are you sure your plaintext value is <strong>move north</strong> and your encryption shift is <strong>up (positive) 3</strong>?';
 
