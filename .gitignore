@@ -5,5 +5,4 @@
 EncryptionWireframes/
 node_modules/
 *.sketch
-*.png
 .DS_Store
