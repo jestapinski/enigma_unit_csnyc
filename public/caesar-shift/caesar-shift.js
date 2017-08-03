@@ -605,11 +605,10 @@ if (document.title.includes('Sandbox')) {
   });
 }
 
-if (document.title.includes('Decrypt')) {
+if (document.title.includes('Brute Force')) {
   decrypt = true;
   code_file = 'decrypt.py';
   $.getScript('decrypt.js', () => {
-    success_modal.innerHTML = success_text;
     test_decryption();
   });
 }

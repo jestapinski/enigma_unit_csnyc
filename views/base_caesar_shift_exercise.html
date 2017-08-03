@@ -28,7 +28,11 @@ body {
 
 	<head>
 		<title>
+    {% if exercise_type != 'Decrypt' %}
       Caesar Shift {{exercise_type}}
+    {% else %}
+      Caesar Shift Brute Force Attack
+    {% endif %}
     </title>
 	</head>
 
@@ -56,7 +60,11 @@ body {
     <div class="row">
       <div class="col s6 offset-s1">
   		  <h3>
-          Caesar Shift {{exercise_type}}
+          {% if exercise_type != 'Decrypt' %}
+            Caesar Shift {{exercise_type}}
+          {% else %}
+            Caesar Shift Brute Force Attack
+          {% endif %}
         </h3>
       </div>
     </div>
@@ -220,7 +228,7 @@ body {
               class="flow-text tooltipped" 
               data-position="bottom" 
               data-delay="50"
-              data-tooltip="This is how much we guess the text was shifted by to get the secret message.">
+              data-tooltip="This is how much we guess the text was shifted by to get the secret message, so we shift by the negative of this value to decrypt.">
             Possible Initial Shift:
           {% endif %} 
           <i class="tiny material-icons">info_outline</i>
@@ -317,10 +325,17 @@ body {
       <div class="modal-content">
         <h4>Correct!</h4>
         <p id="success_text">
+        {% if exercise_type == 'Encrypt' %}
           Notice how the encryption code mechanism cycled through the alphabet 
           at each letter the number of times as we indicated in our shift. Now 
           we have some ciphertext to communicate our orders! Now let's try to 
           decrypt some ciphertext using a similar mechanism.
+        {% else %}
+          How did we crack the starting text? Breaking the Caesar Shift is easy with
+          a strategy called a <strong>Brute Force Attack</strong>, which is trying every possible
+          input until we find a solution that works. <br/><br/>
+          Here, we tried different initial shift values as a Brute Force Attack to decrypt the text!
+        {% endif %}
         </p>
       </div>
 
@@ -441,6 +456,7 @@ def shift_by_value_in_alphabet(starting_letter, shift_value):
           <code>chr</code> converts a number into its corresponding letter. This
           numeric system for representing letters is known as the ASCII
           convention.
+
         </p>
       </div>
 
@@ -584,7 +600,8 @@ ciphertext = ciphertext + (chr(encoded_letter))
             <p>This is called a <strong>Caesar Shift</strong> encryption.</p>            
           {% else %}
             Often, we wish to <strong>decrypt</strong> a message, or convert it from some secret language to an original message. <br/>
-            We can do this, if the Caesar Shift was used, by shifting by the negative of the initial shift value.
+            We can do this, if the Caesar Shift was used, by shifting by the negative of the initial shift value.<br/> 
+            Breaking the Caesar Shift is easy with a strategy called a <strong>Brute Force Attack</strong>, which is trying every possible input until we find a solution that works.
             <img src="../images/cs_inv.png"/>
             <p style='text-align: center'>Here we <strong>shift each letter by -1</strong> in the alphabet.<br/>
             This turns <strong>bcd back to abc</strong>!</p>

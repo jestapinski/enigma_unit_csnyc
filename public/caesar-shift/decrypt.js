@@ -91,6 +91,9 @@ function assert(condition) {
 function check_for_win(plaintext) {
   if (plaintext_solution === plaintext) {
     $('#modalSuccess').modal('open');
+    $('#instruction_set').hide(instruction_speed);
+    instruction_button.text = 'Show Instructions';
+    hidden_text = true;
   } else {
     $('#modalRetry').modal('open');
     shown_retry_msg = true;

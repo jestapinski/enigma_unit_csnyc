@@ -128,6 +128,9 @@ function check_for_win(guess_string) {
 */
   if (overall_encryption(plaintext_solution, shift_solution) === guess_string) {
     $('#modalSuccess').modal('open');
+    $('#instruction_set').hide(instruction_speed);
+    instruction_button.text = 'Show Instructions';
+    hidden_text = true;
   } else {
     $('#modalRetry').modal('open');
   }
