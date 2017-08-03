@@ -24,6 +24,7 @@ var hello_count = 0;
 var solution_word = 'hello';
 var is_animating = false;
 var step_mode = false;
+var enter_char = 13;
 var first_encryption = '', second_encryption = '', at_r2_letter;
 var next_step_function = function(){run_encryption();};
 
@@ -487,6 +488,22 @@ function convert_to_HTML(data){
   Opens the starting modal (wrapped in a function for cleanliness)
 */
 function run_start_modal(){
+  $('#modal_enigma').modal({
+    ready: function(modal, trigger){
+      $(document).keypress((e) => {
+        if (e.charCode == enter_char){
+          $('#modal_enigma').modal('close');
+        }
+      });
+    },
+    complete: function(){
+      $(document).keypress((e) => {
+        if (e.charCode == enter_char){
+          encrypt.click();
+        }
+      });
+    }
+  });
   $('#modal_enigma').modal('open');
   $('#modal_hello_2').modal({
       dismissible: false, // Modal can be dismissed by clicking outside of the modal
@@ -502,8 +519,12 @@ $.getScript('rotor.js', function(){
 
 if (document.title.includes('Sandbox')){
   //Turn off validations while in the Sandbox
-  console.log('in sandbox');
   validate = false;
+  $(document).keypress((e) => {
+    if (e.charCode == enter_char){
+      encrypt.click();
+    }
+  });
 } else {
   setTimeout(run_start_modal, 500);  
 }
@@ -517,10 +538,3 @@ jQuery.get('rotor.py', function(data) {
 });
 
 encrypt.addEventListener("click", function(){step_mode=false; next_step_function();});
-$(document).keypress(function(e){
-  console.log(e.charCode);
-    if (e.charCode == 13){
-        encrypt.click();
-    }
-});
-

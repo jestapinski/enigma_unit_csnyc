@@ -46,6 +46,7 @@ var rotation_angle = 0;
 var angle_offset = 20;
 var max_step = 50;
 var decrypt = false;
+var enter_char = 13;
 var shift_switch;
 
 /*
@@ -474,6 +475,22 @@ function index_wheel_timer(step, pass){
 	Opens the starting modal (wrapped in a function for cleanliness)
 */
 function run_start_modal(){
+  $('#modal_encrypt').modal({
+    ready: function(modal, trigger){
+      $(document).keypress((e) => {
+        if (e.charCode == enter_char){
+          $('#modal_encrypt').modal('close');
+        }
+      });
+    },
+    complete: function(){
+      $(document).keypress((e) => {
+        if (e.charCode == enter_char){
+          encrypt.click();
+        }
+      });
+    } 
+  });
 	$('#modal_encrypt').modal('open');
 }
 
@@ -821,6 +838,11 @@ if (document.title.includes('Sandbox')){
     console.log('Loaded Sandbox');
     test_password_encrypt();
     test_password_decrypt();
+  });
+  $(document).keypress((e) => {
+    if (e.charCode == enter_char){
+      encrypt.click();
+    }
   });    
 }
 
@@ -849,9 +871,3 @@ clipboard.addEventListener('click', copy_to_clipboard);
 if (!(document.title.includes('Sandbox'))){
   setTimeout(run_start_modal, 600);
 }
-$(document).keypress(function(e){
-  console.log(e.charCode);
-    if (e.charCode == 13){
-        encrypt.click();
-    }
-});

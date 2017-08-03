@@ -480,12 +480,12 @@ function run_encryption() {
   let middle_box_width;
   remove_tooltip();
   if (plaintext_not_valid(passed_text_value)) {
-    alert('Plaintext should not be blank!');
+    alert('Starting text should not be blank!');
     return;
   }
 
   if (passed_text_value.length > max_text_length) {
-    alert('This plaintext is too long!');
+    alert('This starting text is too long!');
     return;
   }
 
@@ -617,6 +617,22 @@ if (document.title.includes('Brute Force')) {
 draw_wheel();
 
 function open_start_modal(){
+  $('#modal_sandbox').modal({
+    ready: function(modal, trigger){
+      $(document).keypress((e) => {
+        if (e.charCode === enter_char){
+          $('#modal_sandbox').modal('close');
+        }
+      });
+    },
+    complete: function(){
+      $(document).keypress((e) => {
+        if (e.charCode === enter_char) {
+          encrypt.click();
+        }
+      });
+    }
+  });
   $('#modal_sandbox').modal('open');
 }
 
@@ -629,6 +645,12 @@ jQuery.get(code_file, (data) => {
   });
   if (!(document.title.includes('Sandbox'))){
     open_start_modal();
+  } else {
+    $(document).keypress((e) => {
+      if (e.charCode === enter_char) {
+        encrypt.click();
+      }
+    });
   }
 });
 
@@ -641,12 +663,6 @@ if (decrypt) {
     });
   });
 }
-
-$(document).keypress((e) => {
-  if (e.charCode === enter_char) {
-    encrypt.click();
-  }
-});
 
 // Bind buttons to events
 spin_up.addEventListener('click', spin_wheel_up);
