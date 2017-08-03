@@ -589,7 +589,13 @@ ciphertext = ciphertext + (chr(encoded_letter))
 
     <div id="modal_sandbox" class="modal">
       <div class="modal-content">
-        <h4>Caesar Shift {{exercise_type}}</h4>
+        <h4>
+        {% if exercise_type != 'Decrypt' %}
+          Caesar Shift {{exercise_type}}
+        {% else %}
+          Caesar Shift Brute Force Attack
+        {% endif %}
+        </h4>
         <p id="opening_modal_text">
           {% if exercise_type != 'Decrypt' %}
             Often, we wish to <strong>encrypt</strong> a message, or convert it to come secret language to hide it. <br/>

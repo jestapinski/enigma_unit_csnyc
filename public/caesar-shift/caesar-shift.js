@@ -627,7 +627,9 @@ jQuery.get(code_file, (data) => {
   $('pre code').each((i, block) => {
     hljs.highlightBlock(block);
   });
-  $('#modal_sandbox').modal('open');
+  if (!(document.title.includes('Sandbox'))){
+    open_start_modal();
+  }
 });
 
 if (decrypt) {
