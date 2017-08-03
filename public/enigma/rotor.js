@@ -302,7 +302,6 @@ class Rotor {
   }
 
   draw_rotor(highlight=false, step_angle=0, outer=true){
-    console.log(highlight);
     var cx = this.offset + 3 * (this.canvas_width / 16);
     var cy = this.canvas_height / 2;
     if (this.next_rotor){

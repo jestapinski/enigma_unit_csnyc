@@ -15,6 +15,7 @@ var encrypt_code = document.getElementById('encrypt_code');
 var delay_text = document.getElementById('delay_text');
 var comment_text = document.getElementById('comment_text');
 var final_correct = document.getElementById('final_correct');
+var step_button = document.getElementById('show_code2');
 var canvas_width, canvas_height;
 var left_rotor, right_rotor, first_point, p2, pt, ct, new_i;
 var ctx = rotor_canvas.getContext('2d');
@@ -25,6 +26,7 @@ var solution_word = 'hello';
 var is_animating = false;
 var step_mode = false;
 var enter_char = 13;
+var no_bind = true;
 var first_encryption = '', second_encryption = '', at_r2_letter;
 var next_step_function = function(){run_encryption();};
 
@@ -169,7 +171,6 @@ function enigma_machine_encryption(plaintext, ciphertext='', i=0){
     if (plaintext != solution_word && validate){
       $('#modal_failure').modal('open');
     }
-    // check_is_win();
     $('#plaintext_value').attr('disabled', false);
     is_animating = false;
     next_step_function = function(){
@@ -181,7 +182,7 @@ function enigma_machine_encryption(plaintext, ciphertext='', i=0){
   ciphertext_value.value = ciphertext;
   var intermediate_letter, timer_delay = 500;
   left_rotor.current_letter = plaintext[i];
-  ctx.clearRect(14 * rotor_canvas.width / 16, 0, 2*rotor_canvas.width / 16, rotor_canvas.height);
+  ctx.clearRect(14 * rotor_canvas.width / 16, 0, rotor_canvas.width / 8, rotor_canvas.height);
   initialize_reflector();
   pt = plaintext;
   draw_plaintext(i);
@@ -297,7 +298,11 @@ function to_end(theta, out_radius, cx, cy, letter){
   setTimeout(enigma_machine_encryption, step_delay, pt, ct, new_i); 
 }
 
-function encryption_process(plaintext, ciphertext, i){
+function encryption_process(plaintext, ciphertext, i, redraw=true){
+  if (redraw){
+    setTimeout(encryption_process, 400, plaintext, ciphertext, i, false)
+    return
+  }
   var letter = plaintext[i];
   console.log(letter);
   var angle_difference = (2 * Math.PI) / left_rotor.num_notches;
@@ -325,8 +330,6 @@ function encryption_process(plaintext, ciphertext, i){
   //inverse rotor left
   intermediate_letter = left_rotor.inverse_process_letter(intermediate_letter);
   console.log(intermediate_letter);
-  // right_rotor.draw_rotor(true);
-  // return;
   var rotor = right_rotor;
   var letter = right_rotor.current_letter;
   var letter_index;
@@ -361,7 +364,7 @@ function encryption_process(plaintext, ciphertext, i){
 function to_r2(first_point, p2, letter){
   var rotor = right_rotor;
 
-  rotor.draw_rotor(true, 0, false);
+  // rotor.draw_rotor(true, 0, false);
   arrow(left_rotor.ctx, first_point, p2, 5);
   comment_text.innerHTML = '"'.concat(at_r2_letter, '"', step_3, '"', right_rotor.process_letter(letter), '"');
   ctx.clearRect(14 * (rotor.canvas_width / 16) + 20, rotor.canvas_height - 40, 14 * (rotor.canvas_width / 16) + 50, this.canvas_height);
@@ -497,11 +500,37 @@ function run_start_modal(){
       });
     },
     complete: function(){
+      if (no_bind){
+        console.log('BINDING')
+        no_bind = false;
+        $(document).keypress((e) => {
+          if (e.charCode == enter_char){
+            console.log('hit')
+            step_button.click();
+            return;
+          }
+        });
+      }
+    }
+  });
+  $('#modal_failure').modal({
+    ready: function(modal, trigger){
       $(document).keypress((e) => {
-        if (e.charCode == enter_char){
-          encrypt.click();
-        }
+        return;
       });
+    },
+    complete: function(){
+      if (no_bind){
+        console.log('BINDING')
+        no_bind = false;
+        $(document).keypress((e) => {
+          if (e.charCode == enter_char){
+            console.log('hit')
+            step_button.click();
+            return;
+          }
+        });
+      }
     }
   });
   $('#modal_enigma').modal('open');
@@ -522,7 +551,7 @@ if (document.title.includes('Sandbox')){
   validate = false;
   $(document).keypress((e) => {
     if (e.charCode == enter_char){
-      encrypt.click();
+      step_button.click();
     }
   });
 } else {

@@ -64,12 +64,16 @@ body {
       <div class="row">
           <h4 class="col offset-s1">Instructions:</h4>
           <span class="flow-text col s10 offset-s1" id="instructions_text">
-          <ol>
-            <li>Encrypt the starting text <strong>hello</strong>.</li>
-            <li>Write down the ending text produced by the Enigma Machine.</li>
-            <li>Encrypt the starting text <strong>hello</strong> another time.</li>
-            <li>Compare the initial encryption result from step 2 with this new encryption result.</li>
-          </ol>
+          {% if exercise_type == 'Encrypt' %}
+            <ol>
+              <li>Encrypt the starting text <strong>hello</strong>.</li>
+              <li>Write down the ending text produced by the Enigma Machine.</li>
+              <li>Encrypt the starting text <strong>hello</strong> another time.</li>
+              <li>Compare the initial encryption result from step 2 with this new encryption result.</li>
+            </ol>
+          {% else %}
+            <p>Play around encrypting some text with the Enigma Machine!</p>
+          {% endif %}
           </span>        
       </div>
     </div>

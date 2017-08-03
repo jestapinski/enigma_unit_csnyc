@@ -47,6 +47,7 @@ var angle_offset = 20;
 var max_step = 50;
 var decrypt = false;
 var enter_char = 13;
+let timeout_value;
 var shift_switch;
 
 /*
@@ -288,12 +289,7 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
       //End of the word, stop here
       draw_plaintext(plaintext, ctx);
       draw_word_position(0);
-      $("#encrypt").removeClass('disabled');
       $("#spinUp").removeClass('disabled');
-      if (!decrypt){
-        $("#plaintext_value").attr('disabled', false);
-      }
-      $("#password_value").attr('disabled', false);
       $("#index_input").attr('disabled', false);
       if (current_word_index != 0){
         $("#spinDown").removeClass('disabled');
@@ -311,7 +307,7 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
       }
       return;
     }
-    setTimeout(animate_ciphertext, time_duration, word_index + 1, 0, ciphertext,
+    timeout_value = setTimeout(animate_ciphertext, time_duration, word_index + 1, 0, ciphertext,
                                            ctx, box_width, plaintext, password);
     return;
   }
@@ -333,13 +329,13 @@ function animate_ciphertext(word_index, step, ciphertext, ctx, box_width,
   draw_process_text(ctx, plaintext, password_shift, word_index, ciphertext);
 
   if ((step >= max_step - 1) && (word_index === ciphertext.length - 1) && validate){
-    setTimeout(animate_ciphertext, 100*time_duration, word_index, step + 1, ciphertext,
+    timeout_value = setTimeout(animate_ciphertext, 100*time_duration, word_index, step + 1, ciphertext,
                                          ctx, box_width, plaintext, password);
     return
   }
 
   //Set the timeout to continue the animation
-  setTimeout(animate_ciphertext, time_duration, word_index, step + 1, 
+  timeout_value = setTimeout(animate_ciphertext, time_duration, word_index, step + 1, 
                                ciphertext, ctx, box_width, plaintext, password);
 }
 
@@ -380,6 +376,19 @@ function validate_password(password){
 }
 
 /*
+  validate_plaintext
+
+  plaintext: The passed plaintext from the user
+
+  Returns an error string if the plaintext is empty, and undefined otherwise.
+*/
+function validate_plaintext(plaintext){
+  if (!plaintext){
+    return 'Plaintext should not be blank!'
+  }
+}
+
+/*
 	run_encryption
 
   No inputs
@@ -394,21 +403,27 @@ function run_encryption(){
   var black_box_text = document.getElementById('black_box_text');
   // Validate the password
   password = password_value.value.toLowerCase();
-  password_errors = validate_password(password)
+  plaintext = plaintext_value.value;
+  password_errors = validate_password(password);
+  plaintext_errors = validate_plaintext(plaintext);
   if (password_errors){
     alert(password_errors);
     return;
   }
+  if (plaintext_errors){
+    alert(plaintext_errors);
+    return;
+  }
+  if (timeout_value){
+    clearTimeout(timeout_value);
+  }
 	$('#word_shift_text').removeAttr('hidden');
   $("#spinUp").addClass('disabled');
   $("#spinDown").addClass('disabled');
-  $("#plaintext_value").attr('disabled', true);
-  $("#password_value").attr('disabled', true);
   $("#index_input").attr('disabled', true);
   if (shift_switch){
     $('#shift_switch').attr('disabled', 'true');
   }
-	plaintext = plaintext_value.value;
 	final_word = password_encrypt(plaintext, password, current_word_index);
   if (document.getElementById("black_box_canvas")){
     document.getElementById("black_box_canvas").remove();
@@ -428,8 +443,6 @@ function run_encryption(){
     black_box_text.remove();    
   }
 
-  //Disable the ability to encrypt for now
-  $("#encrypt").addClass('disabled');
   output_text.value = final_word;
   box_width = (square_box.clientWidth - 2 * margin) / plaintext.length;
   animate_ciphertext(0, 0, final_word, ctx, box_width, plaintext, password);
@@ -570,8 +583,9 @@ function draw_current_index_value(ctx, angle, direction){
   var next_letter;
   const text_height = 60;
   const y = - text_height + 10;
+  const next_index = current_word_index + -direction;
   let this_letter = given_password[current_word_index % given_password.length];
-  let upcoming_letter = given_password[(next_letter) % given_password.length];
+  let upcoming_letter = given_password[(next_index) % given_password.length];
 	if (!angle){
 		angle = 0;
 	}
@@ -584,6 +598,9 @@ function draw_current_index_value(ctx, angle, direction){
   if (upcoming_letter === undefined){
     upcoming_letter = '';
   }
+  console.log(direction)
+  console.log(upcoming_letter);
+  console.log(current_word_index)
   ctx.translate(cx, cy);
   ctx.rotate(to_radians(direction * angle));
 
@@ -596,9 +613,9 @@ function draw_current_index_value(ctx, angle, direction){
   ctx.fillText(this_letter, 0, -text_height_offset);
   ctx.rotate(to_radians(direction * wheel_rotation_offset));
   ctx.font = '1.40rem PT Mono';
-  ctx.fillText((current_word_index - direction).toString(), 0, y);
-  ctx.font = '1.30rem PT Mono';
   next_letter = current_word_index - direction;
+  ctx.fillText(next_letter.toString(), 0, y);
+  ctx.font = '1.30rem PT Mono';
   ctx.fillText(upcoming_letter, 0, -text_height_offset);
 	return;
 }

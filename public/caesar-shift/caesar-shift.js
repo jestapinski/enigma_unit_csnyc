@@ -50,6 +50,7 @@ const instruction_speed = 500;
 let hidden_text = false;
 const enable_tooltips = true;
 const enter_char = 13;
+let timeout_value;
 
 function establish_context_settings(ctx, plaintext_length) {
 /*
@@ -381,7 +382,7 @@ function encryption_redraw(i, passed_text_value, current_shift_value,
   if (step === max_number_of_steps) {
     // Check if we have shifted enough, if so move onto the next letter
     if (not_enough_shifts_exhausted(shift_offset, current_shift_value, shifting_value)) {
-      setTimeout(encryption_redraw, encryption_scrolling_speed, i,
+      timeout_value = setTimeout(encryption_redraw, encryption_scrolling_speed, i,
                           passed_text_value, current_shift_value + shift_offset,
                           shifting_value, 0, ctx);
       return;
@@ -389,11 +390,10 @@ function encryption_redraw(i, passed_text_value, current_shift_value,
     // Enough shifts have passed, so either move on to the next letter or let
     // another encryption start
     if (i === (passed_text_value.length - 1)) {
-      $('#encrypt').removeClass('disabled');
       ctx.clearRect(0, box_height, canvas_width, box_height);
       check_for_win(overall_encryption(passed_text_value, shifting_value));
     } else {
-      setTimeout(encryption_redraw, encryption_scrolling_speed, i + 1,
+      timeout_value = setTimeout(encryption_redraw, encryption_scrolling_speed, i + 1,
                                   passed_text_value, 0, shifting_value, 0, ctx);
     }
     return;
@@ -445,7 +445,7 @@ function encryption_redraw(i, passed_text_value, current_shift_value,
 
   draw_vertical_box_lines(ctx, i, box_height, box_width, height_offset);
 
-  setTimeout(encryption_redraw, encryption_scrolling_speed, i, passed_text_value,
+  timeout_value = setTimeout(encryption_redraw, encryption_scrolling_speed, i, passed_text_value,
                             current_shift_value, shifting_value, step + 1, ctx);
 }
 
@@ -478,6 +478,9 @@ function run_encryption() {
   let passed_shift_value;
   let i_box_width;
   let middle_box_width;
+  if (timeout_value){
+    clearTimeout(timeout_value);
+  }
   remove_tooltip();
   if (plaintext_not_valid(passed_text_value)) {
     alert('Starting text should not be blank!');
@@ -506,7 +509,6 @@ function run_encryption() {
   }
 
   // Disable the ability to encrypt for now
-  $('#encrypt').addClass('disabled');
 
   if (canvas.getContext) {
     if (decrypt) {
@@ -534,7 +536,7 @@ function run_encryption() {
 
       draw_vertical_box_lines(ctx, i, box_height, box_width, height_offset);
     }
-    setTimeout(encryption_redraw, encryption_scrolling_speed, 0,
+    timeout_value = setTimeout(encryption_redraw, encryption_scrolling_speed, 0,
                   passed_text_value, 0, passed_shift_value, 0, ctx, passed_shift_value);
   }
 
