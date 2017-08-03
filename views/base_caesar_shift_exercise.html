@@ -22,6 +22,22 @@ body {
   height: 100%;
   background-size: cover;
 }
+
+.nav-wrapper {
+  background-color: #3F5666 !important;
+}
+
+.breadcrumb:hover {
+  color: white !important;
+}
+
+.non-active {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.active {
+  color: white;
+}
 </style>
 
 <html>
@@ -38,20 +54,23 @@ body {
 
   <nav>
     <div class="nav-wrapper">
-      <a 
-        href="#" 
-        class="brand-logo right" 
-        style="padding-right:50px">
-        Enigma: An Introduction to Cryptography
-      </a>
+      <a href="#" class="brand-logo right" style="padding-right:50px">Enigma: An Introduction to Cryptography</a>
       <div class="col s12 pull-s1">
         <a 
-          href="/caesar-shift/sandbox" 
-          class="breadcrumb"
+          href="/caesar-shift/encrypt" 
+          class="breadcrumb active"
           target = "_blank" 
           style="padding-left:50px">
           Caesar Shift
         </a>
+        <a 
+          href="/password/encrypt" 
+          class="breadcrumb non-active"
+          target = "_blank">Vigenere Cipher</a>
+        <a 
+          href="/enigma/encrypt" 
+          class="breadcrumb non-active"
+          target = "_blank">Enigma Machine</a>
       </div>
     </div>
   </nav>

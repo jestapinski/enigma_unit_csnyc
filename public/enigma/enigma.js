@@ -504,6 +504,8 @@ if (document.title.includes('Sandbox')){
   //Turn off validations while in the Sandbox
   console.log('in sandbox');
   validate = false;
+} else {
+  setTimeout(run_start_modal, 500);  
 }
 
 jQuery.get('rotor.py', function(data) {
@@ -522,4 +524,3 @@ $(document).keypress(function(e){
     }
 });
 
-setTimeout(run_start_modal, 500);
